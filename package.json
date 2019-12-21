@@ -2,7 +2,19 @@
   "name": "deth",
   "private": true,
   "license": "MIT",
+  "engines": {
+    "node": "^12.14.0",
+    "yarn": ">=1.21.1"
+  },
+  "scripts": {
+    "lint": "wsrun -c lint",
+    "build": "wsrun -te -c build",
+    "test": "wsrun -c test"
+  },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "wsrun": "^5.2.0"
+  }
 }
