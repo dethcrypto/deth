@@ -23,7 +23,7 @@ describe('createGenesisBlock', () => {
       parent: undefined,
       accounts: new Map(),
       transactions: [],
-      parameters
+      parameters,
     })
     expect(block.parameters).not.to.equal(parameters)
   })
@@ -54,7 +54,7 @@ describe('createGenesisBlock', () => {
         }],
       ]),
       transactions: [],
-      parameters
+      parameters,
     })
     expect(block.parameters).not.to.equal(parameters)
   })

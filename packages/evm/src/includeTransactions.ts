@@ -1,4 +1,4 @@
-import { Block, PendingTransaction, Log } from './model'
+import { Block, PendingTransaction } from './model'
 import { cloneBlock } from './cloneBlock'
 import { executeTransaction } from './executeTransaction'
 

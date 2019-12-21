@@ -5,7 +5,7 @@ export function cloneBlock (block: Block): Block {
     parent: block.parent,
     accounts: cloneAccounts(block.accounts),
     transactions: [...block.transactions],
-    parameters: {...block.parameters},
+    parameters: { ...block.parameters },
   }
 }
 
@@ -22,7 +22,7 @@ function cloneAccount (account: Account): Account {
     balance: account.balance,
     code: account.code,
     nonce: account.nonce,
-    storage: cloneStorage(account.storage)
+    storage: cloneStorage(account.storage),
   }
 }
 
