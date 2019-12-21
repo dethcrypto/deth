@@ -1,14 +1,16 @@
-import { Block, Bytes20, Bytes32, Account } from './model'
+import { Block, Bytes20, Bytes32, Account, BlockParameters } from './model'
 
 export interface GenesisBlockParams {
   balances: Map<Bytes20, Bytes32>,
+  parameters: BlockParameters,
 }
 
 export function createGenesisBlock (params: GenesisBlockParams): Block {
   return {
     parent: undefined,
     accounts: accountsFromBalances(params.balances),
-    transactions: new Map(),
+    transactions: [],
+    parameters: { ...params.parameters },
   }
 }
 

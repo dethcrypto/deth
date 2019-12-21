@@ -1,6 +1,6 @@
 import { ExecutedTransaction } from './ExecutedTransaction'
 import { Account } from './Account'
-import { Bytes20 } from './utils'
+import { Bytes20, Bytes32, Bytes } from './utils'
 
 export interface Block {
   parent?: Block,
@@ -10,5 +10,11 @@ export interface Block {
 }
 
 export interface BlockParameters {
+  hash: Bytes32,
+  number: number,
+  timestamp: number,
   gasLimit: number,
+  gasUsed: number,
+  extraData: Bytes,
+  miner: Bytes20,
 }

@@ -1,5 +1,5 @@
 import { Block, PendingTransaction, BlockParameters } from './model'
-import { executeTransactions } from './executeTransactions'
+import { includeTransactions } from './includeTransactions'
 
 export function createBlock (
   parent: Block,
@@ -9,8 +9,8 @@ export function createBlock (
   const block = {
     parent,
     accounts: parent.accounts,
-    parameters,
+    parameters: { ...parameters },
     transactions: [],
   }
-  return executeTransactions(block, transactions)
+  return includeTransactions(block, transactions)
 }
