@@ -1,17 +1,16 @@
-import { Block, PendingTransaction } from './model'
-import { execute } from './execute'
+import { Block, PendingTransaction, BlockParameters } from './model'
+import { executeTransactions } from './executeTransactions'
 
-export interface BlockParameters {
+export function createBlock (
   parent: Block,
   transactions: PendingTransaction[],
-  gasLimit: number,
-}
-
-export function createBlock (params: BlockParameters): Block {
-  const { accounts, transactions } = execute(params)
-  return {
-    parent: params.parent,
-    transactions,
-    accounts,
+  parameters: BlockParameters,
+): Block {
+  const block = {
+    parent,
+    accounts: parent.accounts,
+    parameters,
+    transactions: [],
   }
+  return executeTransactions(block, transactions)
 }
