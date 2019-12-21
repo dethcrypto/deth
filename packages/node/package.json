@@ -14,7 +14,9 @@
     "build:cjs": "tsc -p tsconfig.build.json --outDir dist/cjs --declaration false",
     "test": "mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@deth/jsonrpc": "^0.1.0"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
