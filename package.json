@@ -1,0 +1,7 @@
+{
+  "name": "deth",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@deth/truffle",
+  "description": "A truffle provider for deth",
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "",
+    "build": "",
+    "test": ""
+  },
+  "dependencies": {
+    "@deth/jsonrpc": "0.1.0"
+  },
+  "devDependencies": {}
+}

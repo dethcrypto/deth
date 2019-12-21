@@ -1,0 +1,14 @@
+{
+  "name": "@deth/jsonrpc",
+  "description": "A jsonrpc interface for deth",
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "",
+    "build": "",
+    "test": ""
+  },
+  "dependencies": {
+    "@deth/evm": "0.1.0"
+  },
+  "devDependencies": {}
+}
