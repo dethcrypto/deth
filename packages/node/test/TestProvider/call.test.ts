@@ -18,7 +18,7 @@ describe('TestProvider.call', () => {
       from: wallet.address,
       to: contract.address,
       data: contract.interface.functions.value.encode([]),
-      gasLimit: 50_000
+      gasLimit: 50_000,
     })
     expect(value).to.equal('0x' + '00'.repeat(32))
   })

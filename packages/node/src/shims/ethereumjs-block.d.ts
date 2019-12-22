@@ -82,9 +82,9 @@ declare module 'ethereumjs-block' {
   }
 
   export interface BlockOpts {
-    chain?: string
-    hardfork?: string
-    common?: Common
+    chain?: string,
+    hardfork?: string,
+    common?: Common,
   }
 
   export default Block
