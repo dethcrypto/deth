@@ -138,7 +138,7 @@ export class TestVM {
         to,
         logsBloom: bufferToHex(result.bloom.bitvector),
         root: undefined, // TODO: this
-        status: 1 // TODO: this
+        status: 1, // TODO: this
       })
     }
   }

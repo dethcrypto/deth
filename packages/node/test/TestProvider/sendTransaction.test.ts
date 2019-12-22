@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { TestProvider } from '../../src/TestProvider'
-import { utils, ContractFactory } from 'ethers'
+import { utils, ContractFactory, providers } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 
 describe('TestProvider.sendTransaction', () => {
@@ -36,9 +36,10 @@ describe('TestProvider.sendTransaction', () => {
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
 
-    const response = await contract.increment(1)
+    const response: providers.TransactionResponse = await contract.increment(1)
     const receipt = await response.wait()
 
     expect(response).not.to.equal(undefined)
+    expect(receipt.status).to.equal(1)
   })
 })
