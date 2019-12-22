@@ -134,11 +134,19 @@ export class TestChain {
   }
 
   async getTransaction (transactionHash: Hash): Promise<TransactionResponse> {
-    throw new Error('(getTransaction) Not implemented!')
+    const transaction = await this.tvm.getTransaction(transactionHash)
+    if (!transaction) {
+      throw new Error('Not found')
+    }
+    return transaction
   }
 
   async getTransactionReceipt (transactionHash: Hash): Promise<TransactionReceiptResponse> {
-    throw new Error('(getTransactionReceipt) Not implemented!')
+    const transaction = await this.tvm.getTransactionReceipt(transactionHash)
+    if (!transaction) {
+      throw new Error('Not found')
+    }
+    return transaction
   }
 
   async getLogs (filter: FilterRequest): Promise<LogResponse[]> {

@@ -1,13 +1,23 @@
 import VM from 'ethereumjs-vm'
 import Blockchain from 'ethereumjs-blockchain'
 import Block, { BlockHeaderData } from 'ethereumjs-block'
-import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
+import { BN, toBuffer, bufferToHex, bufferToInt } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
 import Account from 'ethereumjs-account'
-import { Wallet } from 'ethers'
-import { Hash, HexString, Address } from './model'
+import { Wallet, utils } from 'ethers'
+import {
+  Hash,
+  HexString,
+  Address,
+  TransactionReceiptResponse,
+  TransactionResponse,
+  TransactionReceiptLogResponse,
+} from './model'
 import { TestChainOptions } from './TestChainOptions'
 import Common from 'ethereumjs-common'
+
+const CHAIN_ID = 1337
+const NETWORK_ID = 2137
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
@@ -16,6 +26,8 @@ import Common from 'ethereumjs-common'
 export class TestVM {
   private vm?: Promise<VM>
   pendingTransactions: Transaction[] = []
+  transactions: Map<Hash, TransactionResponse> = new Map()
+  receipts: Map<Hash, TransactionReceiptResponse> = new Map()
 
   constructor (private options: TestChainOptions) {
   }
@@ -47,11 +59,12 @@ export class TestVM {
   }
 
   async mineBlock () {
-    const block = await this.getNextBlock(this.pendingTransactions)
+    const transactions = this.pendingTransactions
     this.pendingTransactions = []
+    const block = await this.getNextBlock(transactions)
 
     const vm = await this.getVM()
-    await vm.runBlock({
+    const { results } = await vm.runBlock({
       block,
       generate: true,
       skipBlockValidation: true,
@@ -61,6 +74,81 @@ export class TestVM {
         err != null ? reject(err) : resolve(block),
       )
     })
+
+    this.rememberTransactions(block, transactions, results)
+  }
+
+  private rememberTransactions (
+    block: Block,
+    transactions: Transaction[],
+    results: any[],
+  ) {
+    const blockHash = bufferToHex(block.hash())
+    const blockNumber = bufferToInt(block.header.number)
+
+    let cumulativeGasUsed = utils.bigNumberify(0)
+
+    for (let i = 0; i < transactions.length; i++) {
+      const tx = transactions[i]
+      const result = results[i]
+      const hash = bufferToHex(tx.hash())
+
+      const from = bufferToHex(tx.getSenderAddress())
+      const to = tx.to.length > 0 ? bufferToHex(tx.to) : undefined
+
+      const createdAddress = result.createdAddress ? bufferToHex(result.createdAddress) : undefined
+
+      this.transactions.set(hash, {
+        data: bufferToHex(tx.data),
+        from,
+        gasLimit: utils.bigNumberify(bufferToInt(tx.gasLimit)),
+        gasPrice: utils.bigNumberify(bufferToInt(tx.gasPrice)),
+        hash,
+        nonce: bufferToInt(tx.nonce),
+        r: bufferToHex(tx.r),
+        s: bufferToHex(tx.s),
+        v: bufferToInt(tx.v),
+        value: utils.bigNumberify(bufferToHex(tx.value)),
+        blockHash,
+        blockNumber,
+        confirmations: undefined, // TODO: this
+        creates: createdAddress,
+        to,
+        transactionIndex: i,
+        networkId: NETWORK_ID,
+        raw: undefined, // TODO: this
+      })
+
+      const gasUsed = utils.bigNumberify(bufferToInt(result.gasUsed))
+      cumulativeGasUsed = cumulativeGasUsed.add(gasUsed)
+
+      const logs: TransactionReceiptLogResponse[] = [] // result.execResult.logs // TODO: correct format
+
+      this.receipts.set(hash, {
+        blockHash,
+        blockNumber,
+        cumulativeGasUsed,
+        gasUsed,
+        logs,
+        transactionHash: hash,
+        transactionIndex: i,
+        confirmations: undefined, // TODO: this
+        contractAddress: createdAddress,
+        from,
+        to,
+        logsBloom: bufferToHex(result.bloom.bitvector),
+        root: undefined, // TODO: this
+        status: 1, // TODO: this
+      })
+    }
+  }
+
+  async getTransaction (hash: Hash) {
+    return this.transactions.get(hash)
+  }
+
+  async getTransactionReceipt (hash: Hash) {
+    return this.receipts.get(hash)
   }
 
   private async getNextBlock (transactions: Transaction[]) {
@@ -143,8 +231,8 @@ export class TestVM {
 
 async function initializeVM (options: TestChainOptions) {
   const common = Common.forCustomChain('mainnet', {
-    chainId: 1337,
-    networkId: 2137,
+    chainId: CHAIN_ID,
+    networkId: NETWORK_ID,
     name: 'test-chain',
   }, options.hardfork)
   const blockchain = new Blockchain({ common, validate: false })
