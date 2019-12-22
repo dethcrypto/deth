@@ -6,6 +6,10 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "engines": {
+    "node": "^11.15.0",
+    "yarn": ">=1.15.2"
+  },
   "scripts": {
     "lint": "eslint --ext .ts src test",
     "prebuild": "rm -rf dist",

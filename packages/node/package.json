@@ -6,6 +6,10 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "engines": {
+    "node": "^11.15.0",
+    "yarn": ">=1.15.2"
+  },
   "scripts": {
     "lint": "eslint --ext .ts src test",
     "prebuild": "rm -rf dist",
@@ -14,9 +18,7 @@
     "build:cjs": "tsc -p tsconfig.build.json --outDir dist/cjs --declaration false",
     "test": "mocha"
   },
-  "dependencies": {
-    "@deth/jsonrpc": "^0.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",

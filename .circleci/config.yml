@@ -19,7 +19,7 @@ commands:
 jobs:
   lint:
     docker:
-      - image: circleci/node:12.14
+      - image: circleci/node:11.15
     steps:
       - checkout
       - install_dependencies
@@ -27,7 +27,7 @@ jobs:
 
   build_and_test:
     docker:
-      - image: circleci/node:12.14
+      - image: circleci/node:11.15
     steps:
       - checkout
       - install_dependencies
