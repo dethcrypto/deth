@@ -1,3 +1,11 @@
-export function add (a: number, b: number) {
-  return a + b
-}
+export { TestProvider } from './TestProvider'
+export { TestChain } from './TestChain'
+export { TestChainOptions } from './TestChainOptions'
+export {
+  TransactionRequest,
+  FilterRequest,
+  LogResponse,
+  TransactionResponse,
+  BlockResponse,
+  TransactionReceiptResponse,
+} from './model'
