@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { TestProvider } from '../../src/TestProvider'
 import { utils } from 'ethers'
 
-describe('TestProvider.getBalance', () => {
+describe('TestProvider.getBlock', () => {
   it('can return a zero balance', async () => {
     const provider = new TestProvider()
     const wallet = provider.createEmptyWallet()

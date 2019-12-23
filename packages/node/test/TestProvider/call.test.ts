@@ -24,4 +24,12 @@ describe('TestProvider.call', () => {
   })
 
   xit('handles execution errors')
+
+  it('throws for blockTag !== latest', async () => {
+    const provider = new TestProvider()
+
+    await expect(
+      provider.call({}, 'pending'),
+    ).to.be.rejectedWith('Unsupported blockTag')
+  })
 })

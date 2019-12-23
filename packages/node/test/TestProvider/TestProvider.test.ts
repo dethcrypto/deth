@@ -1,13 +1,14 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { utils, Wallet } from 'ethers'
+import { TestProvider } from '../../src/TestProvider'
+import { CHAIN_NAME, CHAIN_ID } from '../../src/constants'
 
 describe('TestProvider', () => {
   it('sets the network correctly', async () => {
     const provider = new TestProvider()
     expect(await provider.getNetwork()).to.deep.equal({
-      name: 'test-chain',
-      chainId: 1337,
+      name: CHAIN_NAME,
+      chainId: CHAIN_ID,
     })
   })
 

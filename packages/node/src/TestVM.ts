@@ -15,9 +15,8 @@ import {
 } from './model'
 import { TestChainOptions } from './TestChainOptions'
 import Common from 'ethereumjs-common'
-
-const CHAIN_ID = 1337
-const NETWORK_ID = 2137
+import { NETWORK_ID, CHAIN_ID, CHAIN_NAME } from './constants'
+import { bufferToAddress, bufferToMaybeAddress } from './utils'
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
@@ -93,38 +92,36 @@ export class TestVM {
       const result = results[i]
       const hash = bufferToHex(tx.hash())
 
-      const from = bufferToHex(tx.getSenderAddress())
-      const to = tx.to.length > 0 ? bufferToHex(tx.to) : undefined
-
-      const createdAddress = result.createdAddress ? bufferToHex(result.createdAddress) : undefined
-
-      this.transactions.set(hash, {
-        data: bufferToHex(tx.data),
-        from,
-        gasLimit: utils.bigNumberify(bufferToInt(tx.gasLimit)),
-        gasPrice: utils.bigNumberify(bufferToInt(tx.gasPrice)),
-        hash,
-        nonce: bufferToInt(tx.nonce),
-        r: bufferToHex(tx.r),
-        s: bufferToHex(tx.s),
-        v: bufferToInt(tx.v),
-        value: utils.bigNumberify(bufferToHex(tx.value)),
-        blockHash,
-        blockNumber,
-        confirmations: undefined, // TODO: this
-        creates: createdAddress,
-        to,
-        transactionIndex: i,
-        networkId: NETWORK_ID,
-        raw: undefined, // TODO: this
-      })
+      const from = bufferToAddress(tx.getSenderAddress())
+      const to = bufferToMaybeAddress(tx.to)
+      const created = bufferToMaybeAddress(result.createdAddress)
 
       const gasUsed = utils.bigNumberify(bufferToInt(result.gasUsed))
       cumulativeGasUsed = cumulativeGasUsed.add(gasUsed)
 
-      const logs: TransactionReceiptLogResponse[] = [] // result.execResult.logs // TODO: correct format
+      const response: TransactionResponse = {
+        hash,
+        blockHash,
+        blockNumber,
+        transactionIndex: i,
+        from,
+        gasPrice: utils.bigNumberify(tx.gasPrice),
+        gasLimit: utils.bigNumberify(tx.gasLimit),
+        to,
+        value: utils.bigNumberify(tx.value),
+        nonce: bufferToInt(tx.nonce),
+        data: bufferToHex(tx.data),
+        r: bufferToHex(tx.r),
+        s: bufferToHex(tx.s),
+        v: bufferToInt(tx.v),
+        creates: created,
+        networkId: NETWORK_ID,
+      }
 
-      this.receipts.set(hash, {
+      // result.execResult.logs // TODO: correct format
+      const logs: TransactionReceiptLogResponse[] = []
+
+      const receipt: TransactionReceiptResponse = {
         blockHash,
         blockNumber,
         cumulativeGasUsed,
@@ -132,22 +129,24 @@ export class TestVM {
         logs,
         transactionHash: hash,
         transactionIndex: i,
-        confirmations: undefined, // TODO: this
-        contractAddress: createdAddress,
+        contractAddress: created,
         from,
         to,
         logsBloom: bufferToHex(result.bloom.bitvector),
         root: undefined, // TODO: this
         status: 1, // TODO: this
-      })
+      }
+
+      this.transactions.set(hash, response)
+      this.receipts.set(hash, receipt)
     }
   }
 
-  async getTransaction (hash: Hash) {
+  getTransaction (hash: Hash) {
     return this.transactions.get(hash)
   }
 
-  async getTransactionReceipt (hash: Hash) {
+  getTransactionReceipt (hash: Hash) {
     return this.receipts.get(hash)
   }
 
@@ -233,7 +232,7 @@ async function initializeVM (options: TestChainOptions) {
   const common = Common.forCustomChain('mainnet', {
     chainId: CHAIN_ID,
     networkId: NETWORK_ID,
-    name: 'test-chain',
+    name: CHAIN_NAME,
   }, options.hardfork)
   const blockchain = new Blockchain({ common, validate: false })
   const vm = new VM({ common, blockchain })

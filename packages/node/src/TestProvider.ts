@@ -1,10 +1,7 @@
 import { providers, Wallet } from 'ethers'
 import { TestChain } from './TestChain'
 import { TestChainOptions } from './TestChainOptions'
-
-// chainId of 1337 is the default for private networks as per EIP-155
-const CHAIN_ID = 1337
-const CHAIN_NAME = 'test-chain'
+import { CHAIN_NAME, CHAIN_ID } from './constants'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
