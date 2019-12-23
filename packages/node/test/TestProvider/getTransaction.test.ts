@@ -67,12 +67,14 @@ describe('getTransaction', () => {
       value,
     })
 
+    const block = await provider.getBlock('latest')
     await provider.mineBlock()
     await provider.mineBlock()
 
     const tx = await provider.getTransaction(response.hash!)
 
     expect(tx.confirmations).to.equal(3)
+    expect(tx.blockHash).to.equal(block.hash)
   })
 
   xit('throws on nonexistent transaction')
