@@ -29,7 +29,7 @@ describe('TestProvider.call', () => {
     const provider = new TestProvider()
 
     await expect(
-      provider.call({}, 'pending')
+      provider.call({}, 'pending'),
     ).to.be.rejectedWith('Unsupported blockTag')
   })
 })

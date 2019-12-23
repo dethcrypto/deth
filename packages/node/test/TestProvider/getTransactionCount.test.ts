@@ -36,7 +36,7 @@ describe('TestProvider.getTransactionCount', () => {
     const wallet = provider.createEmptyWallet()
 
     await expect(
-      provider.getTransactionCount(wallet.address, '0x1')
+      provider.getTransactionCount(wallet.address, '0x1'),
     ).to.be.rejectedWith('Unsupported blockTag')
   })
 })

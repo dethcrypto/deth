@@ -83,7 +83,7 @@ describe('TestProvider.getTransaction', () => {
     const hash = randomHash()
 
     await expect(
-      provider.getTransaction(hash)
+      provider.getTransaction(hash),
     ).to.be.rejectedWith('not found')
   })
 })

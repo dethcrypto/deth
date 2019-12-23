@@ -28,7 +28,7 @@ describe('TestProvider.getCode', () => {
     const wallet = provider.createEmptyWallet()
 
     await expect(
-      provider.getCode(wallet.address, 'pending')
+      provider.getCode(wallet.address, 'pending'),
     ).to.be.rejectedWith('Unsupported blockTag')
   })
 })
