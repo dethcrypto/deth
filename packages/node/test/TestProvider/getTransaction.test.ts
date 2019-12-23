@@ -1,6 +1,7 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { utils } from 'ethers'
+import { TestProvider } from '../../src/TestProvider'
+import { NETWORK_ID } from '../../src/constants'
 
 describe('getTransaction', () => {
   it('can return a mined transaction', async () => {
@@ -35,7 +36,7 @@ describe('getTransaction', () => {
       v: response.v,
       raw: tx.raw,
       creates: null,
-      networkId: 2137,
+      networkId: NETWORK_ID,
       wait: tx.wait,
     })
   })
