@@ -1,7 +1,8 @@
 import { expect } from 'chai'
-import { utils } from 'ethers'
+import { utils, ContractFactory } from 'ethers'
 import { TestProvider } from '../../src/TestProvider'
 import { NETWORK_ID } from '../../src/constants'
+import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 
 describe('getTransaction', () => {
   it('can return a mined transaction', async () => {
@@ -41,7 +42,38 @@ describe('getTransaction', () => {
     })
   })
 
-  xit('can return a contract creation')
-  xit('can return an old transaction')
+  it('can return a contract creation', async () => {
+    const provider = new TestProvider()
+    const [wallet] = provider.getWallets()
+
+    const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
+    const contract = await factory.deploy(0)
+
+    const deployTransaction = contract.deployTransaction
+    const tx = await provider.getTransaction(deployTransaction.hash!)
+
+    expect(tx.to).to.equal(null)
+    // For whatever reason ethers types lie about this!
+    expect((tx as any).creates).to.equal(contract.address)
+  })
+
+  it('can return an old transaction', async () => {
+    const provider = new TestProvider()
+    const [sender, recipient] = provider.getWallets()
+
+    const value = utils.parseEther('3.1415')
+    const response = await sender.sendTransaction({
+      to: recipient.address,
+      value,
+    })
+
+    await provider.mineBlock()
+    await provider.mineBlock()
+
+    const tx = await provider.getTransaction(response.hash!)
+
+    expect(tx.confirmations).to.equal(3)
+  })
+
   xit('throws on nonexistent transaction')
 })
