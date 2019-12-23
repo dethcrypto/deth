@@ -50,5 +50,12 @@ describe('TestProvider.getBalance', () => {
     expect(balance.eq(0)).to.equal(true)
   })
 
-  xit('query by blockTag !== latest')
+  it('throws for blockTag !== latest', async () => {
+    const provider = new TestProvider()
+    const wallet = provider.createEmptyWallet()
+
+    await expect(
+      provider.getBalance(wallet.address, 'pending')
+    ).to.be.rejectedWith('Unsupported blockTag')
+  })
 })

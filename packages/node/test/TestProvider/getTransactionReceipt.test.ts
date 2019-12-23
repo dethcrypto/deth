@@ -1,3 +1,3 @@
-describe('getTransactionReceipt', () => {
+describe('TestProvider.getTransactionReceipt', () => {
   xit('works')
 })

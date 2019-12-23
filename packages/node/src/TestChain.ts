@@ -17,6 +17,11 @@ import {
 import { TestVM } from './TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import { bufferToAddress } from './utils'
+import {
+  transactionNotFound,
+  unsupportedBlockTag,
+  unsupportedOperation,
+} from './errors'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -45,16 +50,16 @@ export class TestChain {
     return bufferToInt(block.header.number)
   }
 
-  async getGasPrice (): Promise<utils.BigNumber> {
+  getGasPrice (): utils.BigNumber {
     return this.options.defaultGasPrice
   }
 
   async getBalance (address: Address, blockTag: BlockTag): Promise<utils.BigNumber> {
     if (blockTag !== 'latest') {
-      throw new Error(`getBalance: Unsupported blockTag "${blockTag}". Use "latest".`)
+      throw unsupportedBlockTag('getBalance', blockTag, ['latest'])
     }
-    const { balance } = await this.tvm.getAccount(address)
-    return utils.bigNumberify(balance)
+    const account = await this.tvm.getAccount(address)
+    return utils.bigNumberify(account.balance)
   }
 
   async getTransactionCount (address: Address, blockTag: BlockTag): Promise<number> {
@@ -63,13 +68,13 @@ export class TestChain {
     } else if (blockTag === 'pending') {
       return this.getPendingTransactionCount(address)
     } else {
-      throw new Error(`getTransactionCount: Unsupported blockTag "${blockTag}". Use "latest" or "pending".`)
+      throw unsupportedBlockTag('getTransactionCount', blockTag, ['latest', 'pending'])
     }
   }
 
   private async getLatestTransactionCount (address: Address): Promise<number> {
-    const { nonce } = await this.tvm.getAccount(address)
-    return bufferToInt(nonce)
+    const account = await this.tvm.getAccount(address)
+    return bufferToInt(account.nonce)
   }
 
   private async getPendingTransactionCount (address: Address): Promise<number> {
@@ -82,13 +87,13 @@ export class TestChain {
 
   async getCode (address: Address, blockTag: BlockTag): Promise<HexString> {
     if (blockTag !== 'latest') {
-      throw new Error(`getCode: Unsupported blockTag "${blockTag}". Use "latest".`)
+      throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
     return this.tvm.getCode(address)
   }
 
   async getStorageAt (address: Address, position: HexString, blockTag: BlockTag): Promise<HexString> {
-    throw new Error('(getStorageAt) Not implemented!')
+    throw unsupportedOperation('getStorageAt')
   }
 
   async sendTransaction (signedTransaction: HexString): Promise<Hash> {
@@ -99,10 +104,11 @@ export class TestChain {
 
   async call (transactionRequest: TransactionRequest, blockTag: BlockTag): Promise<HexString> {
     if (blockTag !== 'latest') {
-      throw new Error(`call: Unsupported blockTag "${blockTag}". Use "latest".`)
+      throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
     const tx = toFakeTransaction(transactionRequest)
     const result = await this.tvm.runIsolatedTransaction(tx)
+    // TODO: handle errors
     return utils.hexlify(result.execResult.returnValue)
   }
 
@@ -112,12 +118,13 @@ export class TestChain {
     }
     const tx = toFakeTransaction(transactionRequest)
     const result = await this.tvm.runIsolatedTransaction(tx)
+    // TODO: handle errors
     return utils.bigNumberify(result.gasUsed.toString())
   }
 
   async getBlock (blockTagOrHash: BlockTag | Hash, includeTransactions: boolean): Promise<BlockResponse> {
     if (blockTagOrHash === 'pending') {
-      throw new Error('getBlock: Unsupported blockTag "pending".')
+      throw unsupportedBlockTag('call', blockTagOrHash)
     }
 
     const block = blockTagOrHash === 'latest'
@@ -135,20 +142,20 @@ export class TestChain {
   getTransaction (transactionHash: Hash): TransactionResponse {
     const transaction = this.tvm.getTransaction(transactionHash)
     if (!transaction) {
-      throw new Error('Not found')
+      throw transactionNotFound(transactionHash)
     }
     return transaction
   }
 
-  async getTransactionReceipt (transactionHash: Hash): Promise<TransactionReceiptResponse> {
-    const transaction = await this.tvm.getTransactionReceipt(transactionHash)
+  getTransactionReceipt (transactionHash: Hash): TransactionReceiptResponse {
+    const transaction = this.tvm.getTransactionReceipt(transactionHash)
     if (!transaction) {
-      throw new Error('Not found')
+      throw transactionNotFound(transactionHash)
     }
     return transaction
   }
 
   async getLogs (filter: FilterRequest): Promise<LogResponse[]> {
-    throw new Error('(getLogs) Not implemented!')
+    throw unsupportedOperation('getLogs')
   }
 }

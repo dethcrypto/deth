@@ -1,3 +1,3 @@
-describe('getLogs', () => {
+describe('TestProvider.getLogs', () => {
   xit('works')
 })

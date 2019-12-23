@@ -30,5 +30,13 @@ describe('TestProvider.getTransactionCount', () => {
   })
 
   xit('query pending')
-  xit('query by blockTag')
+
+  it('throws for blockTag !== latest or pending', async () => {
+    const provider = new TestProvider()
+    const wallet = provider.createEmptyWallet()
+
+    await expect(
+      provider.getTransactionCount(wallet.address, '0x1')
+    ).to.be.rejectedWith('Unsupported blockTag')
+  })
 })

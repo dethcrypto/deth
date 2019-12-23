@@ -23,5 +23,12 @@ describe('TestProvider.getCode', () => {
     expect(code).to.equal(COUNTER_RUNTIME)
   })
 
-  xit('query by blockTag !== latest')
+  it('throws for blockTag !== latest', async () => {
+    const provider = new TestProvider()
+    const wallet = provider.createEmptyWallet()
+
+    await expect(
+      provider.getCode(wallet.address, 'pending')
+    ).to.be.rejectedWith('Unsupported blockTag')
+  })
 })

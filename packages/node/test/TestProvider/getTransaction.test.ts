@@ -3,8 +3,9 @@ import { utils, ContractFactory } from 'ethers'
 import { TestProvider } from '../../src/TestProvider'
 import { NETWORK_ID } from '../../src/constants'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { randomHash } from '../testutils'
 
-describe('getTransaction', () => {
+describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
     const provider = new TestProvider()
     const [sender, recipient] = provider.getWallets()
@@ -77,5 +78,12 @@ describe('getTransaction', () => {
     expect(tx.blockHash).to.equal(block.hash)
   })
 
-  xit('throws on nonexistent transaction')
+  it('throws on nonexistent transaction', async () => {
+    const provider = new TestProvider()
+    const hash = randomHash()
+
+    await expect(
+      provider.getTransaction(hash)
+    ).to.be.rejectedWith('not found')
+  })
 })
