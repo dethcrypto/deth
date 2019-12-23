@@ -106,10 +106,13 @@ export class TestChain {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
-    const tx = toFakeTransaction(transactionRequest)
+    const tx = toFakeTransaction({
+      ...transactionRequest,
+      gasLimit: this.options.blockGasLimit,
+    })
     const result = await this.tvm.runIsolatedTransaction(tx)
     // TODO: handle errors
-    return utils.hexlify(result.execResult.returnValue)
+    return bufferToHex(result.execResult.returnValue)
   }
 
   async estimateGas (transactionRequest: TransactionRequest): Promise<utils.BigNumber> {
