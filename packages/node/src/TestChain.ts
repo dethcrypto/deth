@@ -1,4 +1,4 @@
-import { bufferToInt } from 'ethereumjs-util'
+import { bufferToInt, bufferToHex } from 'ethereumjs-util'
 import { utils, Wallet, providers } from 'ethers'
 import {
   Address,
@@ -13,7 +13,6 @@ import {
   TransactionReceiptResponse,
   toFakeTransaction,
   toBlockResponse,
-  toTransactionResponse,
 } from './model'
 import { TestVM } from './TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
@@ -128,13 +127,13 @@ export class TestChain {
     const response = toBlockResponse(block)
     if (includeTransactions) {
       response.transactions = block.transactions
-        .map(tx => toTransactionResponse(tx, block))
+        .map(tx => this.getTransaction(bufferToHex(tx.hash())))
     }
     return response
   }
 
-  async getTransaction (transactionHash: Hash): Promise<TransactionResponse> {
-    const transaction = await this.tvm.getTransaction(transactionHash)
+  getTransaction (transactionHash: Hash): TransactionResponse {
+    const transaction = this.tvm.getTransaction(transactionHash)
     if (!transaction) {
       throw new Error('Not found')
     }
