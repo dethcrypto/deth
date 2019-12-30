@@ -5,6 +5,7 @@ import { Left } from 'fp-ts/lib/Either'
 
 // @todo proper error handling
 // classes for http errors
+// respect JSON-RPC envelope
 export const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
   if (err instanceof IOTSError) {
     res.status(400)
