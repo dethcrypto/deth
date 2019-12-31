@@ -19,7 +19,7 @@ export class TestProvider extends providers.BaseProvider {
 
   getWallets () {
     return this.chain.options.privateKeys.map(
-      key => new Wallet(key, this)
+      key => new Wallet(key, this),
     )
   }
 
@@ -67,7 +67,7 @@ export class TestProvider extends providers.BaseProvider {
 }
 
 function toRpcTransactionRequest (transaction: providers.TransactionRequest): RpcTransactionRequest {
-  let result: RpcTransactionRequest = {};
+  const result: RpcTransactionRequest = {}
 
   if (transaction.gasLimit) {
     result.gas = toQuantity(transaction.gasLimit)
@@ -90,7 +90,7 @@ function toRpcTransactionRequest (transaction: providers.TransactionRequest): Rp
   if (transaction.data) {
     result.data = toHexData(transaction.data)
   }
-  return result;
+  return result
 }
 
 const toQuantity = (value: any) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))

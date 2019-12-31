@@ -1,6 +1,6 @@
-import { Hardfork } from "./model";
-import { utils } from "ethers";
-import { TestChainOptions, getOptionsWithDefaults } from "./TestChainOptions";
+import { Hardfork } from './model'
+import { utils } from 'ethers'
+import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import BN from 'bn.js'
 
 export interface TestProviderOptions {

@@ -38,7 +38,7 @@ import {
  */
 export class TestChain {
   private tvm: TestVM
-  public options: TestChainOptions
+  options: TestChainOptions
 
   constructor (options?: Partial<TestChainOptions>) {
     this.options = getOptionsWithDefaults(options)
