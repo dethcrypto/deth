@@ -1,61 +1,68 @@
-/* eslint-disable max-len */
 import {
   Address,
-  HexString,
   Hash,
   Quantity,
-  bufferToAddress,
-  bufferToHexString,
   bufferToHash,
+  HexData,
   bufferToQuantity,
+  numberToQuantity,
+  bufferToHexData,
+  bufferToAddress,
 } from '../primitives'
 import { RpcTransactionResponse } from './RpcTransactionResponse'
 import Block from 'ethereumjs-block'
 
-export type BlockResponse = BlockResponseWithTxHashes | BlockResponseWithTxResponses
-
-// https://github.com/ethers-io/ethers.js/blob/4ac08432b8e2c7c374dc4a0e141a39a369e2d430/src.ts/providers/base-provider.ts#L259
-export interface BlockResponseWithTxHashes {
+interface RpcBlockResponseBase {
+  number: Quantity,
   hash: Hash,
   parentHash: Hash,
-  number: Quantity,
-  timestamp: Quantity,
-  nonce?: HexString,
+  nonce: HexData,
+  sha3Uncles: Hash,
+  logsBloom: HexData,
+  transactionsRoot: Hash,
+  stateRoot: Hash,
+  receiptsRoot: Hash,
+  miner: Address,
   difficulty: Quantity,
+  totalDifficulty: Quantity,
+  extraData: HexData,
+  size: Quantity,
   gasLimit: Quantity,
   gasUsed: Quantity,
-  miner: Address,
-  extraData: HexString,
+  timestamp: Quantity,
+  uncles: Hash[],
+}
+
+export interface RpcBlockResponse extends RpcBlockResponseBase {
   transactions: Hash[],
 }
 
-// https://github.com/ethers-io/ethers.js/blob/4ac08432b8e2c7c374dc4a0e141a39a369e2d430/src.ts/providers/base-provider.ts#L277
-export interface BlockResponseWithTxResponses {
-  hash: Hash,
-  parentHash: Hash,
-  number: Quantity,
-  timestamp: Quantity,
-  nonce?: HexString,
-  difficulty: Quantity,
-  gasLimit: Quantity,
-  gasUsed: Quantity,
-  miner: Address,
-  extraData: HexString,
+export interface RpcRichBlockResponse extends RpcBlockResponseBase {
   transactions: RpcTransactionResponse[],
 }
 
-export function toBlockResponse (block: Block): BlockResponse {
+export function toBlockResponse (block: Block): RpcBlockResponse {
   return {
+    number: bufferToQuantity(block.header.number),
+    hash: bufferToHash(block.hash()),
+    parentHash: bufferToHash(block.header.parentHash), // common.hash
+    nonce: bufferToHexData(block.header.nonce),
+    sha3Uncles: bufferToHash(block.header.uncleHash),
+    logsBloom: bufferToHexData(block.header.bloom),
+    transactionsRoot: bufferToHash(block.header.transactionsTrie),
+    stateRoot: bufferToHash(block.header.stateRoot),
+    receiptsRoot: bufferToHash(block.header.receiptTrie),
+    miner: bufferToAddress(block.header.coinbase),
     difficulty: bufferToQuantity(block.header.difficulty),
-    extraData: bufferToHexString(block.header.extraData),
+    // Taken from ganache-core LOL TODO: Do something better here
+    totalDifficulty: bufferToQuantity(block.header.difficulty),
+    extraData: bufferToHexData(block.header.extraData),
+    // Taken from ganache-core LOL TODO: Do something better here
+    size: numberToQuantity(1000),
     gasLimit: bufferToQuantity(block.header.gasLimit),
     gasUsed: bufferToQuantity(block.header.gasUsed),
-    hash: bufferToHash(block.hash()),
-    miner: bufferToAddress(block.header.coinbase),
-    nonce: bufferToHexString(block.header.nonce),
-    number: bufferToQuantity(block.header.number),
-    parentHash: bufferToHash(block.header.parentHash),
     timestamp: bufferToQuantity(block.header.timestamp),
-    transactions: block.transactions.map(x => bufferToHash(x.hash())),
+    transactions: block.transactions.map(tx => bufferToHash(tx.hash())),
+    uncles: [],
   }
 }

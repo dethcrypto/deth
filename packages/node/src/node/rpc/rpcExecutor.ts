@@ -12,8 +12,8 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
 
     // eth
     eth_gasPrice: () => utils.bigNumberify(ctx.chain.getGasPrice()),
-    eth_getBalance: ([address, _blockOrTag]) => {
-      return ctx.chain.getBalance(bufferToAddress(address), 'latest')
+    eth_getBalance: async ([address, _blockOrTag]) => {
+      return utils.bigNumberify(await ctx.chain.getBalance(bufferToAddress(address), 'latest'))
     },
     eth_blockNumber: async () => {
       const blockNumber = await ctx.chain.getBlockNumber()

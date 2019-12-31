@@ -1,11 +1,4 @@
 export { TestProvider } from './TestProvider'
+export { TestProviderOptions } from './TestProviderOptions'
 export { TestChain } from './TestChain'
 export { TestChainOptions } from './TestChainOptions'
-export {
-  RpcTransactionRequest,
-  FilterRequest,
-  RpcTransactionResponse,
-  BlockResponse,
-  RpcTransactionReceipt,
-  RpcLogObject,
-} from './model'
