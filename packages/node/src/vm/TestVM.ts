@@ -1,10 +1,8 @@
 import VM from 'ethereumjs-vm'
-import Blockchain from 'ethereumjs-blockchain'
-import Block, { BlockHeaderData } from 'ethereumjs-block'
+import Block from 'ethereumjs-block'
 import { BN, toBuffer, bufferToHex, bufferToInt } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import Account from 'ethereumjs-account'
-import { Wallet, utils } from 'ethers'
+import { utils } from 'ethers'
 import {
   Hash,
   HexString,
@@ -14,9 +12,11 @@ import {
   TransactionReceiptLogResponse,
 } from '../model'
 import { TestChainOptions } from '../TestChainOptions'
-import Common from 'ethereumjs-common'
-import { NETWORK_ID, CHAIN_ID, CHAIN_NAME } from '../constants'
+import { NETWORK_ID } from '../constants'
 import { bufferToAddress, bufferToMaybeAddress, bufferToHexString, bufferToHash } from '../utils'
+import { initializeVM } from './initializeVM'
+import { getLatestBlock } from './getLatestBlock'
+import { getNextBlock } from './getNextBlock'
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
@@ -36,23 +36,14 @@ export class TestVM {
     return this.vm
   }
 
-  async getCommon () {
-    const vm = await this.getVM()
-    return vm._common
-  }
-
   async getLatestBlock (): Promise<Block> {
     const vm = await this.getVM()
-    return new Promise((resolve, reject) => {
-      vm.blockchain.getLatestBlock((err: unknown, block: Block) => {
-        if (err) reject(err)
-        resolve(block)
-      })
-    })
+    return getLatestBlock(vm)
   }
 
   async addPendingTransaction (signedTransaction: HexString): Promise<Hash> {
-    const transaction = new Transaction(signedTransaction, { common: await this.getCommon() })
+    const vm = await this.getVM()
+    const transaction = new Transaction(signedTransaction, { common: vm._common })
     this.pendingTransactions.push(transaction)
     return bufferToHash(transaction.hash())
   }
@@ -60,9 +51,9 @@ export class TestVM {
   async mineBlock () {
     const transactions = this.pendingTransactions
     this.pendingTransactions = []
-    const block = await this.getNextBlock(transactions)
-
     const vm = await this.getVM()
+    const block = await getNextBlock(vm, transactions, this.options)
+
     const { results } = await vm.runBlock({
       block,
       generate: true,
@@ -150,38 +141,6 @@ export class TestVM {
     return this.receipts.get(hash)
   }
 
-  private async getNextBlock (transactions: Transaction[]) {
-    const block = await this.getEmptyNextBlock()
-    await this.addTransactionsToBlock(block, transactions)
-    return block
-  }
-
-  private async getEmptyNextBlock (): Promise<Block> {
-    const latestBlock = await this.getLatestBlock()
-
-    const header: BlockHeaderData = {
-      gasLimit: this.options.blockGasLimit.toHexString(),
-      nonce: 42,
-      timestamp: Math.floor(Date.now() / 1000),
-      number: new BN(latestBlock.header.number).addn(1),
-      parentHash: latestBlock.hash(),
-      coinbase: this.options.coinbaseAddress,
-    }
-    const block = new Block({ header }, { common: await this.getCommon() })
-    block.validate = (blockchain, cb) => cb(null)
-    block.header.difficulty = toBuffer(block.header.canonicalDifficulty(latestBlock))
-
-    return block
-  }
-
-  private async addTransactionsToBlock (block: Block, transactions: Transaction[]) {
-    block.transactions.push(...transactions)
-    await new Promise((resolve, reject) => {
-      block.genTxTrie(err => err != null ? reject(err) : resolve())
-    })
-    block.header.transactionsTrie = block.txTrie.root
-  }
-
   async getAccount (address: Address) {
     const vm = await this.getVM()
     const psm = vm.pStateManager
@@ -202,7 +161,7 @@ export class TestVM {
     const initialStateRoot = await psm.getStateRoot()
 
     try {
-      const block = await this.getNextBlock([transaction])
+      const block = await getNextBlock(vm, [transaction], this.options)
       const result = await vm.runTx({
         block,
         tx: transaction,
@@ -228,46 +187,3 @@ export class TestVM {
   }
 }
 
-async function initializeVM (options: TestChainOptions) {
-  const common = Common.forCustomChain('mainnet', {
-    chainId: CHAIN_ID,
-    networkId: NETWORK_ID,
-    name: CHAIN_NAME,
-  }, options.hardfork)
-  const blockchain = new Blockchain({ common, validate: false })
-  const vm = new VM({ common, blockchain })
-  await initAccounts(vm, options)
-  await addGenesisBlock(vm, options)
-  return vm
-}
-
-async function initAccounts (vm: VM, options: TestChainOptions) {
-  const psm = vm.pStateManager
-  const balance = new BN(options.initialBalance.toString()).toBuffer()
-  for (const privateKey of options.privateKeys) {
-    const { address } = new Wallet(privateKey)
-    await psm.putAccount(toBuffer(address), new Account({ balance }))
-  }
-}
-
-async function addGenesisBlock (vm: VM, options: TestChainOptions) {
-  const genesisBlock = new Block({
-    header: {
-      bloom: '0x' + '0'.repeat(512),
-      coinbase: options.coinbaseAddress,
-      gasLimit: options.blockGasLimit.toHexString(),
-      gasUsed: '0x00',
-      nonce: 0x42,
-      extraData: '0x1337',
-      number: 0,
-      parentHash: '0x' + '0'.repeat(64),
-      timestamp: 0,
-    },
-  }, { common: vm._common })
-
-  await new Promise((resolve, reject) => {
-    vm.blockchain.putGenesis(genesisBlock, (err: unknown) =>
-      err != null ? reject(err) : resolve(),
-    )
-  })
-}
