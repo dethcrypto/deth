@@ -9,7 +9,7 @@ import {
   bufferToHash,
   bufferToQuantity,
 } from '../primitives'
-import { TransactionResponse } from './TransactionResponse'
+import { RpcTransactionResponse } from './RpcTransactionResponse'
 import Block from 'ethereumjs-block'
 
 export type BlockResponse = BlockResponseWithTxHashes | BlockResponseWithTxResponses
@@ -41,7 +41,7 @@ export interface BlockResponseWithTxResponses {
   gasUsed: Quantity,
   miner: Address,
   extraData: HexString,
-  transactions: TransactionResponse[],
+  transactions: RpcTransactionResponse[],
 }
 
 export function toBlockResponse (block: Block): BlockResponse {

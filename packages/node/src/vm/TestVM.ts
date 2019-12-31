@@ -2,7 +2,7 @@ import VM from 'ethereumjs-vm'
 import Block from 'ethereumjs-block'
 import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import { TransactionReceiptResponse, TransactionResponse } from '../model'
+import { RpcTransactionReceipt, RpcTransactionResponse } from '../model'
 import { TestChainOptions } from '../TestChainOptions'
 import { Hash, HexString, Address, bufferToHash } from '../primitives'
 import { initializeVM } from './initializeVM'
@@ -17,8 +17,8 @@ import { runIsolatedTransaction } from './runIsolatedTransaction'
 export class TestVM {
   private vm?: Promise<VM>
   pendingTransactions: Transaction[] = []
-  transactions: Map<Hash, TransactionResponse> = new Map()
-  receipts: Map<Hash, TransactionReceiptResponse> = new Map()
+  transactions: Map<Hash, RpcTransactionResponse> = new Map()
+  receipts: Map<Hash, RpcTransactionReceipt> = new Map()
 
   constructor (private options: TestChainOptions) {
   }

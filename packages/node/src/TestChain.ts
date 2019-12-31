@@ -14,10 +14,10 @@ import {
   Tag,
   TransactionRequest,
   FilterRequest,
-  LogResponse,
-  TransactionResponse,
+  RpcLogObject,
+  RpcTransactionResponse,
   BlockResponse,
-  TransactionReceiptResponse,
+  RpcTransactionReceipt,
   toFakeTransaction,
   toBlockResponse,
 } from './model'
@@ -148,7 +148,7 @@ export class TestChain {
     return response
   }
 
-  getTransaction(transactionHash: Hash): TransactionResponse {
+  getTransaction(transactionHash: Hash): RpcTransactionResponse {
     const transaction = this.tvm.getTransaction(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
@@ -156,7 +156,7 @@ export class TestChain {
     return transaction
   }
 
-  getTransactionReceipt(transactionHash: Hash): TransactionReceiptResponse {
+  getTransactionReceipt(transactionHash: Hash): RpcTransactionReceipt {
     const transaction = this.tvm.getTransactionReceipt(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
@@ -164,7 +164,7 @@ export class TestChain {
     return transaction
   }
 
-  async getLogs(filter: FilterRequest): Promise<LogResponse[]> {
+  async getLogs(filter: FilterRequest): Promise<RpcLogObject[]> {
     throw unsupportedOperation('getLogs')
   }
 }

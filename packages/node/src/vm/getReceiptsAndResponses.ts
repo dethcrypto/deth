@@ -4,18 +4,17 @@ import {
   bufferToHash,
   bufferToAddress,
   bufferToMaybeAddress,
-  bufferToHexString,
   bufferToQuantity,
   bnToQuantity,
   numberToQuantity,
+  bufferToHexData,
 } from '../primitives'
 import BN from 'bn.js'
 import {
-  TransactionResponse,
-  TransactionReceiptLogResponse,
-  TransactionReceiptResponse,
+  RpcTransactionResponse,
+  RpcLogObject,
+  RpcTransactionReceipt,
 } from '../model'
-import { NETWORK_ID } from '../constants'
 
 export function getReceiptsAndResponses (
   block: Block,
@@ -27,8 +26,8 @@ export function getReceiptsAndResponses (
 
   let cumulativeGasUsed = new BN(0)
 
-  const responses: TransactionResponse[] = []
-  const receipts: TransactionReceiptResponse[] = []
+  const responses: RpcTransactionResponse[] = []
+  const receipts: RpcTransactionReceipt[] = []
 
   for (let i = 0; i < transactions.length; i++) {
     const tx = transactions[i]
@@ -36,7 +35,7 @@ export function getReceiptsAndResponses (
     const hash = bufferToHash(tx.hash())
 
     const from = bufferToAddress(tx.getSenderAddress())
-    const to = bufferToMaybeAddress(tx.to)
+    const to = bufferToMaybeAddress(tx.to) ?? null
     const created = bufferToMaybeAddress(result.createdAddress)
 
     const gasUsed = new BN(result.gasUsed)
@@ -51,20 +50,18 @@ export function getReceiptsAndResponses (
       transactionIndex,
       from,
       gasPrice: bufferToQuantity(tx.gasPrice),
-      gasLimit: bufferToQuantity(tx.gasLimit),
+      gas: bufferToQuantity(tx.gasLimit),
       to,
       value: bufferToQuantity(tx.value),
       nonce: bufferToQuantity(tx.nonce),
-      data: bufferToHexString(tx.data),
-      r: bufferToHexString(tx.r),
-      s: bufferToHexString(tx.s),
-      v: bufferToHexString(tx.v),
-      creates: created,
-      networkId: NETWORK_ID,
+      input: bufferToHexData(tx.data),
+      r: bufferToQuantity(tx.r),
+      s: bufferToQuantity(tx.s),
+      v: bufferToQuantity(tx.v),
     })
 
     // result.execResult.logs // TODO: correct format
-    const logs: TransactionReceiptLogResponse[] = []
+    const logs: RpcLogObject[] = []
 
     receipts.push({
       blockHash,
@@ -74,11 +71,10 @@ export function getReceiptsAndResponses (
       logs,
       transactionHash: hash,
       transactionIndex,
-      contractAddress: created,
+      contractAddress: created ?? null,
       from,
       to,
-      logsBloom: bufferToHexString(result.bloom.bitvector),
-      root: undefined, // TODO: this
+      logsBloom: bufferToHexData(result.bloom.bitvector),
       status: numberToQuantity(1), // TODO: this
     })
   }

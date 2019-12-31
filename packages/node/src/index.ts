@@ -4,8 +4,8 @@ export { TestChainOptions } from './TestChainOptions'
 export {
   TransactionRequest,
   FilterRequest,
-  LogResponse,
-  TransactionResponse,
+  RpcTransactionResponse,
   BlockResponse,
-  TransactionReceiptResponse,
+  RpcTransactionReceipt,
+  RpcLogObject,
 } from './model'

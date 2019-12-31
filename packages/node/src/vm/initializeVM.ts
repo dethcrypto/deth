@@ -6,13 +6,13 @@ import { toBuffer } from 'ethereumjs-util'
 import { Wallet } from 'ethers'
 import BN from 'bn.js'
 import { TestChainOptions } from '../TestChainOptions'
-import { CHAIN_ID, NETWORK_ID, CHAIN_NAME } from '../constants'
+import { CHAIN_ID, CHAIN_NAME } from '../constants'
 import { putGenesisBlock } from './putGenesisBlock'
 
 export async function initializeVM (options: TestChainOptions) {
   const common = Common.forCustomChain('mainnet', {
     chainId: CHAIN_ID,
-    networkId: NETWORK_ID,
+    networkId: CHAIN_ID,
     name: CHAIN_NAME,
   }, options.hardfork)
   const blockchain = new Blockchain({ common, validate: false })
