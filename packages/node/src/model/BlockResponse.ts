@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { utils } from 'ethers'
-import { Address, HexString, Hash } from './strings'
+import { Address, HexString, Hash } from './primitives'
 import { TransactionResponse } from './TransactionResponse'
 import Block from 'ethereumjs-block'
 import { bufferToInt } from 'ethereumjs-util'

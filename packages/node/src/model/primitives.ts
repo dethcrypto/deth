@@ -1,6 +1,7 @@
 import { Opaque } from 'ts-essentials'
 
 const HEX_REGEX = /^0x[\da-fA-F]*$/
+const HEX_NO_LEADING_ZERO_REGEX = /^0x[1-9a-fA-F][\da-fA-F]*$/
 
 /**
  * Ethereum hard fork name
@@ -61,3 +62,24 @@ export function makeHexString (value: string): HexString {
   }
   return value.toLowerCase() as HexString
 }
+
+/**
+ * A hexadecimal string representing a number.
+ * Always prefixed with 0x, always lowercase.
+ * Does not have leading zeroes, except when representing 0 - `"0x0"`.
+ */
+export type Quantity = Opaque<'Quantity', string>
+export function makeQuantity (value: string): Quantity {
+  if (value === '0x' || value === '0x0') {
+    return '0x0' as Quantity
+  }
+  if (!HEX_NO_LEADING_ZERO_REGEX.test(value)) {
+    throw new TypeError(`Value "${value}" is not a valid hex number.`)
+  }
+  return value.toLowerCase() as Quantity
+}
+
+/**
+ * Specifies the block to operate on.
+ */
+export type Tag = 'earliest' | 'latest' | 'pending'
