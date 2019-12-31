@@ -1,22 +1,20 @@
 import VM from 'ethereumjs-vm'
 import Block from 'ethereumjs-block'
-import { BN, toBuffer, bufferToHex, bufferToInt } from 'ethereumjs-util'
+import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import { utils } from 'ethers'
 import {
   Hash,
   HexString,
   Address,
   TransactionReceiptResponse,
   TransactionResponse,
-  TransactionReceiptLogResponse,
 } from '../model'
 import { TestChainOptions } from '../TestChainOptions'
-import { NETWORK_ID } from '../constants'
-import { bufferToAddress, bufferToMaybeAddress, bufferToHexString, bufferToHash } from '../utils'
+import { bufferToHash } from '../utils'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
-import { getNextBlock } from './getNextBlock'
+import { putBlock } from './putBlock'
+import { runIsolatedTransaction } from './runIsolatedTransaction'
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
@@ -51,85 +49,15 @@ export class TestVM {
   async mineBlock () {
     const transactions = this.pendingTransactions
     this.pendingTransactions = []
+
     const vm = await this.getVM()
-    const block = await getNextBlock(vm, transactions, this.options)
+    const { receipts, responses } = await putBlock(vm, transactions, this.options)
 
-    const { results } = await vm.runBlock({
-      block,
-      generate: true,
-      skipBlockValidation: true,
-    })
-    await new Promise((resolve, reject) => {
-      vm.blockchain.putBlock(block, (err: unknown, block: Block) =>
-        err != null ? reject(err) : resolve(block),
-      )
-    })
-
-    this.rememberTransactions(block, transactions, results)
-  }
-
-  private rememberTransactions (
-    block: Block,
-    transactions: Transaction[],
-    results: any[],
-  ) {
-    const blockHash = bufferToHash(block.hash())
-    const blockNumber = bufferToInt(block.header.number)
-
-    let cumulativeGasUsed = utils.bigNumberify(0)
-
-    for (let i = 0; i < transactions.length; i++) {
-      const tx = transactions[i]
-      const result = results[i]
-      const hash = bufferToHash(tx.hash())
-
-      const from = bufferToAddress(tx.getSenderAddress())
-      const to = bufferToMaybeAddress(tx.to)
-      const created = bufferToMaybeAddress(result.createdAddress)
-
-      const gasUsed = utils.bigNumberify(bufferToInt(result.gasUsed))
-      cumulativeGasUsed = cumulativeGasUsed.add(gasUsed)
-
-      const response: TransactionResponse = {
-        hash,
-        blockHash,
-        blockNumber,
-        transactionIndex: i,
-        from,
-        gasPrice: utils.bigNumberify(tx.gasPrice),
-        gasLimit: utils.bigNumberify(tx.gasLimit),
-        to,
-        value: utils.bigNumberify(tx.value),
-        nonce: bufferToInt(tx.nonce),
-        data: bufferToHexString(tx.data),
-        r: bufferToHexString(tx.r),
-        s: bufferToHexString(tx.s),
-        v: bufferToInt(tx.v),
-        creates: created,
-        networkId: NETWORK_ID,
-      }
-
-      // result.execResult.logs // TODO: correct format
-      const logs: TransactionReceiptLogResponse[] = []
-
-      const receipt: TransactionReceiptResponse = {
-        blockHash,
-        blockNumber,
-        cumulativeGasUsed,
-        gasUsed,
-        logs,
-        transactionHash: hash,
-        transactionIndex: i,
-        contractAddress: created,
-        from,
-        to,
-        logsBloom: bufferToHexString(result.bloom.bitvector),
-        root: undefined, // TODO: this
-        status: 1, // TODO: this
-      }
-
-      this.transactions.set(hash, response)
-      this.receipts.set(hash, receipt)
+    for (const receipt of receipts) {
+      this.receipts.set(receipt.transactionHash, receipt)
+    }
+    for (const response of responses) {
+      this.transactions.set(response.hash, response)
     }
   }
 
@@ -157,21 +85,7 @@ export class TestVM {
 
   async runIsolatedTransaction (transaction: Transaction) {
     const vm = await this.getVM()
-    const psm = vm.pStateManager
-    const initialStateRoot = await psm.getStateRoot()
-
-    try {
-      const block = await getNextBlock(vm, [transaction], this.options)
-      const result = await vm.runTx({
-        block,
-        tx: transaction,
-        skipNonce: true,
-        skipBalance: true,
-      })
-      return result
-    } finally {
-      await psm.setStateRoot(initialStateRoot)
-    }
+    return runIsolatedTransaction(vm, transaction, this.options)
   }
 
   async getBlock (hashOrNumber: string): Promise<Block> {
