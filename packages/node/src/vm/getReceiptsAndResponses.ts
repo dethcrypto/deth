@@ -19,7 +19,7 @@ import {
 export function getReceiptsAndResponses (
   block: Block,
   transactions: Transaction[],
-  results: any[],
+  results: any[], // eslint-disable-line @typescript-eslint/no-explicit-any
 ) {
   const blockHash = bufferToHash(block.hash())
   const blockNumber = bufferToQuantity(block.header.number)

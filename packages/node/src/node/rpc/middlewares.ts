@@ -3,6 +3,7 @@ import * as t from 'io-ts'
 import { isRight, isLeft } from 'fp-ts/lib/Either'
 import { responseOf } from '@restless/restless'
 import { IOTSError } from '../errorHandler'
+import { Request } from 'express'
 
 type RPCSchema = Dictionary<{ parameters: t.Type<any>, returns: t.Type<any> }>;
 type RPCExecutors = Dictionary<Function>;
@@ -26,7 +27,7 @@ export function sanitizeRPCEnvelope () {
 
 export function sanitizeRPC<T extends t.Any> (
   schema: RPCSchema,
-): (data: any, req: any) => t.OutputOf<T> {
+): (data: unknown, req: Request) => t.OutputOf<T> {
   return (_data, req) => {
     const m = req.body.method
     const rpcDescription = schema[m]

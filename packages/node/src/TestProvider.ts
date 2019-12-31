@@ -66,7 +66,10 @@ export class TestProvider extends providers.BaseProvider {
   }
 }
 
-function toRpcTransactionRequest (transaction: providers.TransactionRequest): RpcTransactionRequest {
+type WithoutPromises <T> = { [K in keyof T]: Exclude<T[K], Promise<unknown>> }
+type EthersTxRequest = WithoutPromises<providers.TransactionRequest>
+
+function toRpcTransactionRequest (transaction: EthersTxRequest): RpcTransactionRequest {
   const result: RpcTransactionRequest = {}
 
   if (transaction.gasLimit) {
@@ -93,6 +96,8 @@ function toRpcTransactionRequest (transaction: providers.TransactionRequest): Rp
   return result
 }
 
-const toQuantity = (value: any) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
-const toAddress = (value: any) => makeAddress(utils.hexlify(value))
-const toHexData = (value: any) => makeHexData(utils.hexlify(value))
+type Hexable = string | number | ArrayLike<number> | utils.Hexable
+
+const toQuantity = (value: Hexable) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
+const toAddress = (value: Hexable) => makeAddress(utils.hexlify(value))
+const toHexData = (value: Hexable) => makeHexData(utils.hexlify(value))

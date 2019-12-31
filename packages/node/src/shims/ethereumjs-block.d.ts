@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'ethereumjs-block' {
   import Blockchain from 'ethereumjs-blockchain'
   import Common from 'ethereumjs-common'
