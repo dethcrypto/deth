@@ -7,7 +7,7 @@ export async function putGenesisBlock (vm: VM, options: TestChainOptions) {
     header: {
       bloom: '0x' + '0'.repeat(512),
       coinbase: options.coinbaseAddress,
-      gasLimit: options.blockGasLimit.toHexString(),
+      gasLimit: options.blockGasLimit,
       gasUsed: '0x00',
       nonce: 0x42,
       extraData: '0x1337',

@@ -1,25 +1,26 @@
-import { providers, Wallet } from 'ethers'
+import { providers, Wallet, utils } from 'ethers'
 import { TestChain } from './TestChain'
-import { TestChainOptions } from './TestChainOptions'
 import { CHAIN_NAME, CHAIN_ID } from './constants'
+import { RpcTransactionRequest } from './model'
+import { makeQuantity, makeAddress, makeHexData } from './primitives'
+import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
 
-  constructor ()
-  constructor (chain: TestChain)
-  constructor (options: Partial<TestChainOptions>)
-  constructor (chainOrOptions?: TestChain | Partial<TestChainOptions>) {
+  constructor (chainOrOptions?: TestChain | TestProviderOptions) {
     super({ name: CHAIN_NAME, chainId: CHAIN_ID })
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
     } else {
-      this.chain = new TestChain(chainOrOptions)
+      this.chain = new TestChain(toTestChainOptions(chainOrOptions))
     }
   }
 
   getWallets () {
-    return this.chain.getWallets(this)
+    return this.chain.options.privateKeys.map(
+      key => new Wallet(key, this)
+    )
   }
 
   createEmptyWallet () {
@@ -48,9 +49,9 @@ export class TestProvider extends providers.BaseProvider {
       case 'sendTransaction':
         return this.chain.sendTransaction(params.signedTransaction)
       case 'call':
-        return this.chain.call(params.transaction, params.blockTag)
+        return this.chain.call(toRpcTransactionRequest(params.transaction), params.blockTag)
       case 'estimateGas':
-        return this.chain.estimateGas(params.transaction)
+        return this.chain.estimateGas(toRpcTransactionRequest(params.transaction))
       case 'getBlock':
         return this.chain.getBlock(params.blockTag ?? params.blockHash, params.includeTransactions)
       case 'getTransaction':
@@ -64,3 +65,34 @@ export class TestProvider extends providers.BaseProvider {
     }
   }
 }
+
+function toRpcTransactionRequest (transaction: providers.TransactionRequest): RpcTransactionRequest {
+  let result: RpcTransactionRequest = {};
+
+  if (transaction.gasLimit) {
+    result.gas = toQuantity(transaction.gasLimit)
+  }
+  if (transaction.gasPrice) {
+    result.gasPrice = toQuantity(transaction.gasPrice)
+  }
+  if (transaction.nonce) {
+    result.nonce = toQuantity(transaction.nonce)
+  }
+  if (transaction.value) {
+    result.value = toQuantity(transaction.value)
+  }
+  if (transaction.from) {
+    result.from = toAddress(transaction.from)
+  }
+  if (transaction.to) {
+    result.to = toAddress(transaction.to)
+  }
+  if (transaction.data) {
+    result.data = toHexData(transaction.data)
+  }
+  return result;
+}
+
+const toQuantity = (value: any) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
+const toAddress = (value: any) => makeAddress(utils.hexlify(value))
+const toHexData = (value: any) => makeHexData(utils.hexlify(value))

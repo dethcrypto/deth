@@ -20,7 +20,7 @@ async function getEmptyNextBlock (vm: VM, options: TestChainOptions) {
   const latestBlock = await getLatestBlock(vm)
 
   const header: BlockHeaderData = {
-    gasLimit: options.blockGasLimit.toHexString(),
+    gasLimit: options.blockGasLimit,
     nonce: 42,
     timestamp: Math.floor(Date.now() / 1000),
     number: new BN(latestBlock.header.number).addn(1),
