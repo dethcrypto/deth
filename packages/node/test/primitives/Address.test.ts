@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { makeAddress, bufferToMaybeAddress } from "../../src/primitives"
+import { makeAddress, bufferToMaybeAddress } from '../../src/primitives'
 
 describe('makeAddress', () => {
   it('accepts addresses and turns them to lowercase', () => {

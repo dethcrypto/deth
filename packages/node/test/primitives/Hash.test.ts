@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { makeHash } from "../../src/primitives"
+import { makeHash } from '../../src/primitives'
 
 describe('makeHash', () => {
   it('accepts hashes and turns them to lowercase', () => {

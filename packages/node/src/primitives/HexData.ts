@@ -1,6 +1,6 @@
-import { Opaque } from "ts-essentials"
-import { HEX_REGEX } from "./common"
-import { bufferToHex } from "ethereumjs-util"
+import { Opaque } from 'ts-essentials'
+import { HEX_REGEX } from './common'
+import { bufferToHex } from 'ethereumjs-util'
 
 /**
  * A hexadecimal string representing bytes of data.
