@@ -11,7 +11,9 @@
     "yarn": ">=1.15.2"
   },
   "scripts": {
+    "start": "ts-node ./src/node/runner.ts",
     "lint": "eslint --ext .ts src test",
+    "lint:fix": "eslint --ext .ts --fix src test",
     "prebuild": "rm -rf dist",
     "build": "yarn build:esm && yarn build:cjs",
     "build:esm": "tsc -p tsconfig.build.json --outDir dist/esm --module ES6",
@@ -19,6 +21,8 @@
     "test": "mocha"
   },
   "dependencies": {
+    "@restless/restless": "^0.4.2",
+    "@restless/sanitizers": "^0.2.3",
     "@types/lru-cache": "^5.1.0",
     "ethereumjs-account": "^3.0.0",
     "ethereumjs-block": "^2.2.1",
@@ -27,11 +31,16 @@
     "ethereumjs-tx": "^2.1.1",
     "ethereumjs-util": "^6.2.0",
     "ethereumjs-vm": "^4.1.1",
-    "ethers": "^4.0.0"
+    "ethers": "^4.0.0",
+    "express": "^4.17.1",
+    "fp-ts": "^2.3.1",
+    "io-ts": "^2.0.2",
+    "ts-essentials": "^4.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
+    "@types/express": "^4.17.2",
     "@types/mocha": "^5.2.7",
     "@types/sinon": "^7.5.1",
     "@types/sinon-chai": "^3.2.3",
@@ -39,6 +48,7 @@
     "@typescript-eslint/parser": "^2.12.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
     "eslint": "^6.8.0",
     "mocha": "^6.2.2",
     "sinon": "^8.0.1",
