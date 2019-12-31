@@ -1,41 +1,6 @@
 import * as t from 'io-ts'
-import { utils } from 'ethers'
 import { AsyncOrSync } from 'ts-essentials'
-import { toBuffer } from 'ethereumjs-util'
-
-// https://github.com/ethereum/wiki/wiki/JSON-RPC#hex-value-encoding
-// internally we represent numbers as BN but externally it's a hex string
-export const quantity = new t.Type<utils.BigNumber, string, unknown>(
-  'RPC_QUANTITY',
-  (u: unknown): u is utils.BigNumber => u instanceof utils.BigNumber,
-  (input, c) => {
-    try {
-      const parsed = new utils.BigNumber(input as any)
-      return t.success(parsed)
-    } catch (e) {
-      return t.failure(`Can't parse ${input} as quantity`, c)
-    }
-  },
-  quantity => {
-    return quantity.toHexString()
-  },
-)
-
-// https://github.com/ethereum/wiki/wiki/JSON-RPC#hex-value-encoding
-// internally we represent unformatted data as buffers, externally as hex strings
-export const data = new t.Type<Buffer, string, unknown>(
-  'RPC_DATA',
-  (u: unknown): u is Buffer => u instanceof Buffer,
-  (input, c) => {
-    try {
-      const parsed = toBuffer(input)
-      return t.success(parsed)
-    } catch (e) {
-      return t.failure(`Can't parse ${input} as quantity`, c)
-    }
-  },
-  data => '0x' + data.toString('hex'),
-)
+import { quantity, hash, hexData, address } from './codecs'
 
 export const tag = t.union([
   t.literal('earliest'),
@@ -44,29 +9,28 @@ export const tag = t.union([
 ])
 
 export const quantityOrTag = t.union([quantity, tag])
-export type quantityOrTagType = t.TypeOf<typeof quantityOrTag>;
 
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-26
 const blockInfo = t.type({
   number: quantity,
-  hash: data,
-  parentHash: data,
-  nonce: data,
-  sha3uncles: data,
-  logsBloom: data,
-  transactionsRoot: data,
-  stateRoot: data,
-  receiptsRoot: data,
-  miner: data,
+  hash: hash,
+  parentHash: hash,
+  nonce: hexData,
+  sha3Uncles: hash,
+  logsBloom: hexData,
+  transactionsRoot: hash,
+  stateRoot: hash,
+  receiptsRoot: hash,
+  miner: address,
   difficulty: quantity,
   totalDifficulty: quantity,
-  extraData: data,
+  extraData: hexData,
   size: quantity,
   gasLimit: quantity,
   gasUsed: quantity,
   timestamp: quantity,
-  transactions: t.array(data),
-  uncles: t.array(data),
+  transactions: t.array(hash),
+  uncles: t.array(hash),
 })
 
 export const rpcCommandsDescription = {
@@ -85,7 +49,7 @@ export const rpcCommandsDescription = {
     returns: quantity,
   },
   eth_getBalance: {
-    parameters: t.tuple([data, quantityOrTag]),
+    parameters: t.tuple([address, quantityOrTag]),
     returns: quantity,
   },
   eth_blockNumber: {
@@ -93,12 +57,12 @@ export const rpcCommandsDescription = {
     returns: quantity,
   },
   eth_getTransactionCount: {
-    parameters: t.tuple([data, quantityOrTag]),
+    parameters: t.tuple([address, quantityOrTag]),
     returns: quantity,
   },
   eth_getCode: {
-    parameters: t.tuple([data, quantityOrTag]),
-    returns: data,
+    parameters: t.tuple([address, quantityOrTag]),
+    returns: hexData,
   },
   eth_getBlockByNumber: {
     parameters: t.tuple([quantityOrTag, t.boolean]),

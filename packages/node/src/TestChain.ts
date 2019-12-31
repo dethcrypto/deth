@@ -1,16 +1,11 @@
-import { bufferToInt } from 'ethereumjs-util'
 import { utils } from 'ethers'
 import {
   Address,
   Hash,
-  HexString,
-  makeHexString,
-  bufferToAddress,
-  bufferToHexString,
-  bufferToHash,
   Quantity,
   bnToQuantity,
   HexData,
+  bufferToHexData,
 } from './primitives'
 import {
   Tag,
@@ -18,10 +13,10 @@ import {
   FilterRequest,
   RpcLogObject,
   RpcTransactionResponse,
-  BlockResponse,
+  RpcBlockResponse,
   RpcTransactionReceipt,
   toFakeTransaction,
-  toBlockResponse,
+  RpcRichBlockResponse,
 } from './model'
 import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
@@ -57,45 +52,29 @@ export class TestChain {
     return bnToQuantity(this.options.defaultGasPrice)
   }
 
-  async getBalance (address: Address, blockTag: Quantity | Tag): Promise<utils.BigNumber> {
+  async getBalance (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getBalance', blockTag, ['latest'])
     }
-    const account = await this.tvm.getAccount(address)
-    return utils.bigNumberify(account.balance)
+    return this.tvm.getBalance(address)
   }
 
-  async getTransactionCount (address: Address, blockTag: Quantity | Tag): Promise<number> {
-    if (blockTag === 'latest') {
-      return this.getLatestTransactionCount(address)
-    } else if (blockTag === 'pending') {
-      return this.getPendingTransactionCount(address)
-    } else {
+  async getTransactionCount (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
+    if (blockTag !== 'latest' && blockTag !== 'pending') {
       throw unsupportedBlockTag('getTransactionCount', blockTag, ['latest', 'pending'])
     }
+    // TODO: handle pending better
+    return this.tvm.getNonce(address)
   }
 
-  private async getLatestTransactionCount (address: Address): Promise<number> {
-    const account = await this.tvm.getAccount(address)
-    return bufferToInt(account.nonce)
-  }
-
-  private async getPendingTransactionCount (address: Address): Promise<number> {
-    const txCount = await this.getLatestTransactionCount(address)
-    const transactionsFromAddress = this.tvm.pendingTransactions
-      .filter(tx => bufferToAddress(tx.getSenderAddress()) === address)
-      .length
-    return txCount + transactionsFromAddress
-  }
-
-  async getCode (address: Address, blockTag: Quantity | Tag): Promise<HexString> {
+  async getCode (address: Address, blockTag: Quantity | Tag): Promise<HexData> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
-    return makeHexString(await this.tvm.getCode(address))
+    return this.tvm.getCode(address)
   }
 
-  async getStorageAt (address: Address, position: HexString, blockTag: Quantity | Tag): Promise<HexString> {
+  async getStorageAt (address: Address, position: Quantity, blockTag: Quantity | Tag): Promise<HexData> {
     throw unsupportedOperation('getStorageAt')
   }
 
@@ -105,7 +84,7 @@ export class TestChain {
     return hash
   }
 
-  async call (transactionRequest: RpcTransactionRequest, blockTag: Quantity | Tag): Promise<HexString> {
+  async call (transactionRequest: RpcTransactionRequest, blockTag: Quantity | Tag): Promise<HexData> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
@@ -115,7 +94,7 @@ export class TestChain {
     })
     const result = await this.tvm.runIsolatedTransaction(tx)
     // TODO: handle errors
-    return bufferToHexString(result.execResult.returnValue)
+    return bufferToHexData(result.execResult.returnValue)
   }
 
   async estimateGas (transactionRequest: RpcTransactionRequest): Promise<utils.BigNumber> {
@@ -128,7 +107,10 @@ export class TestChain {
     return utils.bigNumberify(result.gasUsed.toString())
   }
 
-  async getBlock (blockTagOrHash: Quantity | Tag | Hash, includeTransactions: boolean): Promise<BlockResponse> {
+  async getBlock (
+    blockTagOrHash: Quantity | Tag | Hash,
+    includeTransactions: boolean,
+  ): Promise<RpcBlockResponse | RpcRichBlockResponse> {
     if (blockTagOrHash === 'pending') {
       throw unsupportedBlockTag('call', blockTagOrHash)
     }
@@ -137,12 +119,11 @@ export class TestChain {
       ? await this.tvm.getLatestBlock()
       : await this.tvm.getBlock(blockTagOrHash)
 
-    const response = toBlockResponse(block)
-    if (includeTransactions) {
-      response.transactions = block.transactions
-        .map(tx => this.getTransaction(bufferToHash(tx.hash())))
+    if (!includeTransactions) {
+      return block
     }
-    return response
+    const transactions = block.transactions.map(tx => this.getTransaction(tx))
+    return { ...block, transactions }
   }
 
   getTransaction (transactionHash: Hash): RpcTransactionResponse {

@@ -1,10 +1,23 @@
 import VM from 'ethereumjs-vm'
 import Block from 'ethereumjs-block'
-import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
+import { BN, toBuffer } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import { RpcTransactionReceipt, RpcTransactionResponse } from '../model'
+import {
+  RpcTransactionReceipt,
+  RpcTransactionResponse,
+  RpcBlockResponse,
+  toBlockResponse,
+} from '../model'
 import { TestChainOptions } from '../TestChainOptions'
-import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData } from '../primitives'
+import {
+  Hash,
+  Address,
+  bufferToHash,
+  Quantity,
+  bufferToQuantity,
+  HexData,
+  bufferToHexData,
+} from '../primitives'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
 import { putBlock } from './putBlock'
@@ -34,9 +47,10 @@ export class TestVM {
     return bufferToQuantity(block.header.number)
   }
 
-  async getLatestBlock (): Promise<Block> {
+  async getLatestBlock (): Promise<RpcBlockResponse> {
     const vm = await this.getVM()
-    return getLatestBlock(vm)
+    const block = await getLatestBlock(vm)
+    return toBlockResponse(block)
   }
 
   async addPendingTransaction (signedTransaction: HexData): Promise<Hash> {
@@ -69,18 +83,26 @@ export class TestVM {
     return this.receipts.get(hash)
   }
 
-  async getAccount (address: Address) {
+  async getNonce (address: Address) {
+    const account = await this.getAccount(address)
+    return bufferToQuantity(account.nonce)
+  }
+
+  async getBalance (address: Address) {
+    const account = await this.getAccount(address)
+    return bufferToQuantity(account.balance)
+  }
+
+  private async getAccount (address: Address) {
     const vm = await this.getVM()
-    const psm = vm.pStateManager
-    const account = await psm.getAccount(toBuffer(address))
-    return account
+    return vm.pStateManager.getAccount(toBuffer(address))
   }
 
   async getCode (address: Address) {
     const vm = await this.getVM()
     const psm = vm.pStateManager
     const code = await psm.getContractCode(toBuffer(address))
-    return bufferToHex(code)
+    return bufferToHexData(code)
   }
 
   async runIsolatedTransaction (transaction: Transaction) {
@@ -88,15 +110,16 @@ export class TestVM {
     return runIsolatedTransaction(vm, transaction, this.options)
   }
 
-  async getBlock (hashOrNumber: string): Promise<Block> {
+  async getBlock (hashOrNumber: string): Promise<RpcBlockResponse> {
     const vm = await this.getVM()
     const query = hashOrNumber.length === 66
       ? toBuffer(hashOrNumber)
       : new BN(hashOrNumber.substr(2), 'hex')
-    return new Promise((resolve, reject) => {
+    const block = await new Promise<Block>((resolve, reject) => {
       vm.blockchain.getBlock(query, (err: unknown, block: Block) =>
         err != null ? reject(err) : resolve(block),
       )
     })
+    return toBlockResponse(block)
   }
 }
