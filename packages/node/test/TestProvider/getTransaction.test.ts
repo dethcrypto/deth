@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { utils, ContractFactory } from 'ethers'
 import { TestProvider } from '../../src/TestProvider'
-import { NETWORK_ID } from '../../src/constants'
+import { CHAIN_ID } from '../../src/constants'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { randomHash } from '../testutils'
 
@@ -38,7 +38,7 @@ describe('TestProvider.getTransaction', () => {
       v: response.v,
       raw: tx.raw,
       creates: null,
-      networkId: NETWORK_ID,
+      networkId: CHAIN_ID,
       wait: tx.wait,
     })
   })

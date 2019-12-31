@@ -1,10 +1,16 @@
 /* eslint-disable max-len */
-import { utils } from 'ethers'
-import { Address, HexString, Hash } from './strings'
-import { TransactionResponse } from './TransactionResponse'
+import {
+  Address,
+  HexString,
+  Hash,
+  Quantity,
+  bufferToAddress,
+  bufferToHexString,
+  bufferToHash,
+  bufferToQuantity,
+} from '../primitives'
+import { RpcTransactionResponse } from './RpcTransactionResponse'
 import Block from 'ethereumjs-block'
-import { bufferToInt } from 'ethereumjs-util'
-import { bufferToAddress, bufferToHexString, bufferToHash } from '../utils'
 
 export type BlockResponse = BlockResponseWithTxHashes | BlockResponseWithTxResponses
 
@@ -12,12 +18,12 @@ export type BlockResponse = BlockResponseWithTxHashes | BlockResponseWithTxRespo
 export interface BlockResponseWithTxHashes {
   hash: Hash,
   parentHash: Hash,
-  number: number,
-  timestamp: number,
+  number: Quantity,
+  timestamp: Quantity,
   nonce?: HexString,
-  difficulty: number,
-  gasLimit: utils.BigNumber,
-  gasUsed: utils.BigNumber,
+  difficulty: Quantity,
+  gasLimit: Quantity,
+  gasUsed: Quantity,
   miner: Address,
   extraData: HexString,
   transactions: Hash[],
@@ -27,29 +33,29 @@ export interface BlockResponseWithTxHashes {
 export interface BlockResponseWithTxResponses {
   hash: Hash,
   parentHash: Hash,
-  number: number,
-  timestamp: number,
+  number: Quantity,
+  timestamp: Quantity,
   nonce?: HexString,
-  difficulty: number,
-  gasLimit: utils.BigNumber,
-  gasUsed: utils.BigNumber,
+  difficulty: Quantity,
+  gasLimit: Quantity,
+  gasUsed: Quantity,
   miner: Address,
   extraData: HexString,
-  transactions: TransactionResponse[],
+  transactions: RpcTransactionResponse[],
 }
 
 export function toBlockResponse (block: Block): BlockResponse {
   return {
-    difficulty: bufferToInt(block.header.difficulty),
+    difficulty: bufferToQuantity(block.header.difficulty),
     extraData: bufferToHexString(block.header.extraData),
-    gasLimit: utils.bigNumberify(block.header.gasLimit),
-    gasUsed: utils.bigNumberify(block.header.gasUsed),
+    gasLimit: bufferToQuantity(block.header.gasLimit),
+    gasUsed: bufferToQuantity(block.header.gasUsed),
     hash: bufferToHash(block.hash()),
     miner: bufferToAddress(block.header.coinbase),
     nonce: bufferToHexString(block.header.nonce),
-    number: bufferToInt(block.header.number),
+    number: bufferToQuantity(block.header.number),
     parentHash: bufferToHash(block.header.parentHash),
-    timestamp: bufferToInt(block.header.timestamp),
+    timestamp: bufferToQuantity(block.header.timestamp),
     transactions: block.transactions.map(x => bufferToHash(x.hash())),
   }
 }

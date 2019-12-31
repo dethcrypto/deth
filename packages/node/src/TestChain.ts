@@ -2,22 +2,27 @@ import { bufferToInt } from 'ethereumjs-util'
 import { utils, Wallet, providers } from 'ethers'
 import {
   Address,
-  BlockTag,
   Hash,
   HexString,
+  makeHexString,
+  bufferToAddress,
+  bufferToHexString,
+  bufferToHash,
+  Quantity,
+} from './primitives'
+import {
+  Tag,
   TransactionRequest,
   FilterRequest,
-  LogResponse,
-  TransactionResponse,
+  RpcLogObject,
+  RpcTransactionResponse,
   BlockResponse,
-  TransactionReceiptResponse,
+  RpcTransactionReceipt,
   toFakeTransaction,
   toBlockResponse,
-  makeHexString,
 } from './model'
-import { TestVM } from './TestVM'
+import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
-import { bufferToAddress, bufferToHexString, bufferToHash } from './utils'
 import {
   transactionNotFound,
   unsupportedBlockTag,
@@ -55,7 +60,7 @@ export class TestChain {
     return this.options.defaultGasPrice
   }
 
-  async getBalance (address: Address, blockTag: BlockTag): Promise<utils.BigNumber> {
+  async getBalance (address: Address, blockTag: Quantity | Tag): Promise<utils.BigNumber> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getBalance', blockTag, ['latest'])
     }
@@ -63,7 +68,7 @@ export class TestChain {
     return utils.bigNumberify(account.balance)
   }
 
-  async getTransactionCount (address: Address, blockTag: BlockTag): Promise<number> {
+  async getTransactionCount (address: Address, blockTag: Quantity | Tag): Promise<number> {
     if (blockTag === 'latest') {
       return this.getLatestTransactionCount(address)
     } else if (blockTag === 'pending') {
@@ -86,14 +91,14 @@ export class TestChain {
     return txCount + transactionsFromAddress
   }
 
-  async getCode (address: Address, blockTag: BlockTag): Promise<HexString> {
+  async getCode (address: Address, blockTag: Quantity | Tag): Promise<HexString> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
     return makeHexString(await this.tvm.getCode(address))
   }
 
-  async getStorageAt (address: Address, position: HexString, blockTag: BlockTag): Promise<HexString> {
+  async getStorageAt (address: Address, position: HexString, blockTag: Quantity | Tag): Promise<HexString> {
     throw unsupportedOperation('getStorageAt')
   }
 
@@ -103,7 +108,7 @@ export class TestChain {
     return hash
   }
 
-  async call (transactionRequest: TransactionRequest, blockTag: BlockTag): Promise<HexString> {
+  async call (transactionRequest: TransactionRequest, blockTag: Quantity | Tag): Promise<HexString> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
@@ -126,7 +131,7 @@ export class TestChain {
     return utils.bigNumberify(result.gasUsed.toString())
   }
 
-  async getBlock (blockTagOrHash: BlockTag | Hash, includeTransactions: boolean): Promise<BlockResponse> {
+  async getBlock (blockTagOrHash: Quantity | Tag | Hash, includeTransactions: boolean): Promise<BlockResponse> {
     if (blockTagOrHash === 'pending') {
       throw unsupportedBlockTag('call', blockTagOrHash)
     }
@@ -143,7 +148,7 @@ export class TestChain {
     return response
   }
 
-  getTransaction (transactionHash: Hash): TransactionResponse {
+  getTransaction (transactionHash: Hash): RpcTransactionResponse {
     const transaction = this.tvm.getTransaction(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
@@ -151,7 +156,7 @@ export class TestChain {
     return transaction
   }
 
-  getTransactionReceipt (transactionHash: Hash): TransactionReceiptResponse {
+  getTransactionReceipt (transactionHash: Hash): RpcTransactionReceipt {
     const transaction = this.tvm.getTransactionReceipt(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
@@ -159,7 +164,7 @@ export class TestChain {
     return transaction
   }
 
-  async getLogs (filter: FilterRequest): Promise<LogResponse[]> {
+  async getLogs (filter: FilterRequest): Promise<RpcLogObject[]> {
     throw unsupportedOperation('getLogs')
   }
 }
