@@ -2,7 +2,7 @@ export { TestProvider } from './TestProvider'
 export { TestChain } from './TestChain'
 export { TestChainOptions } from './TestChainOptions'
 export {
-  TransactionRequest,
+  RpcTransactionRequest,
   FilterRequest,
   RpcTransactionResponse,
   BlockResponse,

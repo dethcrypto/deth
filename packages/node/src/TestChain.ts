@@ -1,5 +1,5 @@
 import { bufferToInt } from 'ethereumjs-util'
-import { utils, Wallet, providers } from 'ethers'
+import { utils } from 'ethers'
 import {
   Address,
   Hash,
@@ -9,10 +9,12 @@ import {
   bufferToHexString,
   bufferToHash,
   Quantity,
+  bnToQuantity,
+  HexData,
 } from './primitives'
 import {
   Tag,
-  TransactionRequest,
+  RpcTransactionRequest,
   FilterRequest,
   RpcLogObject,
   RpcTransactionResponse,
@@ -36,28 +38,23 @@ import {
  */
 export class TestChain {
   private tvm: TestVM
-  private options: TestChainOptions
+  options: TestChainOptions
 
   constructor (options?: Partial<TestChainOptions>) {
     this.options = getOptionsWithDefaults(options)
     this.tvm = new TestVM(this.options)
   }
 
-  getWallets (provider?: providers.Provider) {
-    return this.options.privateKeys.map(x => new Wallet(x, provider))
-  }
-
   async mineBlock () {
     return this.tvm.mineBlock()
   }
 
-  async getBlockNumber (): Promise<number> {
-    const block = await this.tvm.getLatestBlock()
-    return bufferToInt(block.header.number)
+  async getBlockNumber (): Promise<Quantity> {
+    return this.tvm.getBlockNumber()
   }
 
-  getGasPrice (): utils.BigNumber {
-    return this.options.defaultGasPrice
+  getGasPrice (): Quantity {
+    return bnToQuantity(this.options.defaultGasPrice)
   }
 
   async getBalance (address: Address, blockTag: Quantity | Tag): Promise<utils.BigNumber> {
@@ -102,28 +99,28 @@ export class TestChain {
     throw unsupportedOperation('getStorageAt')
   }
 
-  async sendTransaction (signedTransaction: HexString): Promise<Hash> {
+  async sendTransaction (signedTransaction: HexData): Promise<Hash> {
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
     await this.tvm.mineBlock()
     return hash
   }
 
-  async call (transactionRequest: TransactionRequest, blockTag: Quantity | Tag): Promise<HexString> {
+  async call (transactionRequest: RpcTransactionRequest, blockTag: Quantity | Tag): Promise<HexString> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
     const tx = toFakeTransaction({
       ...transactionRequest,
-      gasLimit: this.options.blockGasLimit,
+      gas: bnToQuantity(this.options.blockGasLimit),
     })
     const result = await this.tvm.runIsolatedTransaction(tx)
     // TODO: handle errors
     return bufferToHexString(result.execResult.returnValue)
   }
 
-  async estimateGas (transactionRequest: TransactionRequest): Promise<utils.BigNumber> {
-    if (!transactionRequest.gasLimit) {
-      transactionRequest.gasLimit = utils.bigNumberify(this.options.blockGasLimit)
+  async estimateGas (transactionRequest: RpcTransactionRequest): Promise<utils.BigNumber> {
+    if (!transactionRequest.gas) {
+      transactionRequest.gas = bnToQuantity(this.options.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
     const result = await this.tvm.runIsolatedTransaction(tx)

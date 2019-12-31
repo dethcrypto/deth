@@ -4,7 +4,7 @@ import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
 import { RpcTransactionReceipt, RpcTransactionResponse } from '../model'
 import { TestChainOptions } from '../TestChainOptions'
-import { Hash, HexString, Address, bufferToHash } from '../primitives'
+import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData } from '../primitives'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
 import { putBlock } from './putBlock'
@@ -28,12 +28,18 @@ export class TestVM {
     return this.vm
   }
 
+  async getBlockNumber (): Promise<Quantity> {
+    const vm = await this.getVM()
+    const block = await getLatestBlock(vm)
+    return bufferToQuantity(block.header.number)
+  }
+
   async getLatestBlock (): Promise<Block> {
     const vm = await this.getVM()
     return getLatestBlock(vm)
   }
 
-  async addPendingTransaction (signedTransaction: HexString): Promise<Hash> {
+  async addPendingTransaction (signedTransaction: HexData): Promise<Hash> {
     const vm = await this.getVM()
     const transaction = new Transaction(signedTransaction, { common: vm._common })
     this.pendingTransactions.push(transaction)

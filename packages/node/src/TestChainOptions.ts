@@ -1,12 +1,12 @@
 import { Hardfork } from './model'
-import { utils } from 'ethers'
+import BN from 'bn.js'
 
 export interface TestChainOptions {
   hardfork: Hardfork,
   privateKeys: string[],
-  initialBalance: utils.BigNumber,
-  blockGasLimit: utils.BigNumber,
-  defaultGasPrice: utils.BigNumber,
+  initialBalance: BN,
+  blockGasLimit: BN,
+  defaultGasPrice: BN,
   coinbaseAddress: string,
 }
 
@@ -25,9 +25,9 @@ const DEFAULTS: TestChainOptions = {
     '0x12a4fd3f2d9ad98ede42228b5a885c8adc95daf8c36eadb9aafe40cb3bbeb02e',
     '0x7492f9da2b92d144da51bdfda426645f3af0f7388b2bd47ae9bf91cae111519a',
   ],
-  initialBalance: utils.parseEther('100'),
-  blockGasLimit: utils.bigNumberify(10_000_000),
-  defaultGasPrice: utils.bigNumberify(1_000_000_000), // one gwei
+  initialBalance: new BN(10).pow(new BN(20)),
+  blockGasLimit: new BN(10_000_000),
+  defaultGasPrice: new BN(1_000_000_000), // one gwei
   coinbaseAddress: '0xdEadBeEf00000000DeADBeef00000000dEAdBeeF',
 }
 
