@@ -1,9 +1,16 @@
 /* eslint-disable max-len */
-import { utils } from 'ethers'
-import { Address, HexString, Hash, Quantity } from './primitives'
+import {
+  Address,
+  HexString,
+  Hash,
+  Quantity,
+  bufferToAddress,
+  bufferToHexString,
+  bufferToHash,
+  bufferToQuantity,
+} from '../primitives'
 import { TransactionResponse } from './TransactionResponse'
 import Block from 'ethereumjs-block'
-import { bufferToAddress, bufferToHexString, bufferToHash, bufferToQuantity } from '../utils'
 
 export type BlockResponse = BlockResponseWithTxHashes | BlockResponseWithTxResponses
 

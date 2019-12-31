@@ -2,15 +2,9 @@ import VM from 'ethereumjs-vm'
 import Block from 'ethereumjs-block'
 import { BN, toBuffer, bufferToHex } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import {
-  Hash,
-  HexString,
-  Address,
-  TransactionReceiptResponse,
-  TransactionResponse,
-} from '../model'
+import { TransactionReceiptResponse, TransactionResponse } from '../model'
 import { TestChainOptions } from '../TestChainOptions'
-import { bufferToHash } from '../utils'
+import { Hash, HexString, Address, bufferToHash } from '../primitives'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
 import { putBlock } from './putBlock'
@@ -100,4 +94,3 @@ export class TestVM {
     })
   }
 }
-

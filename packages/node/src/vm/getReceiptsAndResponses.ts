@@ -8,13 +8,12 @@ import {
   bufferToQuantity,
   bnToQuantity,
   numberToQuantity,
-} from '../utils'
+} from '../primitives'
 import BN from 'bn.js'
 import {
   TransactionResponse,
   TransactionReceiptLogResponse,
   TransactionReceiptResponse,
-  makeQuantity,
 } from '../model'
 import { NETWORK_ID } from '../constants'
 
@@ -80,7 +79,7 @@ export function getReceiptsAndResponses (
       to,
       logsBloom: bufferToHexString(result.bloom.bitvector),
       root: undefined, // TODO: this
-      status: makeQuantity('0x1'), // TODO: this
+      status: numberToQuantity(1), // TODO: this
     })
   }
 
