@@ -14,6 +14,7 @@
     "start": "ts-node ./src/node/runner.ts",
     "lint": "eslint --ext .ts src test",
     "lint:fix": "eslint --ext .ts --fix src test",
+    "typecheck": "tsc --noEmit",
     "prebuild": "rm -rf dist",
     "build": "yarn build:esm && yarn build:cjs",
     "build:esm": "tsc -p tsconfig.build.json --outDir dist/esm --module ES6",

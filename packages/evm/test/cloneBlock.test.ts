@@ -19,7 +19,7 @@ describe('cloneBlock', () => {
       ]),
       parameters: {
         gasLimit: 1000,
-      },
+      } as any,
       transactions: [],
     }
     block.parent = block

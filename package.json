@@ -8,6 +8,7 @@
   },
   "scripts": {
     "lint": "wsrun -c lint",
+    "typecheck": "wsrun -c typecheck",
     "build": "wsrun -te -c build",
     "test": "wsrun -c test"
   },
