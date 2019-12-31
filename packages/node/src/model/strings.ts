@@ -51,6 +51,25 @@ export function makeAddress (value: string): Address {
 }
 
 /**
+ * A hexadecimal string representing bytes of data.
+ * Always prefixed with 0x, always lowercase.
+ */
+export type HexData = Opaque<'HexData', string>
+export function makeHexData (value: string): HexData {
+  if (!HEX_REGEX.test(value) || value.length % 2 !== 0) {
+    throw new TypeError(`Value "${value}" is not valid hex data`)
+  }
+  return value.toLowerCase() as HexData
+}
+
+/**
+ * A hexadecimal string representing a number.
+ * Always prefixed with 0x, always lowercase.
+ */
+export type Quantity = Opaque<'Quantity', string>
+// TODO: makeQuantity (string | BN)
+
+/**
  * A hexadecimal string.
  * Always prefixed with 0x, always lowercase.
  */
