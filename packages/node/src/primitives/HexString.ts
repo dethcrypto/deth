@@ -3,6 +3,7 @@ import { HEX_REGEX } from "./common"
 import { bufferToHex } from "ethereumjs-util"
 
 /**
+ * @deprecated probably should be replaced with HexData
  * A hexadecimal string.
  * Always prefixed with 0x, always lowercase.
  */
