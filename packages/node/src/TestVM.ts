@@ -16,7 +16,7 @@ import {
 import { TestChainOptions } from './TestChainOptions'
 import Common from 'ethereumjs-common'
 import { NETWORK_ID, CHAIN_ID, CHAIN_NAME } from './constants'
-import { bufferToAddress, bufferToMaybeAddress } from './utils'
+import { bufferToAddress, bufferToMaybeAddress, bufferToHexString, bufferToHash } from './utils'
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
@@ -54,7 +54,7 @@ export class TestVM {
   async addPendingTransaction (signedTransaction: HexString): Promise<Hash> {
     const transaction = new Transaction(signedTransaction, { common: await this.getCommon() })
     this.pendingTransactions.push(transaction)
-    return bufferToHex(transaction.hash())
+    return bufferToHash(transaction.hash())
   }
 
   async mineBlock () {
@@ -82,7 +82,7 @@ export class TestVM {
     transactions: Transaction[],
     results: any[],
   ) {
-    const blockHash = bufferToHex(block.hash())
+    const blockHash = bufferToHash(block.hash())
     const blockNumber = bufferToInt(block.header.number)
 
     let cumulativeGasUsed = utils.bigNumberify(0)
@@ -90,7 +90,7 @@ export class TestVM {
     for (let i = 0; i < transactions.length; i++) {
       const tx = transactions[i]
       const result = results[i]
-      const hash = bufferToHex(tx.hash())
+      const hash = bufferToHash(tx.hash())
 
       const from = bufferToAddress(tx.getSenderAddress())
       const to = bufferToMaybeAddress(tx.to)
@@ -110,9 +110,9 @@ export class TestVM {
         to,
         value: utils.bigNumberify(tx.value),
         nonce: bufferToInt(tx.nonce),
-        data: bufferToHex(tx.data),
-        r: bufferToHex(tx.r),
-        s: bufferToHex(tx.s),
+        data: bufferToHexString(tx.data),
+        r: bufferToHexString(tx.r),
+        s: bufferToHexString(tx.s),
         v: bufferToInt(tx.v),
         creates: created,
         networkId: NETWORK_ID,
@@ -132,7 +132,7 @@ export class TestVM {
         contractAddress: created,
         from,
         to,
-        logsBloom: bufferToHex(result.bloom.bitvector),
+        logsBloom: bufferToHexString(result.bloom.bitvector),
         root: undefined, // TODO: this
         status: 1, // TODO: this
       }

@@ -1,8 +1,10 @@
 import { RPCExecutorType } from './description'
 import { NodeCtx } from '../node'
 import { utils } from 'ethers'
-import { toBuffer, bufferToHex } from 'ethereumjs-util'
+import { toBuffer } from 'ethereumjs-util'
 import { CHAIN_ID } from '../../constants'
+import { bufferToAddress } from '../../utils'
+import { makeBlockTag } from '../../model'
 
 export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
   return {
@@ -12,26 +14,26 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     // eth
     eth_gasPrice: () => ctx.chain.getGasPrice(),
     eth_getBalance: ([address, _blockOrTag]) => {
-      return ctx.chain.getBalance(bufferToHex(address), 'latest')
+      return ctx.chain.getBalance(bufferToAddress(address), makeBlockTag('latest'))
     },
     eth_blockNumber: async () => {
       const blockNumber = await ctx.chain.getBlockNumber()
       return utils.bigNumberify(blockNumber)
     },
     eth_getCode: ([address, _blockOrTag]) => {
-      return toBuffer(ctx.chain.getCode(bufferToHex(address), 'latest'))
+      return toBuffer(ctx.chain.getCode(bufferToAddress(address), makeBlockTag('latest')))
     },
     eth_getTransactionCount: async ([address]) => {
       const txCount = await ctx.chain.getTransactionCount(
-        bufferToHex(address),
-        'latest',
+        bufferToAddress(address),
+        makeBlockTag('latest'),
       )
 
       return utils.bigNumberify(txCount)
     },
     eth_getBlockByNumber: async ([_blockOrTag, _includeTxs]) => {
       // @todo doesn't include txs
-      const block = await ctx.chain.getBlock('latest', false)
+      const block = await ctx.chain.getBlock(makeBlockTag('latest'), false)
 
       return {
         number: utils.bigNumberify(block.number),
