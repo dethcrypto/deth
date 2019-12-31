@@ -1,4 +1,4 @@
-import { bufferToInt, bufferToHex } from 'ethereumjs-util'
+import { bufferToInt } from 'ethereumjs-util'
 import { utils, Wallet, providers } from 'ethers'
 import {
   Address,
@@ -13,10 +13,11 @@ import {
   TransactionReceiptResponse,
   toFakeTransaction,
   toBlockResponse,
+  makeHexString,
 } from './model'
 import { TestVM } from './TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
-import { bufferToAddress } from './utils'
+import { bufferToAddress, bufferToHexString, bufferToHash } from './utils'
 import {
   transactionNotFound,
   unsupportedBlockTag,
@@ -89,7 +90,7 @@ export class TestChain {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
-    return this.tvm.getCode(address)
+    return makeHexString(await this.tvm.getCode(address))
   }
 
   async getStorageAt (address: Address, position: HexString, blockTag: BlockTag): Promise<HexString> {
@@ -112,7 +113,7 @@ export class TestChain {
     })
     const result = await this.tvm.runIsolatedTransaction(tx)
     // TODO: handle errors
-    return bufferToHex(result.execResult.returnValue)
+    return bufferToHexString(result.execResult.returnValue)
   }
 
   async estimateGas (transactionRequest: TransactionRequest): Promise<utils.BigNumber> {
@@ -137,7 +138,7 @@ export class TestChain {
     const response = toBlockResponse(block)
     if (includeTransactions) {
       response.transactions = block.transactions
-        .map(tx => this.getTransaction(bufferToHex(tx.hash())))
+        .map(tx => this.getTransaction(bufferToHash(tx.hash())))
     }
     return response
   }
