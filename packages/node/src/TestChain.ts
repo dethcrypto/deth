@@ -15,7 +15,7 @@ import {
   toBlockResponse,
   makeHexString,
 } from './model'
-import { TestVM } from './TestVM'
+import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import { bufferToAddress, bufferToHexString, bufferToHash } from './utils'
 import {

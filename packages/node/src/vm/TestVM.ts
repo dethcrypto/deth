@@ -12,11 +12,11 @@ import {
   TransactionReceiptResponse,
   TransactionResponse,
   TransactionReceiptLogResponse,
-} from './model'
-import { TestChainOptions } from './TestChainOptions'
+} from '../model'
+import { TestChainOptions } from '../TestChainOptions'
 import Common from 'ethereumjs-common'
-import { NETWORK_ID, CHAIN_ID, CHAIN_NAME } from './constants'
-import { bufferToAddress, bufferToMaybeAddress, bufferToHexString, bufferToHash } from './utils'
+import { NETWORK_ID, CHAIN_ID, CHAIN_NAME } from '../constants'
+import { bufferToAddress, bufferToMaybeAddress, bufferToHexString, bufferToHash } from '../utils'
 
 /**
  * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
