@@ -2,13 +2,12 @@ import * as t from 'io-ts'
 import { utils } from 'ethers'
 import { AsyncOrSync } from 'ts-essentials'
 import { toBuffer } from 'ethereumjs-util'
-import { BigNumber } from 'ethers/utils'
 
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#hex-value-encoding
 // internally we represent numbers as BN but externally it's a hex string
 export const quantity = new t.Type<utils.BigNumber, string, unknown>(
   'RPC_QUANTITY',
-  (u: unknown): u is BigNumber => u instanceof utils.BigNumber,
+  (u: unknown): u is utils.BigNumber => u instanceof utils.BigNumber,
   (input, c) => {
     try {
       const parsed = new utils.BigNumber(input as any)
