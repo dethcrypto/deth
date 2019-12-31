@@ -1,9 +1,21 @@
 import Block from 'ethereumjs-block'
 import { Transaction } from 'ethereumjs-tx'
-import { bufferToHash, bufferToAddress, bufferToMaybeAddress, bufferToHexString } from '../utils'
-import { bufferToInt } from 'ethereumjs-util'
-import { utils } from 'ethers'
-import { TransactionResponse, TransactionReceiptLogResponse, TransactionReceiptResponse } from '../model'
+import {
+  bufferToHash,
+  bufferToAddress,
+  bufferToMaybeAddress,
+  bufferToHexString,
+  bufferToQuantity,
+  bnToQuantity,
+  numberToQuantity,
+} from '../utils'
+import BN from 'bn.js'
+import {
+  TransactionResponse,
+  TransactionReceiptLogResponse,
+  TransactionReceiptResponse,
+  makeQuantity,
+} from '../model'
 import { NETWORK_ID } from '../constants'
 
 export function getReceiptsAndResponses (
@@ -12,9 +24,9 @@ export function getReceiptsAndResponses (
   results: any[],
 ) {
   const blockHash = bufferToHash(block.hash())
-  const blockNumber = bufferToInt(block.header.number)
+  const blockNumber = bufferToQuantity(block.header.number)
 
-  let cumulativeGasUsed = utils.bigNumberify(0)
+  let cumulativeGasUsed = new BN(0)
 
   const responses: TransactionResponse[] = []
   const receipts: TransactionReceiptResponse[] = []
@@ -28,24 +40,26 @@ export function getReceiptsAndResponses (
     const to = bufferToMaybeAddress(tx.to)
     const created = bufferToMaybeAddress(result.createdAddress)
 
-    const gasUsed = utils.bigNumberify(bufferToInt(result.gasUsed))
+    const gasUsed = new BN(result.gasUsed)
     cumulativeGasUsed = cumulativeGasUsed.add(gasUsed)
+
+    const transactionIndex = numberToQuantity(i)
 
     responses.push({
       hash,
       blockHash,
       blockNumber,
-      transactionIndex: i,
+      transactionIndex,
       from,
-      gasPrice: utils.bigNumberify(tx.gasPrice),
-      gasLimit: utils.bigNumberify(tx.gasLimit),
+      gasPrice: bufferToQuantity(tx.gasPrice),
+      gasLimit: bufferToQuantity(tx.gasLimit),
       to,
-      value: utils.bigNumberify(tx.value),
-      nonce: bufferToInt(tx.nonce),
+      value: bufferToQuantity(tx.value),
+      nonce: bufferToQuantity(tx.nonce),
       data: bufferToHexString(tx.data),
       r: bufferToHexString(tx.r),
       s: bufferToHexString(tx.s),
-      v: bufferToInt(tx.v),
+      v: bufferToHexString(tx.v),
       creates: created,
       networkId: NETWORK_ID,
     })
@@ -56,17 +70,17 @@ export function getReceiptsAndResponses (
     receipts.push({
       blockHash,
       blockNumber,
-      cumulativeGasUsed,
-      gasUsed,
+      cumulativeGasUsed: bnToQuantity(cumulativeGasUsed),
+      gasUsed: bnToQuantity(gasUsed),
       logs,
       transactionHash: hash,
-      transactionIndex: i,
+      transactionIndex,
       contractAddress: created,
       from,
       to,
       logsBloom: bufferToHexString(result.bloom.bitvector),
       root: undefined, // TODO: this
-      status: 1, // TODO: this
+      status: makeQuantity('0x1'), // TODO: this
     })
   }
 

@@ -1,5 +1,5 @@
-import { bufferToHex } from 'ethereumjs-util'
-import { Address, makeAddress, HexString, makeHexString, Hash, makeHash } from './model'
+import { bufferToHex, BN } from 'ethereumjs-util'
+import { Address, makeAddress, HexString, makeHexString, Hash, makeHash, Quantity, makeQuantity } from './model'
 
 export function bufferToAddress (buffer: Buffer): Address {
   return makeAddress(bufferToHex(buffer))
@@ -17,4 +17,16 @@ export function bufferToHexString (buffer: Buffer): HexString {
 
 export function bufferToHash (buffer: Buffer): Hash {
   return makeHash(bufferToHex(buffer))
+}
+
+export function bufferToQuantity (buffer: Buffer): Quantity {
+  return bnToQuantity(new BN(buffer))
+}
+
+export function bnToQuantity (bn: BN): Quantity {
+  return makeQuantity('0x' + bn.toString(16))
+}
+
+export function numberToQuantity (number: number): Quantity {
+  return makeQuantity('0x' + number.toString(16))
 }
