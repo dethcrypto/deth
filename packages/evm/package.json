@@ -12,6 +12,7 @@
   },
   "scripts": {
     "lint": "eslint --ext .ts src test",
+    "lint:fix": "eslint --ext .ts --fix src test",
     "typecheck": "tsc --noEmit",
     "prebuild": "rm -rf dist",
     "build": "yarn build:esm && yarn build:cjs",
