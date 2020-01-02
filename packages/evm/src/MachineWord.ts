@@ -1,5 +1,4 @@
 import BN from 'bn.js'
-import { keccak256 } from 'js-sha3'
 
 const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
@@ -205,12 +204,5 @@ export class MachineWord {
       result.ior(mask)
     }
     return new MachineWord(result)
-  }
-
-  keccak256Hash () {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const hex = this.value.toString(16, 64).match(/../g)!.map(x => parseInt(x, 16))
-    const result = keccak256(hex)
-    return MachineWord.fromHexString(result)
   }
 }
