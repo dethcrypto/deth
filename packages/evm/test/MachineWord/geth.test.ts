@@ -1,51 +1,55 @@
 import testCasesADD from './geth/add.json'
-import testCasesAND from './geth/and.json'
-import testCasesBYTE from './geth/byte.json'
-import testCasesDIV from './geth/div.json'
-import testCasesEQ from './geth/eq.json'
-import testCasesEXP from './geth/exp.json'
-import testCasesGT from './geth/gt.json'
-import testCasesLT from './geth/lt.json'
-import testCasesMOD from './geth/mod.json'
+import testCasesSUB from './geth/sub.json'
 import testCasesMUL from './geth/mul.json'
-import testCasesOR from './geth/or.json'
-import testCasesSAR from './geth/sar.json'
+import testCasesDIV from './geth/div.json'
 import testCasesSDIV from './geth/sdiv.json'
+import testCasesMOD from './geth/mod.json'
+import testCasesSMOD from './geth/smod.json'
+import testCasesEXP from './geth/exp.json'
+import testCasesSIGNEXT from './geth/signext.json'
+import testCasesLT from './geth/lt.json'
+import testCasesSLT from './geth/slt.json'
+import testCasesGT from './geth/gt.json'
 import testCasesSGT from './geth/sgt.json'
+import testCasesEQ from './geth/eq.json'
+import testCasesAND from './geth/and.json'
+import testCasesOR from './geth/or.json'
+import testCasesXOR from './geth/xor.json'
+import testCasesBYTE from './geth/byte.json'
 import testCasesSHL from './geth/shl.json'
 import testCasesSHR from './geth/shr.json'
-import testCasesSIGNEXT from './geth/signext.json'
-import testCasesSLT from './geth/slt.json'
-import testCasesSMOD from './geth/smod.json'
-import testCasesSUB from './geth/sub.json'
-import testCasesXOR from './geth/xor.json'
+import testCasesSAR from './geth/sar.json'
 
 import { expect, AssertionError } from 'chai'
 import { MachineWord } from '../../src/MachineWord'
 
 describe('MachineWord - geth', () => {
   testMW('add', testCasesADD)
-  testMW('and', testCasesAND)
-  testMW('getByte', testCasesBYTE)
-  testMW('unsignedDivide', flip(testCasesDIV))
-  testBoolean('equals', testCasesEQ)
-  testMW('exponentiate', flip(testCasesEXP))
-  testBoolean('unsignedGreaterThan', flip(testCasesGT))
-  testBoolean('unsignedLessThan', flip(testCasesLT))
-  testMW('unsignedModulo', flip(testCasesMOD))
+  testMW('subtract', flip(testCasesSUB))
   testMW('multiply', flip(testCasesMUL))
-  testMW('or', flip(testCasesOR))
-  testMW('arithmeticShiftRight', testCasesSAR)
+  testMW('unsignedDivide', flip(testCasesDIV))
   testMW('signedDivide', flip(testCasesSDIV))
+  testMW('unsignedModulo', flip(testCasesMOD))
+  testMW('signedModulo', flip(testCasesSMOD))
+  // TODO: addModulo
+  // TODO: multiplyModulo
+  testMW('exponentiate', flip(testCasesEXP))
+  testMW('extendSign', testCasesSIGNEXT)
+  testBoolean('unsignedLessThan', flip(testCasesLT))
+  testBoolean('signedLessThan', flip(testCasesSLT))
+  testBoolean('unsignedGreaterThan', flip(testCasesGT))
   testBoolean('signedGreaterThan', flip(testCasesSGT))
-  testBoolean('signedGreaterThan', flip(testCasesSGT))
+  // TODO: isZero
+  testBoolean('equals', testCasesEQ)
+  testMW('and', testCasesAND)
+  testMW('or', flip(testCasesOR))
+  testMW('xor', testCasesXOR)
+  // TODO: not
+  testMW('getByte', testCasesBYTE)
   testMW('shiftLeft', testCasesSHL)
   testMW('logicalShiftRight', testCasesSHR)
-  testMW('extendSign', testCasesSIGNEXT)
-  testBoolean('signedLessThan', flip(testCasesSLT))
-  testMW('signedModulo', flip(testCasesSMOD))
-  testMW('subtract', flip(testCasesSUB))
-  testMW('xor', testCasesXOR)
+  testMW('arithmeticShiftRight', testCasesSAR)
+  // TODO: keccak256Hash
 })
 
 interface TestCase {
@@ -79,7 +83,7 @@ function testMethod (method: keyof MachineWord, testCases: TestCase[], convert: 
   describe('MachineWord.' + method, () => {
     for (let i = 0; i < testCases.length; i++) {
       const testCase = testCases[i]
-      it(`${method} test #${i}`, () => {
+      it(`${method} test #${i + 1}`, () => {
         const x = MachineWord.fromHexString(testCase.X)
         const y = MachineWord.fromHexString(testCase.Y)
         const result = convert((x as any)[method](y))
