@@ -1,4 +1,5 @@
-import { request, expect } from 'chai'
+import { expect } from 'chai'
+import { makeRpcCall } from './common'
 import { getApp, NodeCtx } from '../../src/node/node'
 import { TestChain, TestProvider } from '../../src'
 import { CHAIN_ID } from '../../src/constants'
@@ -16,14 +17,8 @@ describe('RPC', () => {
     app = getApp(ctx)
   })
 
-  function makeRpcCall (methodName: string, params: any[]) {
-    return request(app)
-      .post('/')
-      .send({ jsonrpc: '2.0', method: methodName, params: params, id: 1 })
-  }
-
   it('supports net_version call', async () => {
-    const res = await makeRpcCall('net_version', [])
+    const res = await makeRpcCall(app, 'net_version', [])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(CHAIN_ID.toString())
@@ -41,7 +36,10 @@ describe('RPC', () => {
       value,
     })
 
-    const res = await makeRpcCall('eth_getBalance', [recipient.address, 'latest'])
+    const res = await makeRpcCall(app, 'eth_getBalance', [
+      recipient.address,
+      'latest',
+    ])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(value.toHexString())
