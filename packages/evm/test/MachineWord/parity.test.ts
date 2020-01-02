@@ -12,7 +12,7 @@ describe('MachineWord - parity', () => {
       value: negative('1'),
       other: negative('1'),
       result: negative('2'),
-    }
+    },
   ])
 
   testBinOp('subtract', [
@@ -321,143 +321,143 @@ describe('MachineWord - parity', () => {
   // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L928
   testBinOp('logicalShiftRight', [
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000001",
-      other: "00",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: '0000000000000000000000000000000000000000000000000000000000000001',
+      other: '00',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000001",
-      other: "01",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '0000000000000000000000000000000000000000000000000000000000000001',
+      other: '01',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "01",
-      result: "4000000000000000000000000000000000000000000000000000000000000000",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '01',
+      result: '4000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "ff",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: 'ff',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "0100",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '0100',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "0101",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '0101',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "00",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '00',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "01",
-      result: "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '01',
+      result: '7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "ff",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: 'ff',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "0100",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '0100',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000000",
-      other: "01",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '0000000000000000000000000000000000000000000000000000000000000000',
+      other: '01',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
   ])
 
   // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L998
   testBinOp('arithmeticShiftRight', [
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000001",
-      other: "00",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: '0000000000000000000000000000000000000000000000000000000000000001',
+      other: '00',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000001",
-      other: "01",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '0000000000000000000000000000000000000000000000000000000000000001',
+      other: '01',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "01",
-      result: "c000000000000000000000000000000000000000000000000000000000000000",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '01',
+      result: 'c000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "ff",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: 'ff',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "0100",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '0100',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "8000000000000000000000000000000000000000000000000000000000000000",
-      other: "0101",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: '8000000000000000000000000000000000000000000000000000000000000000',
+      other: '0101',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "00",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '00',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "01",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '01',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "ff",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: 'ff',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "0100",
-      result: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '0100',
+      result: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
     {
-      value: "0000000000000000000000000000000000000000000000000000000000000000",
-      other: "01",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '0000000000000000000000000000000000000000000000000000000000000000',
+      other: '01',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "4000000000000000000000000000000000000000000000000000000000000000",
-      other: "fe",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: '4000000000000000000000000000000000000000000000000000000000000000',
+      other: 'fe',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "f8",
-      result: "000000000000000000000000000000000000000000000000000000000000007f",
+      value: '7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: 'f8',
+      result: '000000000000000000000000000000000000000000000000000000000000007f',
     },
     {
-      value: "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "fe",
-      result: "0000000000000000000000000000000000000000000000000000000000000001",
+      value: '7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: 'fe',
+      result: '0000000000000000000000000000000000000000000000000000000000000001',
     },
     {
-      value: "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "ff",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: 'ff',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
     {
-      value: "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      other: "0100",
-      result: "0000000000000000000000000000000000000000000000000000000000000000",
+      value: '7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      other: '0100',
+      result: '0000000000000000000000000000000000000000000000000000000000000000',
     },
   ])
 })
@@ -490,7 +490,6 @@ function testUnaryOp (method: keyof MachineWord, testCases: UnaryTestCase[]) {
     })
   })
 }
-
 
 function testBinOp (method: keyof MachineWord, testCases: BinaryTestCase[]) {
   describe('MachineWord.' + method, () => {

@@ -60,7 +60,7 @@ function flip (testCases: TestCase[]) {
   return testCases.map(testCase => ({
     X: testCase.Y,
     Y: testCase.X,
-    Expected: testCase.Expected
+    Expected: testCase.Expected,
   }))
 }
 
