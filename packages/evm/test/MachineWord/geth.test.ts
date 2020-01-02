@@ -31,25 +31,23 @@ describe('MachineWord - geth', () => {
   testMW('signedDivide', flip(testCasesSDIV))
   testMW('unsignedModulo', flip(testCasesMOD))
   testMW('signedModulo', flip(testCasesSMOD))
-  // TODO: addModulo
-  // TODO: multiplyModulo
   testMW('exponentiate', flip(testCasesEXP))
   testMW('extendSign', testCasesSIGNEXT)
   testBoolean('unsignedLessThan', flip(testCasesLT))
   testBoolean('signedLessThan', flip(testCasesSLT))
   testBoolean('unsignedGreaterThan', flip(testCasesGT))
   testBoolean('signedGreaterThan', flip(testCasesSGT))
-  // TODO: isZero
+  // I couldn't find geth tests for ISZERO
   testBoolean('equals', testCasesEQ)
   testMW('and', testCasesAND)
   testMW('or', flip(testCasesOR))
   testMW('xor', testCasesXOR)
-  // TODO: not
+  // I couldn't find geth tests for NOT
   testMW('getByte', testCasesBYTE)
   testMW('shiftLeft', testCasesSHL)
   testMW('logicalShiftRight', testCasesSHR)
   testMW('arithmeticShiftRight', testCasesSAR)
-  // TODO: keccak256Hash
+  // I couldn't find geth tests for SHA3
 })
 
 interface TestCase {

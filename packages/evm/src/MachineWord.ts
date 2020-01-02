@@ -91,22 +91,6 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  addModulo (other: MachineWord, divisor: MachineWord) {
-    if (divisor.isZero()) {
-      return MachineWord.ZERO
-    }
-    const result = this.value.add(other.value).mod(divisor.value)
-    return new MachineWord(result)
-  }
-
-  multiplyModulo (other: MachineWord, divisor: MachineWord) {
-    if (divisor.isZero()) {
-      return MachineWord.ZERO
-    }
-    const result = this.value.mul(other.value).mod(divisor.value)
-    return new MachineWord(result)
-  }
-
   exponentiate (power: MachineWord) {
     if (power.isZero()) {
       return MachineWord.ONE
