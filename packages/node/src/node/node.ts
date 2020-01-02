@@ -8,7 +8,7 @@ import {
   respondRPC,
   sanitizeRPCEnvelope,
 } from './rpc/middlewares'
-import { errorHandler } from './errorHandler'
+import { errorHandler, NotFoundHttpError } from './errorHandler'
 import { rpcCommandsDescription } from './rpc/description'
 import { TestChain } from '../TestChain'
 import { rpcExecutorFromCtx } from './rpc/rpcExecutor'
@@ -33,6 +33,10 @@ export function getApp (ctx: NodeCtx) {
       respondRPC(rpcCommandsDescription),
     ),
   )
+
+  app.use('*', (_req, _res) => {
+    throw new NotFoundHttpError()
+  })
 
   app.use(errorHandler)
 
