@@ -5,7 +5,7 @@ const negative = (value: string) => MachineWord.ZERO
   .subtract(MachineWord.fromHexString(value))
   .toHexString()
 
-describe.only('MachineWord - parity', () => {
+describe('MachineWord - parity', () => {
   testBinOp('add', [
     // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L51
     {
