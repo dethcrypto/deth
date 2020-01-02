@@ -34,6 +34,12 @@ export function getApp (ctx: NodeCtx) {
     ),
   )
 
+  app.use('/health', (req, res) => {
+    res.status(200).json({
+      status: 'OK',
+    })
+  })
+
   app.use('*', (_req, _res) => {
     throw new NotFoundHttpError()
   })
