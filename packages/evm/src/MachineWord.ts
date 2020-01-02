@@ -85,7 +85,9 @@ export class MachineWord {
     }
 
     const intermediate = this.signed.abs().mod(other.signed.abs())
-    const result = this.signed.isNeg() ? intermediate.ineg() : intermediate
+    const result = this.signed.isNeg()
+      ? intermediate.ineg().toTwos(256)
+      : intermediate
     return new MachineWord(result)
   }
 
@@ -180,10 +182,11 @@ export class MachineWord {
     if (position.value.gten(32)) {
       return MachineWord.ZERO
     }
+    // for some reason the actual type of result is number!
     const result = this.value
       .shrn((31 - position.value.toNumber()) * 8)
       .andln(0xff)
-    return new MachineWord(result)
+    return new MachineWord(new BN(result))
   }
 
   shiftLeft (by: MachineWord) {
