@@ -221,6 +221,7 @@ export class MachineWord {
   }
 
   keccak256Hash () {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const hex = this.value.toString(16, 64).match(/../g)!.map(x => parseInt(x, 16))
     const result = keccak256(hex)
     return MachineWord.fromHexString(result)

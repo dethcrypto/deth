@@ -40,6 +40,13 @@ describe('MachineWord', () => {
       b: '30'.padEnd(64, '0'),
       c: '1f'.padEnd(64, '0'),
     })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L30
+    it('passes Parity test case "test_add"', {
+      a: MINUS_ONE,
+      b: MINUS_ONE,
+      c: negative('2'),
+    })
   })
 
   testBinOp('subtract', (it) => {
@@ -84,6 +91,13 @@ describe('MachineWord', () => {
       b: 'ef'.padEnd(64, '0'),
       c: '41'.padEnd(64, '0'),
     })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L452
+    it('passes Parity test case "test_sub"', {
+      a: '12365124623',
+      b: '654321',
+      c: '12364ad0302',
+    })
   })
 
   testBinOp('multiply', (it) => {
@@ -121,6 +135,13 @@ describe('MachineWord', () => {
       a: '0ff'.padEnd(64, '0'),
       b: '100',
       c: 'f'.padEnd(64, '0'),
+    })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L434
+    it('passes Parity test case "test_mul"', {
+      a: '12365124623',
+      b: '654321',
+      c: '734349397b853383',
     })
   })
 
@@ -160,6 +181,13 @@ describe('MachineWord', () => {
       b: '2',
       c: '7'.padEnd(64, 'f'),
     })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L470
+    it('passes Parity test case "test_div"', {
+      a: '12365124623',
+      b: '654321',
+      c: '2e0ac',
+    })
   })
 
   testBinOp('signedDivide', (it) => {
@@ -190,6 +218,20 @@ describe('MachineWord', () => {
     it('interprets large numbers as negative', {
       a: MINUS_ONE,
       b: '2',
+      c: ZERO,
+    })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L557
+    it('passes Parity test case "test_sdiv" #1', {
+      a: '12365124623',
+      b: '654322',
+      c: '2e0ac',
+    })
+
+    // https://github.com/paritytech/parity-ethereum/blob/dabfa2c6/ethcore/evm/src/tests.rs#L558
+    it('passes Parity test case "test_sdiv" #2', {
+      a: '12365124623',
+      b: ZERO,
       c: ZERO,
     })
   })
