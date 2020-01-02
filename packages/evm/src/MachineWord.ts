@@ -4,9 +4,7 @@ const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
 
 export class MachineWord {
-  private value: BN
-  constructor (value: BN) {
-    this.value = value.clone()
+  private constructor (private value: BN) {
   }
 
   static ZERO = new MachineWord(new BN(0))
@@ -18,6 +16,7 @@ export class MachineWord {
   }
 
   static fromHexString (value: string) {
+    // TODO: error check for size
     return new MachineWord(new BN(value, 16))
   }
 
