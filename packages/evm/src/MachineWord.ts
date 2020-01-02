@@ -5,6 +5,9 @@ const MAX_256 = new BN('f'.repeat(64), 16)
 
 export class MachineWord {
   private constructor (private value: BN) {
+    if (value.isNeg() || value.gt(MAX_256)) {
+      throw new TypeError('Invalid MachineWord initialized')
+    }
   }
 
   static ZERO = new MachineWord(new BN(0))
@@ -16,7 +19,6 @@ export class MachineWord {
   }
 
   static fromHexString (value: string) {
-    // TODO: error check for size
     return new MachineWord(new BN(value, 16))
   }
 
