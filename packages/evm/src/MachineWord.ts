@@ -4,9 +4,10 @@ const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
 
 export class MachineWord {
-  private value: BN
-  constructor (value: BN) {
-    this.value = value.clone()
+  private constructor (private value: BN) {
+    if (value.isNeg() || value.gt(MAX_256)) {
+      throw new TypeError('Invalid MachineWord initialized')
+    }
   }
 
   static ZERO = new MachineWord(new BN(0))
