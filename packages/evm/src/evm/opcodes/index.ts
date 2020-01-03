@@ -23,6 +23,9 @@ import {
   opXOR,
   opNOT,
   opBYTE,
+  opSHL,
+  opSHR,
+  opSAR,
 } from './calculations'
 import { invalidOpcode } from './invalid'
 import { opDup, opSwap } from './stack'
@@ -54,6 +57,9 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '18': opXOR,
   '19': opNOT,
   '1a': opBYTE,
+  '1b': opSHL,
+  '1c': opSHR,
+  '1d': opSAR,
   // 60 - 7f PUSH - handled differently
   '80': opDup(1),
   '81': opDup(1),

@@ -115,3 +115,20 @@ export const opBYTE = makeBinaryOp(
   GasCost.VERY_LOW,
   (a, b) => b.getByte(a)
 )
+
+// shifts
+
+export const opSHL = makeBinaryOp(
+  GasCost.VERY_LOW,
+  (a, b) => b.shiftLeft(a)
+)
+
+export const opSHR = makeBinaryOp(
+  GasCost.VERY_LOW,
+  (a, b) => b.logicalShiftRight(a)
+)
+
+export const opSAR = makeBinaryOp(
+  GasCost.VERY_LOW,
+  (a, b) => b.arithmeticShiftRight(a)
+)
