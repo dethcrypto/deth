@@ -30,6 +30,9 @@ export class MachineWord {
     return this.value.fromTwos(256)
   }
 
+  /**
+   * Returns the result of adding the argument to this machine word
+   */
   add (other: MachineWord) {
     const result = this.value
       .add(other.value)
@@ -37,22 +40,31 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  subtract (other: MachineWord) {
-    const result = this.value
-      .sub(other.value)
-      .toTwos(256)
-    return new MachineWord(result)
-  }
-
-  multiply (other: MachineWord) {
+  /**
+   * Returns the result of multiplying this machine word by the argument
+   */
+  mul (other: MachineWord) {
     const result = this.value
       .mul(other.value)
       .mod(TWO_POW256)
     return new MachineWord(result)
   }
 
-  unsignedDivide (other: MachineWord) {
-    if (other.isZero()) {
+  /**
+   * Returns the result of subtracting the argument from this machine word
+   */
+  sub (other: MachineWord) {
+    const result = this.value
+      .sub(other.value)
+      .toTwos(256)
+    return new MachineWord(result)
+  }
+
+  /**
+   * Returns the result of dividing this machine word by the argument
+   */
+  div (other: MachineWord) {
+    if (other.value.isZero()) {
       return MachineWord.ZERO
     }
     const result = this.value
@@ -60,8 +72,12 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  signedDivide (other: MachineWord) {
-    if (other.isZero()) {
+  /**
+   * Returns the result of dividing this machine word by the argument.
+   * Treats the contents as two's complement signed integers
+   */
+  sdiv (other: MachineWord) {
+    if (other.value.isZero()) {
       return MachineWord.ZERO
     }
     const result = this.signed
@@ -70,8 +86,11 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  unsignedModulo (other: MachineWord) {
-    if (other.isZero()) {
+  /**
+   * Returns the remainder after dividing this machine word by the argument
+   */
+  mod (other: MachineWord) {
+    if (other.value.isZero()) {
       return MachineWord.ZERO
     }
     const result = this.value
@@ -79,8 +98,12 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  signedModulo (other: MachineWord) {
-    if (other.isZero()) {
+  /**
+   * Returns the remainder after dividing this machine word by the argument.
+   * Treats the contents as two's complement signed integers
+   */
+  smod (other: MachineWord) {
+    if (other.value.isZero()) {
       return MachineWord.ZERO
     }
 
@@ -91,11 +114,14 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  exponentiate (power: MachineWord) {
-    if (power.isZero()) {
+  /**
+   * Returns this machine word raised to the power of the argument
+   */
+  exp (power: MachineWord) {
+    if (power.value.isZero()) {
       return MachineWord.ONE
     }
-    if (this.isZero()) {
+    if (this.value.isZero()) {
       return MachineWord.ZERO
     }
     const redBase = this.value.toRed(BN.red(TWO_POW256))
@@ -103,7 +129,12 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  extendSign (bytes: MachineWord) {
+  /**
+   * Returns the this machine word converted to a 256 bit two's complement
+   * integer, by extending the sign of it's n-byte fragment, where n is
+   * specified by the argument
+   */
+  signextend (bytes: MachineWord) {
     if (bytes.value.gten(31)) {
       return this
     }
@@ -118,51 +149,100 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  unsignedLessThan (other: MachineWord) {
-    return this.value.lt(other.value)
+  /**
+   * Returns ONE if this machine word is lesser than the argument. Otherwise
+   * returns ZERO
+   */
+  lt (other: MachineWord) {
+    const result = this.value.lt(other.value)
+    return MachineWord.fromBoolean(result)
   }
 
-  signedLessThan (other: MachineWord) {
-    return this.signed.lt(other.signed)
+  /**
+   * Returns ONE if this machine word is greater than the argument. Otherwise
+   * returns ZERO
+   */
+  gt (other: MachineWord) {
+    const result = this.value.gt(other.value)
+    return MachineWord.fromBoolean(result)
   }
 
-  unsignedGreaterThan (other: MachineWord) {
-    return this.value.gt(other.value)
+  /**
+   * Returns ONE if this machine word is lesser than the argument. Otherwise
+   * returns ZERO. Treats the contents as two's complement signed integers
+   */
+  slt (other: MachineWord) {
+    const result = this.signed.lt(other.signed)
+    return MachineWord.fromBoolean(result)
   }
 
-  signedGreaterThan (other: MachineWord) {
-    return this.signed.gt(other.signed)
+  /**
+   * Returns ONE if this machine word is greater than the argument. Otherwise
+   * returns ZERO. Treats the contents as two's complement signed integers
+   */
+  sgt (other: MachineWord) {
+    const result = this.signed.gt(other.signed)
+    return MachineWord.fromBoolean(result)
   }
 
-  equals (other: MachineWord) {
-    return this.value.eq(other.value)
+  /**
+   * Returns ONE if this machine word is equal to the argument. Otherwise
+   * returns ZERO
+   */
+  eq (other: MachineWord) {
+    const result = this.value.eq(other.value)
+    return MachineWord.fromBoolean(result)
   }
 
-  isZero () {
-    return this.value.isZero()
+  /**
+   * Returns ONE if this machine word is equal to ZERO. Otherwise
+   * returns ZERO
+   */
+  iszero () {
+    const result = this.value.isZero()
+    return MachineWord.fromBoolean(result)
   }
 
+  /**
+   * Returns the result of the binary AND operation on this machine word and
+   * the argument
+   */
   and (other: MachineWord) {
     const result = this.value.and(other.value)
     return new MachineWord(result)
   }
 
+  /**
+   * Returns the result of the binary OR operation on this machine word and
+   * the argument
+   */
   or (other: MachineWord) {
     const result = this.value.or(other.value)
     return new MachineWord(result)
   }
 
+  /**
+   * Returns the result of the binary XOR operation on this machine word and
+   * the argument
+   */
   xor (other: MachineWord) {
     const result = this.value.xor(other.value)
     return new MachineWord(result)
   }
 
+  /**
+   * Returns the result of the binary NOT operation on this machine word
+   */
   not () {
     const result = this.value.notn(256)
     return new MachineWord(result)
   }
 
-  getByte (position: MachineWord) {
+  /**
+   * Returns the n-th byte of this machine word, or ZERO if n >= 32, where n is
+   * specified by the argument
+   */
+  byte (position: MachineWord) {
     if (position.value.gten(32)) {
       return MachineWord.ZERO
     }
@@ -173,7 +253,11 @@ export class MachineWord {
     return new MachineWord(new BN(result))
   }
 
-  shiftLeft (by: MachineWord) {
+  /**
+   * Returns this machine word shifted left by n bits, where n is specified by
+   * the argument
+   */
+  shl (by: MachineWord) {
     if (by.value.gten(256)) {
       return MachineWord.ZERO
     }
@@ -181,7 +265,11 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  logicalShiftRight (by: MachineWord) {
+  /**
+   * Returns this machine word logically shifted right by n bits, where n is
+   * specified by the argument
+   */
+  shr (by: MachineWord) {
     if (by.value.gten(256)) {
       return MachineWord.ZERO
     }
@@ -189,7 +277,11 @@ export class MachineWord {
     return new MachineWord(result)
   }
 
-  arithmeticShiftRight (by: MachineWord) {
+  /**
+   * Returns this machine word arithmetically shifted right by n bits, where n
+   * is specified by the argument
+   */
+  sar (by: MachineWord) {
     const isSigned = this.value.testn(255)
     if (by.value.gten(256)) {
       if (isSigned) {

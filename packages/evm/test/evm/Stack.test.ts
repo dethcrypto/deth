@@ -3,31 +3,35 @@ import { MachineWord } from '../../src/evm/MachineWord'
 import { Stack } from '../../src/evm/Stack'
 import { StackOverflow, StackUnderflow } from '../../src/evm/errors'
 
+const A = MachineWord.ONE
+const B = A.add(A)
+const C = B.add(A)
+
 describe('Stack', () => {
   it('can store a single item', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ZERO)
+    stack.push(A)
 
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
+    expect(stack.pop()).to.equal(A)
   })
 
   it('can store a multiple items', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ZERO)
-    stack.push(MachineWord.ONE)
+    stack.push(A)
+    stack.push(B)
 
-    expect(stack.pop().equals(MachineWord.ONE)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
+    expect(stack.pop()).to.equal(B)
+    expect(stack.pop()).to.equal(A)
   })
 
   it('adding 1025-th item results in overflow', () => {
     const stack = new Stack()
     for (let i = 0; i < 1024; i++) {
-      stack.push(MachineWord.ZERO)
+      stack.push(A)
     }
-    expect(() => stack.push(MachineWord.ZERO)).to.throw(StackOverflow)
+    expect(() => stack.push(A)).to.throw(StackOverflow)
   })
 
   it('popping on empty stack results in underflow', () => {
@@ -38,23 +42,23 @@ describe('Stack', () => {
   it('can duplicate stack items', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ZERO)
+    stack.push(A)
     stack.dup(1)
 
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
+    expect(stack.pop()).to.equal(A)
+    expect(stack.pop()).to.equal(A)
   })
 
   it('can duplicate deeper stack items', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ONE)
-    stack.push(MachineWord.ZERO)
+    stack.push(B)
+    stack.push(A)
     stack.dup(2)
 
-    expect(stack.pop().equals(MachineWord.ONE)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ONE)).to.equal(true)
+    expect(stack.pop()).to.equal(B)
+    expect(stack.pop()).to.equal(A)
+    expect(stack.pop()).to.equal(B)
   })
 
   it('duplicating on empty stack results in underflow', () => {
@@ -65,8 +69,8 @@ describe('Stack', () => {
   it('duplicating on a shallow stack results in underflow', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ZERO)
-    stack.push(MachineWord.ZERO)
+    stack.push(A)
+    stack.push(A)
 
     expect(() => stack.dup(3)).to.throw(StackUnderflow)
   })
@@ -74,33 +78,33 @@ describe('Stack', () => {
   it('can swap items', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ONE)
-    stack.push(MachineWord.ZERO)
+    stack.push(B)
+    stack.push(A)
     stack.swap(1)
 
-    expect(stack.pop().equals(MachineWord.ONE)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
+    expect(stack.pop()).to.equal(B)
+    expect(stack.pop()).to.equal(A)
   })
 
   it('can swap items deep', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ONE)
-    stack.push(MachineWord.ZERO)
-    stack.push(MachineWord.MAX)
+    stack.push(B)
+    stack.push(A)
+    stack.push(C)
     stack.swap(2)
 
-    expect(stack.pop().equals(MachineWord.ONE)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.ZERO)).to.equal(true)
-    expect(stack.pop().equals(MachineWord.MAX)).to.equal(true)
+    expect(stack.pop()).to.equal(B)
+    expect(stack.pop()).to.equal(A)
+    expect(stack.pop()).to.equal(C)
   })
 
   it('swapping on a shallow stack results in underflow', () => {
     const stack = new Stack()
 
-    stack.push(MachineWord.ONE)
-    stack.push(MachineWord.ZERO)
-    stack.push(MachineWord.MAX)
+    stack.push(B)
+    stack.push(A)
+    stack.push(C)
 
     expect(() => stack.swap(3)).to.throw(StackUnderflow)
   })

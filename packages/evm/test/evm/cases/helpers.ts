@@ -27,7 +27,7 @@ export const Int256 = {
 
 function negative (value: string) {
   return MachineWord.ZERO
-    .subtract(MachineWord.fromHexString(value))
+    .sub(MachineWord.fromHexString(value))
     .toHexString()
 }
 

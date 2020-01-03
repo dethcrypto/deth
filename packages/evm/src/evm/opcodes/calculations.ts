@@ -1,5 +1,4 @@
 import { makeUnaryOp, makeBinaryOp, makeTernaryOp } from './helpers'
-import { MachineWord } from '../MachineWord'
 import { GasCost } from './gasCosts'
 
 // Arithmetic
@@ -11,84 +10,84 @@ export const opADD = makeBinaryOp(
 
 export const opMUL = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => a.multiply(b),
+  (a, b) => a.mul(b),
 )
 
 export const opSUB = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => a.subtract(b),
+  (a, b) => a.sub(b),
 )
 
 export const opDIV = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => a.unsignedDivide(b),
+  (a, b) => a.div(b),
 )
 
 export const opSDIV = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => a.signedDivide(b),
+  (a, b) => a.sdiv(b),
 )
 
 export const opMOD = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => a.unsignedModulo(b),
+  (a, b) => a.mod(b),
 )
 
 export const opSMOD = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => a.signedModulo(b),
+  (a, b) => a.smod(b),
 )
 
 export const opADDMOD = makeTernaryOp(
   GasCost.MEDIUM,
-  (a, b, c) => a.add(b).unsignedModulo(c),
+  (a, b, c) => a.add(b).mod(c),
 )
 
 export const opMULMOD = makeTernaryOp(
   GasCost.MEDIUM,
-  (a, b, c) => a.multiply(b).unsignedModulo(c),
+  (a, b, c) => a.mul(b).mod(c),
 )
 
 export const opEXP = makeBinaryOp(
   GasCost.ZERO, // TODO: proper exp gas cost calculation
-  (a, b) => a.exponentiate(b),
+  (a, b) => a.exp(b),
 )
 
 export const opSIGNEXTEND = makeBinaryOp(
   GasCost.LOW,
-  (a, b) => b.extendSign(a),
+  (a, b) => b.signextend(a),
 )
 
 // Comparison & Bitwise Logic
 
 export const opLT = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.unsignedLessThan(b)),
+  (a, b) => a.lt(b),
 )
 
 export const opGT = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.unsignedGreaterThan(b)),
+  (a, b) => a.gt(b),
 )
 
 export const opSLT = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.signedLessThan(b)),
+  (a, b) => a.slt(b),
 )
 
 export const opSGT = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.signedGreaterThan(b)),
+  (a, b) => a.sgt(b),
 )
 
 export const opEQ = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.equals(b)),
+  (a, b) => a.eq(b),
 )
 
 export const opISZERO = makeUnaryOp(
   GasCost.VERY_LOW,
-  (a) => MachineWord.fromBoolean(a.isZero()),
+  (a) => a.iszero(),
 )
 
 export const opAND = makeBinaryOp(
@@ -113,22 +112,22 @@ export const opNOT = makeUnaryOp(
 
 export const opBYTE = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => b.getByte(a),
+  (a, b) => b.byte(a),
 )
 
 // shifts
 
 export const opSHL = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => b.shiftLeft(a),
+  (a, b) => b.shl(a),
 )
 
 export const opSHR = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => b.logicalShiftRight(a),
+  (a, b) => b.shr(a),
 )
 
 export const opSAR = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => b.arithmeticShiftRight(a),
+  (a, b) => b.sar(a),
 )
