@@ -1,12 +1,12 @@
 import { RPCExecutorType } from './description'
 import { NodeCtx } from '../node'
 import { CHAIN_ID } from '../../constants'
-import { RpcBlockResponse, RpcTransactionReceipt } from '../../model'
+import { RpcBlockResponse } from '../../model'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> };
 type SafeBlock = NoNullProperties<RpcBlockResponse>;
-type SafeTxReceipt = NoNullProperties<RpcTransactionReceipt>;
 
+// NOTE: we don't pass real blockOrTag value here but rather always use latest b/c it's not yet properly implemented
 export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
   return {
     web3_clientVersion: () => 'Deth/0.0.1', // @todo real value here
@@ -25,14 +25,15 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       return block as SafeBlock
     },
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
+    // @TODO: rewrite chain to return undefined instead of throw
     eth_getTransactionReceipt: ([txHash]) =>
-      catchAsNull(() => ctx.chain.getTransactionReceipt(txHash) as any), // @TODO: types
+      catchAsNull(() => ctx.chain.getTransactionReceipt(txHash)),
   }
 }
 
-const catchAsNull = async (fn: Function) => {
+const catchAsNull = <T>(fn: () => T): T | null => {
   try {
-    return await fn()
+    return fn()
   } catch (e) {
     return null
   }
