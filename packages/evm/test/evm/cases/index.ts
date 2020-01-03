@@ -105,10 +105,10 @@ export const TestCases = {
     ...importParity(paritySMOD),
   ],
   ADDMOD: [
-    ...importParity(parityADDMOD)
+    ...importParity(parityADDMOD),
   ],
   MULMOD: [
-    ...importParity(parityMULMOD)
+    ...importParity(parityMULMOD),
   ],
   EXP: [
     ...importGeth(gethEXP),

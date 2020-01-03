@@ -32,7 +32,7 @@ describe('MachineWord', () => {
 export function invert (testCases: TestCase[]): TestCase[] {
   return testCases.map(testCase => ({
     ...testCase,
-    stack: [...testCase.stack].reverse()
+    stack: [...testCase.stack].reverse(),
   }))
 }
 

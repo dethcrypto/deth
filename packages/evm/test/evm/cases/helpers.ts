@@ -1,4 +1,4 @@
-import { MachineWord } from "../../../src/MachineWord"
+import { MachineWord } from '../../../src/MachineWord'
 
 const HEX_REGEX = /^0x[\da-f]*$/
 
@@ -22,7 +22,7 @@ export const Int256 = {
         ? value.toString(16).padStart(64, '0')
         : negative((-value).toString(16))
     }
-  }
+  },
 }
 
 function negative (value: string) {
@@ -48,7 +48,7 @@ export function importGeth (testCases: GethTestCase[]): TestCase[] {
     title: `geth #${i + 1}`,
     stack: [
       testCase.X,
-      testCase.Y
+      testCase.Y,
     ],
     expected: testCase.Expected,
   }))

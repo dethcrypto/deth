@@ -29,7 +29,7 @@ export default [
     title: 'loops around',
     stack: [
       Int256.MIN_SIGNED,
-      Int256.of(-1)
+      Int256.of(-1),
     ],
     expected: Int256.MAX_SIGNED,
   },

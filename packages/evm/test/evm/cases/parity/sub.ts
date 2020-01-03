@@ -7,5 +7,5 @@ export default [
       Int256.of(0x12365124623),
     ],
     expected: Int256.of(0x12364ad0302),
-  }
+  },
 ]

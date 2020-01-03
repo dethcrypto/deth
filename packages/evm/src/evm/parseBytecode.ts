@@ -36,6 +36,7 @@ function parseBytes (bytecode: string) {
   if (!isHexBytes(bytecode)) {
     throw new InvalidBytecode()
   }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return bytecode.match(/../g)!.map(x => x)
 }
 

@@ -16,5 +16,5 @@ export default [
       Int256.of(0x10),
     ],
     expected: Int256.of(0),
-  }
+  },
 ]

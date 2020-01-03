@@ -163,4 +163,3 @@ const OPCODES: Record<string, string | undefined> = {
   REVERT: 'fd',
   SELFDESTRUCT: 'ff',
 }
-

@@ -3,7 +3,7 @@ import { ExecutionContext } from '../ExecutionContext'
 
 export function makeUnaryOp (
   gasCost: number,
-  operation: (a: MachineWord) => MachineWord
+  operation: (a: MachineWord) => MachineWord,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.gasUsed += gasCost
@@ -15,7 +15,7 @@ export function makeUnaryOp (
 
 export function makeBinaryOp (
   gasCost: number,
-  operation: (a: MachineWord, b: MachineWord) => MachineWord
+  operation: (a: MachineWord, b: MachineWord) => MachineWord,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.gasUsed += gasCost
@@ -28,7 +28,7 @@ export function makeBinaryOp (
 
 export function makeTernaryOp (
   gasCost: number,
-  operation: (a: MachineWord, b: MachineWord, c: MachineWord) => MachineWord
+  operation: (a: MachineWord, b: MachineWord, c: MachineWord) => MachineWord,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.gasUsed += gasCost
