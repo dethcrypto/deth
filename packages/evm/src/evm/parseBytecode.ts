@@ -1,4 +1,4 @@
-import { InvalidBytecode } from '../errors'
+import { InvalidBytecode } from './errors'
 import { getOpcode, opPush, opUnreachable } from './opcodes'
 import { Opcode } from './opcodes/Opcode'
 

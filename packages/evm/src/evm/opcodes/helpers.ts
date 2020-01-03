@@ -1,4 +1,4 @@
-import { MachineWord } from '../../MachineWord'
+import { MachineWord } from '../MachineWord'
 import { ExecutionContext } from '../ExecutionContext'
 
 export function makeUnaryOp (

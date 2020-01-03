@@ -1,5 +1,5 @@
 import { makeUnaryOp, makeBinaryOp, makeTernaryOp } from './helpers'
-import { MachineWord } from '../../MachineWord'
+import { MachineWord } from '../MachineWord'
 import { GasCost } from './gasCosts'
 
 // Arithmetic
