@@ -2,7 +2,7 @@ import { assert, Dictionary } from 'ts-essentials'
 import * as t from 'io-ts'
 import { isRight, isLeft } from 'fp-ts/lib/Either'
 import { responseOf } from '@restless/restless'
-import { IOTSError } from '../errorHandler'
+import { IOTSError, NotFoundHttpError } from '../errorHandler'
 import { Request } from 'express'
 
 type RPCSchema = Dictionary<{ parameters: t.Type<any>, returns: t.Type<any> }>;
@@ -10,13 +10,13 @@ type RPCExecutors = Dictionary<Function>;
 
 const jsonRpcEnvelope = t.type({
   jsonrpc: t.literal('2.0'),
-  id: t.number,
+  id: t.union([t.number, t.string]),
   method: t.string,
   params: t.any,
 })
 
 export function sanitizeRPCEnvelope () {
-  return (_data: any, req: any) => {
+  return (_data: any, req: Request) => {
     const result = jsonRpcEnvelope.decode(req.body)
 
     if (isLeft(result)) {
@@ -32,7 +32,7 @@ export function sanitizeRPC<T extends t.Any> (
     const m = req.body.method
     const rpcDescription = schema[m]
     if (!rpcDescription) {
-      throw new Error(`RPC: ${m} not implemented`)
+      throw new NotFoundHttpError()
     }
     const params = req.body.params
     // we need to normalize empty arrays to undefineds
@@ -50,7 +50,7 @@ export function sanitizeRPC<T extends t.Any> (
 }
 
 export function executeRPC (executors: RPCExecutors) {
-  return async (data: any, req: any) => {
+  return async (data: unknown, req: Request) => {
     const method = req.body.method
 
     const executor = executors[method]
@@ -61,7 +61,7 @@ export function executeRPC (executors: RPCExecutors) {
 }
 
 export function respondRPC (schema: RPCSchema) {
-  return (data: any, req: any) => {
+  return (data: unknown, req: Request) => {
     const method = req.body.method
     const rpcDescription = schema[method]
     assert(rpcDescription, `Couldn't find rpc description for ${method}`)

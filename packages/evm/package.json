@@ -12,6 +12,7 @@
   },
   "scripts": {
     "lint": "eslint --ext .ts src test",
+    "lint:fix": "eslint --ext .ts --fix src test",
     "typecheck": "tsc --noEmit",
     "prebuild": "rm -rf dist",
     "build": "yarn build:esm && yarn build:cjs",
@@ -30,6 +31,7 @@
     "@typescript-eslint/parser": "^2.12.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-no-only-tests": "^2.4.0",
     "mocha": "^6.2.2",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"

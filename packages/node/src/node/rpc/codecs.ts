@@ -7,6 +7,8 @@ export const hexData = codecFromMake(makeHexData)
 export const hash = codecFromMake(makeHash)
 export const address = codecFromMake(makeAddress)
 
+export const nullable = (type: t.Type<any>) => t.union([type, t.null])
+
 function codecFromMake <T extends string> (make: (value: string) => T) {
   return new t.Type<T, string, unknown>(
     'RPC_QUANTITY',
