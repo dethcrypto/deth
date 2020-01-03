@@ -1,6 +1,6 @@
 import { Opcode } from './opcodes/Opcode'
 import { ExecutionContext } from './ExecutionContext'
-import { Stack } from '../Stack'
+import { Stack } from './Stack'
 
 export function executeCode (code: Opcode[]) {
   const ctx: ExecutionContext = {

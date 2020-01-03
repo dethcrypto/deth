@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { MachineWord } from '../../src/MachineWord'
+import { MachineWord } from '../../src/evm/MachineWord'
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
 

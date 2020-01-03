@@ -1,5 +1,5 @@
 import { ExecutionContext } from '../ExecutionContext'
-import { InvalidOpcode, UnreachableInstruction } from '../../errors'
+import { InvalidOpcode, UnreachableInstruction } from '../errors'
 
 export function invalidOpcode (opcode: string) {
   return function (ctx: ExecutionContext) {

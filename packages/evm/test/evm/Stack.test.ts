@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import { MachineWord } from '../src/MachineWord'
-import { Stack } from '../src/Stack'
-import { StackOverflow, StackUnderflow } from '../src/errors'
+import { MachineWord } from '../../src/evm/MachineWord'
+import { Stack } from '../../src/evm/Stack'
+import { StackOverflow, StackUnderflow } from '../../src/evm/errors'
 
 describe('Stack', () => {
   it('can store a single item', () => {
