@@ -1,6 +1,6 @@
 import * as t from 'io-ts'
 import { AsyncOrSync } from 'ts-essentials'
-import { quantity, hash, hexData, address } from './codecs'
+import { quantity, hash, hexData, address, nullable } from './codecs'
 
 export const tag = t.union([
   t.literal('earliest'),
@@ -31,6 +31,22 @@ const blockInfo = t.type({
   timestamp: quantity,
   transactions: t.array(hash),
   uncles: t.array(hash),
+})
+
+// https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-31
+const txReceipt = t.type({
+  transactionHash: hash,
+  transactionIndex: quantity,
+  blockHash: hash,
+  blockNumber: quantity,
+  from: address,
+  to: nullable(address),
+  cumulativeGasUsed: quantity,
+  gasUsed: quantity,
+  contractAddress: nullable(address),
+  logs: t.array(hexData), // @TODO types
+  logsBloom: hexData,
+  status: quantity,
 })
 
 export const rpcCommandsDescription = {
@@ -67,6 +83,14 @@ export const rpcCommandsDescription = {
   eth_getBlockByNumber: {
     parameters: t.tuple([quantityOrTag, t.boolean]),
     returns: blockInfo,
+  },
+  eth_sendRawTransaction: {
+    parameters: t.tuple([hexData]),
+    returns: hash,
+  },
+  eth_getTransactionReceipt: {
+    parameters: t.tuple([hash]),
+    returns: nullable(txReceipt),
   },
 }
 

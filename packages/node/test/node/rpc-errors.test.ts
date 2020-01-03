@@ -26,7 +26,7 @@ describe('RPC/errors', () => {
     })
   })
 
-  it('throws error on malformed envelopes', async () => {
+  it('throws error on malformed envelope', async () => {
     const res = await request(app)
       .post('/')
       .send({ jsonrpc: '2.0', method: 'net_version', params: [] })
@@ -38,10 +38,13 @@ describe('RPC/errors', () => {
         code: -32600,
         message: 'BadRequest',
         details: [
-          'Invalid value undefined supplied to : { jsonrpc: "2.0", id: number, method: string, params: any }/id: number',
+          'Invalid value undefined supplied to : { jsonrpc: "2.0", id: (number | string), method: string, params: any }/id: (number | string)/0: number',
+          'Invalid value undefined supplied to : { jsonrpc: "2.0", id: (number | string), method: string, params: any }/id: (number | string)/1: string',
         ],
       },
       id: null,
     })
   })
+
+  xit('throws error on malformed request')
 })
