@@ -10,7 +10,7 @@ type RPCExecutors = Dictionary<Function>;
 
 const jsonRpcEnvelope = t.type({
   jsonrpc: t.literal('2.0'),
-  id: t.number,
+  id: t.union([t.number, t.string]),
   method: t.string,
   params: t.any,
 })

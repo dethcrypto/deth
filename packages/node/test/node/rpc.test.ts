@@ -1,9 +1,10 @@
 import { expect } from 'chai'
-import { makeRpcCall } from './common'
+import { makeRpcCall, unwrapRpcResponse } from './common'
 import { getApp, NodeCtx } from '../../src/node/node'
 import { TestChain, TestProvider } from '../../src'
 import { CHAIN_ID } from '../../src/constants'
-import { utils } from 'ethers'
+import { utils, ContractFactory } from 'ethers'
+import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 
 describe('RPC', () => {
   let app: Express.Application
@@ -16,6 +17,8 @@ describe('RPC', () => {
 
     app = getApp(ctx)
   })
+
+  xit('supports json envelope with ids as strings and numbers')
 
   it('supports net_version call', async () => {
     const res = await makeRpcCall(app, 'net_version', [])
@@ -43,5 +46,94 @@ describe('RPC', () => {
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(value.toHexString())
+  })
+
+  it('supports eth_getBalance call for account with zero balance', async () => {
+    const provider = new TestProvider(ctx.chain)
+    const recipient = provider.createEmptyWallet()
+
+    const res = await makeRpcCall(app, 'eth_getBalance', [
+      recipient.address,
+      'latest',
+    ])
+
+    expect(res).to.have.status(200)
+    expect(res.body.result).to.be.eq('0x0')
+  })
+
+  it('supports eth_getTransactionReceipt for not existing txs', async () => {
+    const notExistingTx =
+      '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
+
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
+      notExistingTx,
+    ])
+
+    expect(res).to.have.status(200)
+    expect(res.body.result).to.be.eq(null)
+  })
+
+  it('supports eth_getTransactionReceipt for existing txs', async () => {
+    const provider = new TestProvider(ctx.chain)
+    const [sender] = provider.getWallets()
+    const recipient = provider.createEmptyWallet()
+
+    const value = utils.parseEther('3.1415')
+    const signedTx = await sender.sign({
+      to: recipient.address,
+      gasLimit: 1000000,
+      gasPrice: 1,
+      nonce: 0,
+      value,
+    })
+
+    const txHashResponse = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]),
+    )
+
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
+      txHashResponse,
+    ])
+
+    expect(res).to.have.status(200)
+    expect(res.body.result).to.containSubset({
+      blockNumber: '0x1',
+      contractAddress: null,
+      cumulativeGasUsed: '0x5208',
+      from: sender.address.toLowerCase(),
+      gasUsed: '0x5208',
+      logs: [],
+      logsBloom:
+        '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+      status: '0x1',
+      to: recipient.address.toLowerCase(),
+      transactionIndex: '0x0',
+    })
+  })
+
+  it('supports contract deploys via eth_sendRawTransaction', async () => {
+    const provider = new TestProvider(ctx.chain)
+    const [sender] = provider.getWallets()
+
+    const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
+    const { data: deployData } = factory.getDeployTransaction(0)
+    const signedTx = await sender.sign({
+      data: deployData,
+      gasLimit: 1000000,
+      gasPrice: 1,
+      nonce: 0,
+    })
+
+    const txHashResponse = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]),
+    )
+
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
+      txHashResponse,
+    ])
+
+    expect(res).to.have.status(200)
+    expect(res.body.result.contractAddress).to.not.be.null
+    expect(res.body.result.to).to.be.null
   })
 })
