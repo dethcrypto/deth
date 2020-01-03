@@ -11,7 +11,7 @@ export function parseBytecode (bytecode: string) {
       if (i + pushSize >= bytes.length) {
         throw new InvalidBytecode()
       }
-      const toPush = bytes.slice(i + 1, i + pushSize + 1).join()
+      const toPush = bytes.slice(i + 1, i + pushSize + 1).join('')
       result.push(opPush(toPush))
       for (let j = 0; j < pushSize; j++) {
         result.push(opUnreachable)

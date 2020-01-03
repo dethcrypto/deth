@@ -1,9 +1,6 @@
 import { expect } from 'chai'
 import { MachineWord } from '../../src/MachineWord'
-
-const negative = (value: string) => MachineWord.ZERO
-  .subtract(MachineWord.fromHexString(value))
-  .toHexString()
+import { negative } from '../utils'
 
 describe('MachineWord - parity', () => {
   testBinOp('add', [

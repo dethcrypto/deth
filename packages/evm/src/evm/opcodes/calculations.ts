@@ -68,7 +68,7 @@ export const opLT = makeBinaryOp(
 
 export const opGT = makeBinaryOp(
   GasCost.VERY_LOW,
-  (a, b) => MachineWord.fromBoolean(a.unsignedLessThan(b))
+  (a, b) => MachineWord.fromBoolean(a.unsignedGreaterThan(b))
 )
 
 export const opSLT = makeBinaryOp(
