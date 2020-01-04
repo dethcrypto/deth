@@ -1,7 +1,7 @@
 import { RPCExecutorType } from './description'
 import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
-import { RpcBlockResponse } from '../../model'
+import { RpcBlockResponse, toEthersTransaction } from '../../model'
 import { BadRequestHttpError } from '../errorHandler'
 import { makeHexData } from '../../primitives'
 
@@ -30,12 +30,12 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     eth_getTransactionReceipt: ([txHash]) => catchAsNull(() => ctx.chain.getTransactionReceipt(txHash) as any),
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
-      const { from, gas, ...pureTx } = tx
+      const { from, ...pureTx } = tx
       const wallet = ctx.provider.getWalletForPublicKey(from)
       if (!wallet) {
         throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
       }
-      const signedTx = makeHexData(await wallet.sign({ ...pureTx, gasLimit: gas }))
+      const signedTx = makeHexData(await wallet.sign(toEthersTransaction(pureTx)))
 
       return ctx.chain.sendTransaction(signedTx)
     },
