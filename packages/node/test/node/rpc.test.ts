@@ -6,6 +6,7 @@ import { CHAIN_ID } from '../../src/constants'
 import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { NodeCtx } from '../../src/node/ctx'
+import { numberToQuantity } from '../../src/primitives'
 
 describe('RPC', () => {
   let app: Express.Application
@@ -143,10 +144,10 @@ describe('RPC', () => {
     const request = await makeRpcCall(app, 'eth_sendTransaction', [
       {
         from: sender.address,
-        gas: utils.bigNumberify(5_000_000).toHexString(),
-        gasPrice: utils.bigNumberify(1_000_000_000).toHexString(),
+        gas: numberToQuantity(5_000_000),
+        gasPrice: numberToQuantity(1_000_000_000),
         to: recipient.address,
-        value: utils.bigNumberify(1_000_000_000).toHexString(),
+        value: numberToQuantity(1_000),
       },
     ])
 
