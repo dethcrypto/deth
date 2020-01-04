@@ -1,6 +1,7 @@
 import { request, expect } from 'chai'
-import { getApp, NodeCtx } from '../../src/node/node'
-import { TestChain } from '../../src'
+import { getApp } from '../../src/node/node'
+import { TestChain, TestProvider } from '../../src'
+import { NodeCtx } from '../../src/node/ctx'
 
 describe('HTTP/errors', () => {
   let app: Express.Application
@@ -9,6 +10,7 @@ describe('HTTP/errors', () => {
     const chain = new TestChain()
     ctx = {
       chain,
+      provider: new TestProvider(chain),
     }
 
     app = getApp(ctx)

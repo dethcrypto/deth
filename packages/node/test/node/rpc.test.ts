@@ -1,10 +1,11 @@
-import { expect } from 'chai'
+import { expect, request } from 'chai'
 import { makeRpcCall, unwrapRpcResponse } from './common'
-import { getApp, NodeCtx } from '../../src/node/node'
+import { getApp } from '../../src/node/node'
 import { TestChain, TestProvider } from '../../src'
 import { CHAIN_ID } from '../../src/constants'
 import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { NodeCtx } from '../../src/node/ctx'
 
 describe('RPC', () => {
   let app: Express.Application
@@ -13,12 +14,27 @@ describe('RPC', () => {
     const chain = new TestChain()
     ctx = {
       chain,
+      provider: new TestProvider(chain),
     }
 
     app = getApp(ctx)
   })
 
-  xit('supports json envelope with ids as strings and numbers')
+  it('supports json envelope with ids as numbers', async () => {
+    const res = await request(app)
+      .post('/')
+      .send({ jsonrpc: '2.0', method: 'net_version', params: [], id: 1 })
+
+    expect(res).to.have.status(200)
+  })
+
+  it('supports json envelope with ids as strings', async () => {
+    const res = await request(app)
+      .post('/')
+      .send({ jsonrpc: '2.0', method: 'net_version', params: [], id: '1' })
+
+    expect(res).to.have.status(200)
+  })
 
   it('supports net_version call', async () => {
     const res = await makeRpcCall(app, 'net_version', [])
@@ -39,10 +55,7 @@ describe('RPC', () => {
       value,
     })
 
-    const res = await makeRpcCall(app, 'eth_getBalance', [
-      recipient.address,
-      'latest',
-    ])
+    const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(value.toHexString())
@@ -52,22 +65,16 @@ describe('RPC', () => {
     const provider = new TestProvider(ctx.chain)
     const recipient = provider.createEmptyWallet()
 
-    const res = await makeRpcCall(app, 'eth_getBalance', [
-      recipient.address,
-      'latest',
-    ])
+    const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq('0x0')
   })
 
   it('supports eth_getTransactionReceipt for not existing txs', async () => {
-    const notExistingTx =
-      '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
+    const notExistingTx = '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
-      notExistingTx,
-    ])
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [notExistingTx])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(null)
@@ -87,13 +94,9 @@ describe('RPC', () => {
       value,
     })
 
-    const txHashResponse = unwrapRpcResponse(
-      await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]),
-    )
+    const txHashResponse = unwrapRpcResponse(await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]))
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
-      txHashResponse,
-    ])
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHashResponse])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.containSubset({
@@ -124,16 +127,30 @@ describe('RPC', () => {
       nonce: 0,
     })
 
-    const txHashResponse = unwrapRpcResponse(
-      await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]),
-    )
+    const txHashResponse = unwrapRpcResponse(await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]))
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
-      txHashResponse,
-    ])
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHashResponse])
 
     expect(res).to.have.status(200)
     expect(res.body.result.contractAddress).to.not.be.null
     expect(res.body.result.to).to.be.null
+  })
+
+  it('supports eth_sendTransaction', async () => {
+    const [sender] = ctx.provider.getWallets()
+    const recipient = ctx.provider.createEmptyWallet()
+
+    const request = await makeRpcCall(app, 'eth_sendTransaction', [
+      {
+        from: sender.address,
+        gas: utils.bigNumberify(5_000_000).toHexString(),
+        gasPrice: utils.bigNumberify(1_000_000_000).toHexString(),
+        to: recipient.address,
+        value: utils.bigNumberify(1_000_000_000).toHexString(),
+      },
+    ])
+
+    expect(request).to.have.status(200)
+    expect(request.body.result).to.a('string')
   })
 })

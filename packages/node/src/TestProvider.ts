@@ -2,7 +2,7 @@ import { providers, Wallet, utils } from 'ethers'
 import { TestChain } from './TestChain'
 import { CHAIN_NAME, CHAIN_ID } from './constants'
 import { RpcTransactionRequest } from './model'
-import { makeQuantity, makeAddress, makeHexData } from './primitives'
+import { makeQuantity, makeAddress, makeHexData, Address } from './primitives'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 
 export class TestProvider extends providers.BaseProvider {
@@ -21,6 +21,11 @@ export class TestProvider extends providers.BaseProvider {
     return this.chain.options.privateKeys.map(
       key => new Wallet(key, this),
     )
+  }
+
+  getWalletForPublicKey (address: Address): Wallet | undefined {
+    const wallets = this.getWallets()
+    return wallets.filter(w => w.address.toLowerCase() === address)[0]
   }
 
   createEmptyWallet () {

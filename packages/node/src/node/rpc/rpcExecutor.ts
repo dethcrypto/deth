@@ -1,10 +1,12 @@
 import { RPCExecutorType } from './description'
-import { NodeCtx } from '../node'
+import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse } from '../../model'
+import { BadRequestHttpError } from '../errorHandler'
+import { makeHexData } from '../../primitives'
 
-type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> };
-type SafeBlock = NoNullProperties<RpcBlockResponse>;
+type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }
+type SafeBlock = NoNullProperties<RpcBlockResponse>
 
 // NOTE: we don't pass real blockOrTag value here but rather always use latest b/c it's not yet properly implemented
 export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
@@ -14,20 +16,29 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
 
     // eth
     eth_gasPrice: () => ctx.chain.getGasPrice(),
-    eth_getBalance: ([address, blockTag]) =>
-      ctx.chain.getBalance(address, 'latest'),
+    eth_getBalance: ([address, blockTag]) => {
+      return ctx.chain.getBalance(address, 'latest')
+    },
     eth_blockNumber: () => ctx.chain.getBlockNumber(),
     eth_getCode: ([address, blockTag]) => ctx.chain.getCode(address, 'latest'),
-    eth_getTransactionCount: ([address, _blockTag]) =>
-      ctx.chain.getTransactionCount(address, 'latest'),
+    eth_getTransactionCount: ([address, _blockTag]) => ctx.chain.getTransactionCount(address, 'latest'),
     eth_getBlockByNumber: async ([blockTag, includeTransactions]) => {
       const block = await ctx.chain.getBlock('latest', false)
       return block as SafeBlock
     },
-    eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     // @TODO: rewrite chain to return undefined instead of throw
-    eth_getTransactionReceipt: ([txHash]) =>
-      catchAsNull(() => ctx.chain.getTransactionReceipt(txHash)),
+    eth_getTransactionReceipt: ([txHash]) => catchAsNull(() => ctx.chain.getTransactionReceipt(txHash) as any),
+    eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
+    eth_sendTransaction: async ([tx]) => {
+      const { from, gas, ...pureTx } = tx
+      const wallet = ctx.provider.getWalletForPublicKey(from)
+      if (!wallet) {
+        throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
+      }
+      const signedTx = makeHexData(await wallet.sign({ ...pureTx, gasLimit: gas }))
+
+      return ctx.chain.sendTransaction(signedTx)
+    },
   }
 }
 
