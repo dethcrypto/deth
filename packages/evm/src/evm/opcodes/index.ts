@@ -26,7 +26,7 @@ import {
   opSHL,
   opSHR,
   opSAR,
-} from './calculations'
+} from './machineWord'
 import { invalidOpcode } from './invalid'
 import { opDup, opSwap } from './stack'
 
