@@ -49,10 +49,10 @@ const txReceipt = t.type({
 // @TODO: additional validation rule: if to === null then data can't be null
 const tx = t.type({
   from: address,
-  to: address,
-  gas: quantity,
-  gasPrice: quantity,
-  value: quantity,
+  to: undefinable(address),
+  gas: undefinable(quantity),
+  gasPrice: undefinable(quantity),
+  value: undefinable(quantity),
   data: undefinable(hexData),
   nonce: undefinable(quantity),
 })
