@@ -1,4 +1,4 @@
-import { MachineWord } from '../../../src/evm/MachineWord'
+import { MachineWord } from '../../../../../src/evm/MachineWord'
 
 const HEX_REGEX = /^0x[\da-f]*$/
 

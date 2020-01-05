@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
-import { executeAssembly } from './executeAssembly'
+import { executeAssembly } from '../../executeAssembly'
 
-describe('executeCode', () => {
+describe('machineWord opcodes', () => {
   runTestCases('ADD', TestCases.ADD)
   runTestCases('MUL', TestCases.MUL)
   runTestCases('SUB', TestCases.SUB)
