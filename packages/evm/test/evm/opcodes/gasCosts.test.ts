@@ -62,7 +62,7 @@ describe('gas costs', () => {
         testGas(
           `PUSH${n} uses ${GasCost.VERYLOW} gas`,
           `PUSH${n} ${'00'.repeat(n)}`,
-          GasCost.VERYLOW
+          GasCost.VERYLOW,
         )
       }
     })
@@ -103,11 +103,11 @@ describe('gas costs', () => {
   // TODO: other opcodes
 })
 
-function testGasPushN(n: number, opcode: string, expectedGas: number) {
+function testGasPushN (n: number, opcode: string, expectedGas: number) {
   testGas(
     `${opcode} uses ${expectedGas} gas`,
     'PUSH1 00 '.repeat(n) + opcode,
-    GasCost.VERYLOW * n + expectedGas
+    GasCost.VERYLOW * n + expectedGas,
   )
 }
 
