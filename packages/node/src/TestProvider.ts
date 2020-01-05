@@ -23,7 +23,7 @@ export class TestProvider extends providers.BaseProvider {
     )
   }
 
-  getWalletForPublicKey (address: Address): Wallet | undefined {
+  getWalletForAddress (address: Address): Wallet | undefined {
     const wallets = this.getWallets()
     return wallets.filter(w => w.address.toLowerCase() === address)[0]
   }

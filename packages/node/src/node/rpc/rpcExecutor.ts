@@ -31,7 +31,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
       const { from, ...pureTx } = tx
-      const wallet = ctx.provider.getWalletForPublicKey(from)
+      const wallet = ctx.provider.getWalletForAddress(from)
       if (!wallet) {
         throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
       }
