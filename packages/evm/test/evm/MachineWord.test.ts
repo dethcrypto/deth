@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { MachineWord } from '../../src/evm/MachineWord'
-import { TestCases } from './cases'
-import { TestCase } from './cases/helpers'
+import { TestCases } from './opcodes/machineWord/cases'
+import { TestCase } from './opcodes/machineWord/cases/helpers'
 
 describe('MachineWord', () => {
   runTestCases('add', TestCases.ADD)

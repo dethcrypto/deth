@@ -58,7 +58,7 @@ export const opSIGNEXTEND = makeBinaryOp(
   (a, b) => b.signextend(a),
 )
 
-// Comparison & Bitwise Logic
+// Comparison
 
 export const opLT = makeBinaryOp(
   GasCost.VERY_LOW,
@@ -90,6 +90,8 @@ export const opISZERO = makeUnaryOp(
   (a) => a.iszero(),
 )
 
+// Bitwise Logic
+
 export const opAND = makeBinaryOp(
   GasCost.VERY_LOW,
   (a, b) => a.and(b),
@@ -115,7 +117,7 @@ export const opBYTE = makeBinaryOp(
   (a, b) => b.byte(a),
 )
 
-// shifts
+// Shifts
 
 export const opSHL = makeBinaryOp(
   GasCost.VERY_LOW,
