@@ -15,6 +15,7 @@ describe('DUP* opcodes', () => {
     describe(`DUP${n}`, () => {
       it('duplicates the value on the stack', () => {
         const result = executeAssembly(`${assembly} DUP${n}`)
+        expect(result.error).to.equal(undefined)
         expect(result.stack.pop().toHexString()).to.equal(stack[stack.length - n])
       })
 
@@ -27,6 +28,7 @@ describe('DUP* opcodes', () => {
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
         const result = executeAssembly(`${assembly} DUP${n}`)
+        expect(result.error).to.equal(undefined)
         expect(result.gasUsed - GasCost.VERYLOW * 16).to.equal(GasCost.VERYLOW)
       })
     })

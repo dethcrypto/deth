@@ -11,11 +11,13 @@ describe('PUSH* opcodes', () => {
 
       it('pushes a value onto the stack', () => {
         const result = executeAssembly(`PUSH${n} ${bytes}`)
+        expect(result.error).to.equal(undefined)
         expect(result.stack.pop().toHexString()).to.equal(bytes.padStart(64, '0'))
       })
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
         const result = executeAssembly(`PUSH${n} ${bytes}`)
+        expect(result.error).to.equal(undefined)
         expect(result.gasUsed).to.equal(GasCost.VERYLOW)
       })
 

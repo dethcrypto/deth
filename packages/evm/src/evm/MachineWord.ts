@@ -22,6 +22,10 @@ export class MachineWord {
     return new MachineWord(new BN(value, 16))
   }
 
+  toUnsignedNumber () {
+    return this.value.toNumber()
+  }
+
   toHexString () {
     return this.value.toString(16, 64)
   }

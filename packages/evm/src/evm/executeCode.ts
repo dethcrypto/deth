@@ -1,4 +1,4 @@
-import { Opcode } from './opcodes/Opcode'
+import { Opcode } from './opcodes'
 import { ExecutionContext } from './ExecutionContext'
 import { Stack } from './Stack'
 import { VMError } from './errors'
@@ -13,6 +13,7 @@ export interface ExecutionResult {
 export function executeCode (code: Opcode[]): ExecutionResult {
   const ctx: ExecutionContext = {
     stack: new Stack(),
+    code,
     running: true,
     gasUsed: 0,
     programCounter: 0,
