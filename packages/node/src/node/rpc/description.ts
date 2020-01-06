@@ -1,12 +1,8 @@
 import * as t from 'io-ts'
 import { AsyncOrSync } from 'ts-essentials'
-import { quantity, hash, hexData, address, nullable } from './codecs'
+import { quantity, hash, hexData, address, nullable, undefinable } from './codecs'
 
-export const tag = t.union([
-  t.literal('earliest'),
-  t.literal('latest'),
-  t.literal('pending'),
-])
+export const tag = t.union([t.literal('earliest'), t.literal('latest'), t.literal('pending')])
 
 export const quantityOrTag = t.union([quantity, tag])
 
@@ -47,6 +43,18 @@ const txReceipt = t.type({
   logs: t.array(hexData), // @TODO types
   logsBloom: hexData,
   status: quantity,
+})
+
+// https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendtransaction
+// @TODO: additional validation rule: if to === null then data can't be null
+const tx = t.type({
+  from: address,
+  to: undefinable(address),
+  gas: undefinable(quantity),
+  gasPrice: undefinable(quantity),
+  value: undefinable(quantity),
+  data: undefinable(hexData),
+  nonce: undefinable(quantity),
 })
 
 export const rpcCommandsDescription = {
@@ -92,21 +100,21 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([hash]),
     returns: nullable(txReceipt),
   },
+  eth_sendTransaction: {
+    parameters: t.tuple([tx]),
+    returns: hash,
+  },
 }
 
-type rpcCommandsDescriptionType = typeof rpcCommandsDescription;
+type rpcCommandsDescriptionType = typeof rpcCommandsDescription
 type RpcCommandsParamsType = {
-  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<
-  rpcCommandsDescriptionType[K]['parameters']
-  >;
-};
+  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<rpcCommandsDescriptionType[K]['parameters']>
+}
 type RpcCommandsReturnsType = {
-  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<
-  rpcCommandsDescriptionType[K]['returns']
-  >;
-};
+  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<rpcCommandsDescriptionType[K]['returns']>
+}
 export type RPCExecutorType = {
   [cmd in keyof rpcCommandsDescriptionType]: (
     params: RpcCommandsParamsType[cmd]
-  ) => AsyncOrSync<RpcCommandsReturnsType[cmd]>;
-};
+  ) => AsyncOrSync<RpcCommandsReturnsType[cmd]>
+}

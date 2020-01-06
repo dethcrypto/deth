@@ -1,8 +1,8 @@
-import { providers, Wallet, utils } from 'ethers'
+import { providers, Wallet } from 'ethers'
 import { TestChain } from './TestChain'
 import { CHAIN_NAME, CHAIN_ID } from './constants'
-import { RpcTransactionRequest } from './model'
-import { makeQuantity, makeAddress, makeHexData } from './primitives'
+import { toRpcTransactionRequest } from './model'
+import { Address } from './primitives'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 
 export class TestProvider extends providers.BaseProvider {
@@ -21,6 +21,11 @@ export class TestProvider extends providers.BaseProvider {
     return this.chain.options.privateKeys.map(
       key => new Wallet(key, this),
     )
+  }
+
+  getWalletForAddress (address: Address): Wallet | undefined {
+    const wallets = this.getWallets()
+    return wallets.filter(w => w.address.toLowerCase() === address)[0]
   }
 
   createEmptyWallet () {
@@ -65,39 +70,3 @@ export class TestProvider extends providers.BaseProvider {
     }
   }
 }
-
-type WithoutPromises <T> = { [K in keyof T]: Exclude<T[K], Promise<unknown>> }
-type EthersTxRequest = WithoutPromises<providers.TransactionRequest>
-
-function toRpcTransactionRequest (transaction: EthersTxRequest): RpcTransactionRequest {
-  const result: RpcTransactionRequest = {}
-
-  if (transaction.gasLimit) {
-    result.gas = toQuantity(transaction.gasLimit)
-  }
-  if (transaction.gasPrice) {
-    result.gasPrice = toQuantity(transaction.gasPrice)
-  }
-  if (transaction.nonce) {
-    result.nonce = toQuantity(transaction.nonce)
-  }
-  if (transaction.value) {
-    result.value = toQuantity(transaction.value)
-  }
-  if (transaction.from) {
-    result.from = toAddress(transaction.from)
-  }
-  if (transaction.to) {
-    result.to = toAddress(transaction.to)
-  }
-  if (transaction.data) {
-    result.data = toHexData(transaction.data)
-  }
-  return result
-}
-
-type Hexable = string | number | ArrayLike<number> | utils.Hexable
-
-const toQuantity = (value: Hexable) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
-const toAddress = (value: Hexable) => makeAddress(utils.hexlify(value))
-const toHexData = (value: Hexable) => makeHexData(utils.hexlify(value))

@@ -14,7 +14,7 @@ export function makeQuantity (value: string): Quantity {
     return '0x0' as Quantity
   }
   if (!HEX_NO_LEADING_ZERO_REGEX.test(value)) {
-    throw new TypeError(`Value "${value}" is not a valid hex number.`)
+    throw new TypeError(`Value "${value}" is not a valid hex number (leading zeroes)`)
   }
   return value.toLowerCase() as Quantity
 }

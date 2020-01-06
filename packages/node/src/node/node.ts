@@ -2,20 +2,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { asyncHandler } from '@restless/restless'
 
-import {
-  sanitizeRPC,
-  executeRPC,
-  respondRPC,
-  sanitizeRPCEnvelope,
-} from './rpc/middlewares'
+import { sanitizeRPC, executeRPC, respondRPC, sanitizeRPCEnvelope } from './rpc/middlewares'
 import { errorHandler, NotFoundHttpError } from './errorHandler'
 import { rpcCommandsDescription } from './rpc/description'
-import { TestChain } from '../TestChain'
 import { rpcExecutorFromCtx } from './rpc/rpcExecutor'
-
-export interface NodeCtx {
-  chain: TestChain,
-}
+import { NodeCtx, makeDefaultCtx } from './ctx'
 
 export function getApp (ctx: NodeCtx) {
   const rpcExecutor = rpcExecutorFromCtx(ctx)
@@ -50,11 +41,7 @@ export function getApp (ctx: NodeCtx) {
 }
 
 export function runNode (port: number) {
-  const ctx: NodeCtx = {
-    chain: new TestChain(),
-  }
-
-  const app = getApp(ctx)
+  const app = getApp(makeDefaultCtx())
 
   return app.listen(port)
 }
