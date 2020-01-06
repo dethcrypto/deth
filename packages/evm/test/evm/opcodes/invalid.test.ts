@@ -11,6 +11,7 @@ describe('invalid opcodes', () => {
     ...range('5c', '5f'),
     ...range('a5', 'ef'),
     ...range('f6', 'f9'),
+    'fe',
   ]
   for (const opcode of opcodes) {
     it(`opcode ${opcode} is invalid`, () => {
