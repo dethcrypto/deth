@@ -28,7 +28,7 @@ import {
   opSAR,
 } from './machineWord'
 import { invalidOpcode } from './invalid'
-import { opDup, opSwap } from './stack'
+import { opDup, opSwap, opPop } from './stack'
 
 export { opUnreachable } from './invalid'
 export { opPush } from './stack'
@@ -65,6 +65,7 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '1b': opSHL,
   '1c': opSHR,
   '1d': opSAR,
+  '50': opPop,
   // 60 - 7f PUSH - handled differently
   '80': opDup(1),
   '81': opDup(2),

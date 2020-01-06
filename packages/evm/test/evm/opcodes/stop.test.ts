@@ -3,7 +3,7 @@ import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 
 describe('STOP opcode', () => {
-  it(`STOP uses ${GasCost.ZERO} gas`, () => {
+  it(`uses ${GasCost.ZERO} gas`, () => {
     const result = executeAssembly('STOP')
     expect(result.gasUsed).to.equal(GasCost.ZERO)
   })

@@ -24,7 +24,7 @@ describe('gas costs', () => {
     xit('DIFFICULTY')
     xit('GASLIMIT')
     xit('RETURNDATASIZE')
-    xit('POP')
+    // POP tested separately
     xit('PC')
     xit('MSIZE')
     xit('GAS')
