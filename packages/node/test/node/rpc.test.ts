@@ -154,4 +154,23 @@ describe('RPC', () => {
     expect(request).to.have.status(200)
     expect(request.body.result).to.a('string')
   })
+
+  it('supports eth_sendTransaction with optional values', async () => {
+    const [sender] = ctx.provider.getWallets()
+    const recipient = ctx.provider.createEmptyWallet()
+
+    const request = await makeRpcCall(app, 'eth_sendTransaction', [
+      {
+        from: sender.address,
+        gas: numberToQuantity(5_000_000),
+        // note: gasLimit is totally missing ie undefined
+        to: recipient.address,
+        // note: data is passed as null
+        data: null,
+      },
+    ])
+
+    expect(request).to.have.status(200)
+    expect(request.body.result).to.a('string')
+  })
 })
