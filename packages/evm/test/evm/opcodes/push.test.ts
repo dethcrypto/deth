@@ -24,6 +24,6 @@ function testPushN (n: number) {
       expect(result.gasUsed).to.equal(GasCost.VERYLOW)
     })
 
-    xit(`results in stackoverflow after 1024 items`)
+    xit('results in stackoverflow after 1024 items')
   })
 }

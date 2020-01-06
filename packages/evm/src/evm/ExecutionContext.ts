@@ -1,5 +1,4 @@
 import { Stack } from './Stack'
-import { VMError } from './errors'
 
 export interface ExecutionContext {
   stack: Stack,

@@ -7,7 +7,7 @@ export interface ExecutionResult {
   stack: Stack,
   gasUsed: number,
   programCounter: number,
-  error?: VMError
+  error?: VMError,
 }
 
 export function executeCode (code: Opcode[]): ExecutionResult {
