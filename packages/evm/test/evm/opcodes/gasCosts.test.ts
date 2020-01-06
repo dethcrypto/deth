@@ -4,7 +4,7 @@ import { executeAssembly } from '../executeAssembly'
 
 describe('gas costs', () => {
   describe('GasCost.ZERO', () => {
-    testGas('STOP uses 0 gas', 'STOP', GasCost.ZERO)
+    // STOP tested separately
 
     xit('RETURN')
     xit('REVERT')
