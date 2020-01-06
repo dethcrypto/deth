@@ -4,7 +4,7 @@ import { asyncHandler } from '@restless/restless'
 
 import { sanitizeRPC, executeRPC, respondRPC, sanitizeRPCEnvelope } from './rpc/middlewares'
 import { errorHandler, NotFoundHttpError } from './errorHandler'
-import { rpcCommandsDescription } from './rpc/description'
+import { rpcCommandsDescription } from './rpc/schema'
 import { rpcExecutorFromCtx } from './rpc/rpcExecutor'
 import { NodeCtx, makeDefaultCtx } from './ctx'
 

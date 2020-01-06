@@ -1,35 +1,23 @@
-import { providers, Wallet } from 'ethers'
+import { providers } from 'ethers'
 import { TestChain } from './TestChain'
 import { CHAIN_NAME, CHAIN_ID } from './constants'
 import { toRpcTransactionRequest } from './model'
-import { Address } from './primitives'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
+import { WalletManager } from './WalletManager'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
+  readonly walletManager: WalletManager
 
   constructor (chainOrOptions?: TestChain | TestProviderOptions) {
     super({ name: CHAIN_NAME, chainId: CHAIN_ID })
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
+      this.walletManager = new WalletManager(undefined, this)
     } else {
       this.chain = new TestChain(toTestChainOptions(chainOrOptions))
+      this.walletManager = new WalletManager(this.chain.options.privateKeys, this)
     }
-  }
-
-  getWallets () {
-    return this.chain.options.privateKeys.map(
-      key => new Wallet(key, this),
-    )
-  }
-
-  getWalletForAddress (address: Address): Wallet | undefined {
-    const wallets = this.getWallets()
-    return wallets.filter(w => w.address.toLowerCase() === address)[0]
-  }
-
-  createEmptyWallet () {
-    return Wallet.createRandom().connect(this)
   }
 
   async mineBlock () {

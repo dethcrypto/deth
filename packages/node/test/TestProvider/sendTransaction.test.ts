@@ -6,7 +6,7 @@ import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 describe('TestProvider.sendTransaction', () => {
   it('can send a simple transfer', async () => {
     const provider = new TestProvider()
-    const [sender, recipient] = provider.getWallets()
+    const [sender, recipient] = provider.walletManager.getWallets()
 
     const response = await sender.sendTransaction({
       to: recipient.address,
@@ -18,7 +18,7 @@ describe('TestProvider.sendTransaction', () => {
 
   it('can deploy a contract', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const tx = factory.getDeployTransaction(0)
@@ -31,7 +31,7 @@ describe('TestProvider.sendTransaction', () => {
 
   it('can call a contract method', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)

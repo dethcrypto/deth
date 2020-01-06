@@ -1,12 +1,13 @@
 import { expect, request } from 'chai'
 import { makeRpcCall, unwrapRpcResponse } from './common'
 import { getApp } from '../../src/node/node'
-import { TestChain, TestProvider } from '../../src'
+import { TestChain } from '../../src'
 import { CHAIN_ID } from '../../src/constants'
 import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { NodeCtx } from '../../src/node/ctx'
 import { numberToQuantity } from '../../src/primitives'
+import { WalletManager } from '../../src/WalletManager'
 
 describe('RPC', () => {
   let app: Express.Application
@@ -15,7 +16,7 @@ describe('RPC', () => {
     const chain = new TestChain()
     ctx = {
       chain,
-      provider: new TestProvider(chain),
+      walletManager: new WalletManager(chain.options.privateKeys),
     }
 
     app = getApp(ctx)
@@ -45,16 +46,18 @@ describe('RPC', () => {
   })
 
   it('supports eth_getBalance call for account with non-zero balance', async () => {
-    // this test could use other RPC call for sending tx but they are not implemented yet
-    const provider = new TestProvider(ctx.chain)
-    const [sender] = provider.getWallets()
-    const recipient = provider.createEmptyWallet()
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
 
     const value = utils.parseEther('3.1415')
-    await sender.sendTransaction({
-      to: recipient.address,
-      value,
-    })
+    await makeRpcCall(app, 'eth_sendTransaction', [
+      {
+        from: sender.address,
+        gas: numberToQuantity(5_000_000),
+        to: recipient.address,
+        value: value.toHexString(),
+      },
+    ])
 
     const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
 
@@ -63,8 +66,7 @@ describe('RPC', () => {
   })
 
   it('supports eth_getBalance call for account with zero balance', async () => {
-    const provider = new TestProvider(ctx.chain)
-    const recipient = provider.createEmptyWallet()
+    const recipient = ctx.walletManager.createEmptyWallet()
 
     const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
 
@@ -82,9 +84,8 @@ describe('RPC', () => {
   })
 
   it('supports eth_getTransactionReceipt for existing txs', async () => {
-    const provider = new TestProvider(ctx.chain)
-    const [sender] = provider.getWallets()
-    const recipient = provider.createEmptyWallet()
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
 
     const value = utils.parseEther('3.1415')
     const signedTx = await sender.sign({
@@ -116,8 +117,7 @@ describe('RPC', () => {
   })
 
   it('supports contract deploys via eth_sendRawTransaction', async () => {
-    const provider = new TestProvider(ctx.chain)
-    const [sender] = provider.getWallets()
+    const [sender] = ctx.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
     const { data: deployData } = factory.getDeployTransaction(0)
@@ -138,8 +138,8 @@ describe('RPC', () => {
   })
 
   it('supports eth_sendTransaction', async () => {
-    const [sender] = ctx.provider.getWallets()
-    const recipient = ctx.provider.createEmptyWallet()
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
 
     const request = await makeRpcCall(app, 'eth_sendTransaction', [
       {
@@ -156,8 +156,8 @@ describe('RPC', () => {
   })
 
   it('supports eth_sendTransaction with optional values', async () => {
-    const [sender] = ctx.provider.getWallets()
-    const recipient = ctx.provider.createEmptyWallet()
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
 
     const request = await makeRpcCall(app, 'eth_sendTransaction', [
       {

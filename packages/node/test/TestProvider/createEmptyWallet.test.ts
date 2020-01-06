@@ -1,33 +1,33 @@
 import { expect } from 'chai'
 import { TestProvider } from '../../src/TestProvider'
 
-describe('TestProvider.createEmptyWallet', () => {
+describe('Testprovider.walletManager.createEmptyWallet', () => {
   it('returns a connected wallet', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
     expect(wallet.provider).to.equal(provider)
   })
 
   it('returns a wallet with empty balance', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
     const balance = await wallet.getBalance()
     expect(balance.eq(0)).to.equal(true)
   })
 
   it('returns a unique wallet', async () => {
     const provider = new TestProvider()
-    const first = provider.createEmptyWallet()
-    const second = provider.createEmptyWallet()
+    const first = provider.walletManager.createEmptyWallet()
+    const second = provider.walletManager.createEmptyWallet()
     expect(first.address).not.to.equal(second.address)
   })
 
-  it('returns a wallet not present in getWallets', async () => {
+  it('returns a wallet present in getWallets', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
-    const other = provider.getWallets()
+    const wallet = provider.walletManager.createEmptyWallet()
+    const other = provider.walletManager.getWallets()
 
     const unique = other.every(x => x.address !== wallet.address)
-    expect(unique).to.equal(true)
+    expect(unique).to.equal(false)
   })
 })

@@ -1,4 +1,4 @@
-import { RPCExecutorType } from './description'
+import { RPCExecutorType } from './schema'
 import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
@@ -31,7 +31,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
       const { from, ...pureTx } = tx
-      const wallet = ctx.provider.getWalletForAddress(from)
+      const wallet = ctx.walletManager.getWalletForAddress(from)
       if (!wallet) {
         throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
       }

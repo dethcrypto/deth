@@ -14,7 +14,7 @@ describe('TestProvider', () => {
 
   it('supports sending transactions', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
     const other = Wallet.createRandom().connect(provider)
 
     await wallet.sendTransaction({
@@ -30,7 +30,7 @@ describe('TestProvider', () => {
 
   it('can get blocks', async () => {
     const provider = new TestProvider()
-    const [wallet, other] = provider.getWallets()
+    const [wallet, other] = provider.walletManager.getWallets()
 
     const blockZero = await provider.getBlock(0)
     expect(blockZero.number).to.equal(0)

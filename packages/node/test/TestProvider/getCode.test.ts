@@ -6,7 +6,7 @@ import { COUNTER_ABI, COUNTER_BYTECODE, COUNTER_RUNTIME } from '../contracts/Cou
 describe('TestProvider.getCode', () => {
   it('returns empty value for normal addresses', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
 
     const code = await provider.getCode(wallet.address)
     expect(code).to.equal('0x')
@@ -14,7 +14,7 @@ describe('TestProvider.getCode', () => {
 
   it('returns runtime bytecode for contracts', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -25,7 +25,7 @@ describe('TestProvider.getCode', () => {
 
   it('throws for blockTag !== latest', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
 
     await expect(
       provider.getCode(wallet.address, 'pending'),
