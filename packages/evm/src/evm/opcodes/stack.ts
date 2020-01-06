@@ -25,3 +25,8 @@ export function opSwap (n: number) {
     ctx.stack.swap(n)
   }
 }
+
+export function opPop (ctx: ExecutionContext) {
+  ctx.gasUsed += GasCost.BASE
+  ctx.stack.pop()
+}

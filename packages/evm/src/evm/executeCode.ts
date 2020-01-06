@@ -1,8 +1,16 @@
 import { Opcode } from './opcodes/Opcode'
 import { ExecutionContext } from './ExecutionContext'
 import { Stack } from './Stack'
+import { VMError } from './errors'
 
-export function executeCode (code: Opcode[]) {
+export interface ExecutionResult {
+  stack: Stack,
+  gasUsed: number,
+  programCounter: number,
+  error?: VMError,
+}
+
+export function executeCode (code: Opcode[]): ExecutionResult {
   const ctx: ExecutionContext = {
     stack: new Stack(),
     running: true,
@@ -13,8 +21,25 @@ export function executeCode (code: Opcode[]) {
   while (ctx.programCounter < code.length && ctx.running) {
     const opCode = code[ctx.programCounter]
     ctx.programCounter++
-    opCode(ctx)
+    try {
+      opCode(ctx)
+    } catch (e) {
+      if (e instanceof VMError) {
+        return toResult(ctx, e)
+      } else {
+        throw e
+      }
+    }
   }
 
-  return ctx
+  return toResult(ctx)
+}
+
+function toResult (ctx: ExecutionContext, error?: VMError): ExecutionResult {
+  return {
+    stack: ctx.stack,
+    gasUsed: ctx.gasUsed,
+    programCounter: ctx.programCounter,
+    error,
+  }
 }
