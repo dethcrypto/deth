@@ -33,6 +33,7 @@ import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
 export { Opcode } from './Opcode'
+export { GasCost } from './gasCosts'
 
 export function getOpcode (hex: string) {
   return OP_CODES[hex] ?? invalidOpcode(hex)

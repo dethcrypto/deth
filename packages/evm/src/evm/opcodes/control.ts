@@ -8,11 +8,11 @@ export function opSTOP (ctx: ExecutionContext) {
 }
 
 export function opJUMPDEST (ctx: ExecutionContext) {
-  ctx.gasUsed += GasCost.JUMPDEST
+  ctx.useGas(GasCost.JUMPDEST)
 }
 
 export function opJUMP (ctx: ExecutionContext) {
-  ctx.gasUsed += GasCost.MID
+  ctx.useGas(GasCost.MID)
 
   const destination = ctx.stack.pop()
   const location = destination.toUnsignedNumber()
@@ -25,7 +25,7 @@ export function opJUMP (ctx: ExecutionContext) {
 }
 
 export function opJUMPI (ctx: ExecutionContext) {
-  ctx.gasUsed += GasCost.HIGH
+  ctx.useGas(GasCost.HIGH)
 
   const destination = ctx.stack.pop()
   const location = destination.toUnsignedNumber()

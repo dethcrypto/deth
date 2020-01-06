@@ -41,3 +41,9 @@ export class InvalidJumpDestination extends VMError {
     super(`Invalid jump destination ${destination.toHexString()}`)
   }
 }
+
+export class OutOfGas extends VMError {
+  constructor () {
+    super('Out of gas')
+  }
+}

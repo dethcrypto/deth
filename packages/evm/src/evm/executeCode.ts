@@ -10,14 +10,8 @@ export interface ExecutionResult {
   error?: VMError,
 }
 
-export function executeCode (code: Opcode[]): ExecutionResult {
-  const ctx: ExecutionContext = {
-    stack: new Stack(),
-    code,
-    running: true,
-    gasUsed: 0,
-    programCounter: 0,
-  }
+export function executeCode (code: Opcode[], gasLimit: number): ExecutionResult {
+  const ctx = new ExecutionContext(code, gasLimit)
 
   while (ctx.programCounter < code.length && ctx.running) {
     const opCode = code[ctx.programCounter]
@@ -39,7 +33,7 @@ export function executeCode (code: Opcode[]): ExecutionResult {
 function toResult (ctx: ExecutionContext, error?: VMError): ExecutionResult {
   return {
     stack: ctx.stack,
-    gasUsed: ctx.gasUsed,
+    gasUsed: ctx.getGasUsed(),
     programCounter: ctx.programCounter,
     error,
   }
