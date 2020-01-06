@@ -4,30 +4,30 @@ import { executeAssembly } from '../executeAssembly'
 
 describe('gas costs', () => {
   describe('GasCost.ZERO', () => {
-    testGas('STOP uses 0 gas', 'STOP', GasCost.ZERO)
+    // STOP tested separately
 
-    // TODO: RETURN
-    // TODO: REVERT
+    xit('RETURN')
+    xit('REVERT')
   })
 
   describe('GasCost.BASE', () => {
-    // TODO: ADDRESS
-    // TODO: ORIGIN
-    // TODO: CALLER
-    // TODO: CALLVALUE
-    // TODO: CALLDATASIZE
-    // TODO: CODESIZE
-    // TODO: GASPRICE
-    // TODO: COINBASE
-    // TODO: TIMESTAMP
-    // TODO: NUMBER
-    // TODO: DIFFICULTY
-    // TODO: GASLIMIT
-    // TODO: RETURNDATASIZE
-    // TODO: POP
-    // TODO: PC
-    // TODO: MSIZE
-    // TODO: GAS
+    xit('ADDRESS')
+    xit('ORIGIN')
+    xit('CALLER')
+    xit('CALLVALUE')
+    xit('CALLDATASIZE')
+    xit('CODESIZE')
+    xit('GASPRICE')
+    xit('COINBASE')
+    xit('TIMESTAMP')
+    xit('NUMBER')
+    xit('DIFFICULTY')
+    xit('GASLIMIT')
+    xit('RETURNDATASIZE')
+    // POP tested separately
+    xit('PC')
+    xit('MSIZE')
+    xit('GAS')
   })
 
   describe('GasCost.VERY_LOW', () => {
@@ -48,30 +48,13 @@ describe('gas costs', () => {
     testGasPushN(2, 'SHR', GasCost.VERYLOW)
     testGasPushN(2, 'SAR', GasCost.VERYLOW)
 
-    // TODO: CALLDATALOAD
-    // TODO: MLOAD
-    // TODO: MSTORE
-    // TODO: MSTORE8
+    xit('CALLDATALOAD')
+    xit('MLOAD')
+    xit('MSTORE')
+    xit('MSTORE8')
 
-    describe('PUSH*', () => {
-      for (let i = 1; i <= 32; i++) {
-        testPush(i)
-      }
-
-      function testPush (n: number) {
-        testGas(
-          `PUSH${n} uses ${GasCost.VERYLOW} gas`,
-          `PUSH${n} ${'00'.repeat(n)}`,
-          GasCost.VERYLOW,
-        )
-      }
-    })
-
-    describe('DUP*', () => {
-      for (let i = 1; i <= 16; i++) {
-        testGasPushN(i, 'DUP' + i, GasCost.VERYLOW)
-      }
-    })
+    // PUSH* tested separately
+    // DUP* tested separately
 
     describe('SWAP*', () => {
       for (let i = 1; i <= 16; i++) {
@@ -93,14 +76,14 @@ describe('gas costs', () => {
     testGasPushN(3, 'ADDMOD', GasCost.MID)
     testGasPushN(3, 'MULMOD', GasCost.MID)
 
-    // TODO: JUMP
+    xit('JUMP')
   })
 
   describe('GasCosts.HIGH', () => {
-    // TODO: JUMPI
+    xit('JUMPI')
   })
 
-  // TODO: other opcodes
+  xit('other opcodes')
 })
 
 function testGasPushN (n: number, opcode: string, expectedGas: number) {
@@ -113,7 +96,8 @@ function testGasPushN (n: number, opcode: string, expectedGas: number) {
 
 function testGas (title: string, assembly: string, expectedGas: number) {
   it(title, () => {
-    const ctx = executeAssembly(assembly)
-    expect(ctx.gasUsed).to.equal(expectedGas)
+    const result = executeAssembly(assembly)
+    expect(result.error).to.equal(undefined)
+    expect(result.gasUsed).to.equal(expectedGas)
   })
 }

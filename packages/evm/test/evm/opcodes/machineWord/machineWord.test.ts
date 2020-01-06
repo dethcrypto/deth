@@ -39,9 +39,9 @@ function runTestCases (opcode: string, testCases: TestCase[]) {
           .map(x => `PUSH32 ${x}`)
           .concat(opcode)
           .join(' ')
-        const ctx = executeAssembly(assembly)
-        const result = ctx.stack.pop()
-        expect(result.toHexString()).to.equal(testCase.expected)
+        const result = executeAssembly(assembly)
+        const value = result.stack.pop()
+        expect(value.toHexString()).to.equal(testCase.expected)
       })
     }
   })

@@ -27,6 +27,24 @@ describe('MachineWord', () => {
   runTestCases('shl', invert(TestCases.SHL))
   runTestCases('shr', invert(TestCases.SHR))
   runTestCases('sar', invert(TestCases.SAR))
+
+  it('toUnsignedNumber returns a number', () => {
+    expect(MachineWord.ONE.toUnsignedNumber()).to.equal(1)
+  })
+
+  it('toUnsignedNumber returns Infinity for large numbers', () => {
+    expect(MachineWord.MAX.toUnsignedNumber()).to.equal(Infinity)
+  })
+
+  it('equals returns true for equal MachineWords', () => {
+    const a = MachineWord.fromHexString('6').div(MachineWord.fromHexString('2'))
+    const b = MachineWord.fromHexString('3')
+    expect(a.equals(b)).to.equal(true)
+  })
+
+  it('equals returns false for unequal MachineWords', () => {
+    expect(MachineWord.ONE.equals(MachineWord.MAX)).to.equal(false)
+  })
 })
 
 export function invert (testCases: TestCase[]): TestCase[] {

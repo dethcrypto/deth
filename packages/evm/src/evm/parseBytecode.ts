@@ -1,6 +1,5 @@
 import { InvalidBytecode } from './errors'
-import { getOpcode, opPush, opUnreachable } from './opcodes'
-import { Opcode } from './opcodes/Opcode'
+import { Opcode, getOpcode, makeOpPUSH, opUnreachable } from './opcodes'
 
 export function parseBytecode (bytecode: string) {
   const result: Opcode[] = []
@@ -12,7 +11,7 @@ export function parseBytecode (bytecode: string) {
         throw new InvalidBytecode()
       }
       const toPush = bytes.slice(i + 1, i + pushSize + 1).join('')
-      result.push(opPush(toPush))
+      result.push(makeOpPUSH(toPush))
       for (let j = 0; j < pushSize; j++) {
         result.push(opUnreachable)
       }
