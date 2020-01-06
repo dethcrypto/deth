@@ -3,7 +3,7 @@ import { Opcode, GasCost } from './opcodes'
 import { OutOfGas } from './errors'
 
 export class ExecutionContext {
-  stack = new Stack
+  stack = new Stack()
   private gasUsed = 0
   private memoryUsed = 0
   private gasUsedForMemory = 0
