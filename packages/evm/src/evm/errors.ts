@@ -1,3 +1,5 @@
+import { MachineWord } from './MachineWord'
+
 export class VMError extends Error {
   constructor (message: string) {
     super('VM Exception: ' + message)
@@ -31,5 +33,11 @@ export class InvalidOpcode extends VMError {
 export class UnreachableInstruction extends VMError {
   constructor () {
     super('Unreachable instruction reached')
+  }
+}
+
+export class InvalidJumpDestination extends VMError {
+  constructor (destination: MachineWord) {
+    super(`Invalid jump destination ${destination.toHexString()}`)
   }
 }

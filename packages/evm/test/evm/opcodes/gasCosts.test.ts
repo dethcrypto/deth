@@ -97,6 +97,7 @@ function testGasPushN (n: number, opcode: string, expectedGas: number) {
 function testGas (title: string, assembly: string, expectedGas: number) {
   it(title, () => {
     const result = executeAssembly(assembly)
+    expect(result.error).to.equal(undefined)
     expect(result.gasUsed).to.equal(expectedGas)
   })
 }

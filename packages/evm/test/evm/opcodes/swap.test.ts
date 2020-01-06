@@ -23,6 +23,7 @@ describe('SWAP* opcodes', () => {
         const resultItems = (result.stack as unknown as { items: MachineWord[] }).items
           .map(x => x.toHexString())
         expect(resultItems).to.deep.equal(expected)
+        expect(result.error).to.equal(undefined)
       })
 
       for (let i = 0; i <= n; i++) {
@@ -34,6 +35,7 @@ describe('SWAP* opcodes', () => {
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
         const result = executeAssembly(`${assembly} SWAP${n}`)
+        expect(result.error).to.equal(undefined)
         expect(result.gasUsed - GasCost.VERYLOW * 17).to.equal(GasCost.VERYLOW)
       })
     })

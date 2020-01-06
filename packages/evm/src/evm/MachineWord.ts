@@ -22,12 +22,24 @@ export class MachineWord {
     return new MachineWord(new BN(value, 16))
   }
 
+  toUnsignedNumber () {
+    try {
+      return this.value.toNumber()
+    } catch {
+      return Infinity
+    }
+  }
+
   toHexString () {
     return this.value.toString(16, 64)
   }
 
   private get signed () {
     return this.value.fromTwos(256)
+  }
+
+  equals (other: MachineWord) {
+    return this.value.eq(other.value)
   }
 
   /**
