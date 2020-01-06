@@ -22,6 +22,7 @@ export async function initializeVM (options: TestChainOptions) {
   return vm
 }
 
+// @TODO extract this. VM should not be aware of any private keys etc. TestChain should provide data for genesis block
 async function initAccounts (vm: VM, options: TestChainOptions) {
   const psm = vm.pStateManager
   const balance = new BN(options.initialBalance.toString()).toBuffer()

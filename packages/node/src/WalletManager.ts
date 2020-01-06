@@ -9,7 +9,7 @@ const d = debug('deth:WalletManager')
  * This will auto connect wallets to a provider if it was specified in a constructor
  */
 export class WalletManager {
-  readonly wallets: Map<Address, Wallet> = new Map()
+  protected readonly wallets: Map<Address, Wallet> = new Map()
 
   constructor (privateKeys?: string[], readonly defaultProvider?: providers.Provider) {
     if (privateKeys) {

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { TestProvider } from '../../src/TestProvider'
 
-describe('Testprovider.walletManager.createEmptyWallet', () => {
+describe('WalletManager.createEmptyWallet', () => {
   it('returns a connected wallet', async () => {
     const provider = new TestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
