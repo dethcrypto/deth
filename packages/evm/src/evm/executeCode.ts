@@ -20,6 +20,7 @@ export function executeCode (code: Opcode[], gasLimit: number): ExecutionResult 
       opCode(ctx)
     } catch (e) {
       if (e instanceof VMError) {
+        ctx.useRemainingGas()
         return toResult(ctx, e)
       } else {
         throw e

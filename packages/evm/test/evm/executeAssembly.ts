@@ -161,5 +161,6 @@ const OPCODES: Record<string, string | undefined> = {
   CREATE2: 'f5',
   STATICCALL: 'fa',
   REVERT: 'fd',
+  INVALID: 'fe',
   SELFDESTRUCT: 'ff',
 }

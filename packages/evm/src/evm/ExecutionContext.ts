@@ -27,6 +27,10 @@ export class ExecutionContext {
     }
   }
 
+  useRemainingGas () {
+    this.gasUsed = this.gasLimit
+  }
+
   useMemory (offset: number, length: number) {
     if (length === 0) {
       return
