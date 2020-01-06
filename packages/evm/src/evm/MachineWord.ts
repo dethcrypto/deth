@@ -18,8 +18,16 @@ export class MachineWord {
     return value ? MachineWord.ONE : MachineWord.ZERO
   }
 
+  static fromNumber (value: number) {
+    return new MachineWord(new BN(value).toTwos(256))
+  }
+
   static fromHexString (value: string) {
     return new MachineWord(new BN(value, 16))
+  }
+
+  static fromBytes (value: number[]) {
+    return new MachineWord(new BN(value))
   }
 
   toUnsignedNumber () {
@@ -32,6 +40,10 @@ export class MachineWord {
 
   toHexString () {
     return this.value.toString(16, 64)
+  }
+
+  toBytes () {
+    return this.value.toArray(undefined, 32)
   }
 
   private get signed () {
