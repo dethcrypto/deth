@@ -1,14 +1,15 @@
 import { Stack } from './Stack'
-import { Opcode, GasCost } from './opcodes'
+import { Opcode } from './opcodes'
 import { OutOfGas } from './errors'
+import { Memory, GasAwareMemory } from './Memory'
 
 export class ExecutionContext {
   stack = new Stack()
-  private gasUsed = 0
-  private memoryUsed = 0
-  private gasUsedForMemory = 0
+  memory = new GasAwareMemory(new Memory(), this.useGas.bind(this))
   running = true
   programCounter = 0
+
+  private gasUsed = 0
 
   constructor (
     public code: Opcode[],
@@ -29,20 +30,5 @@ export class ExecutionContext {
 
   useRemainingGas () {
     this.gasUsed = this.gasLimit
-  }
-
-  useMemory (offset: number, length: number) {
-    if (length === 0) {
-      return
-    }
-    const words = Math.ceil((offset + length) / 32)
-    if (words <= this.memoryUsed) {
-      return
-    }
-    const gasCost = words * GasCost.MEMORY + Math.floor(words * words / 512)
-    if (this.gasUsedForMemory < gasCost) {
-      this.useGas(gasCost - this.gasUsedForMemory)
-      this.gasUsedForMemory = gasCost
-    }
   }
 }
