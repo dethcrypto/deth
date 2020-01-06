@@ -41,4 +41,59 @@ describe('JUMP* opcodes', () => {
       expect(result.error).to.be.instanceOf(StackUnderflow)
     })
   })
+
+  describe('JUMPI', () => {
+    it(`uses ${GasCost.HIGH} gas`, () => {
+      const result = executeAssembly('PUSH1 01 PUSH1 05 JUMPI JUMPDEST')
+      expect(result.error).to.equal(undefined)
+      expect(result.gasUsed - GasCost.VERYLOW * 2 - GasCost.JUMPDEST).to.equal(GasCost.HIGH)
+    })
+
+    it('jumps to a specified location in if condition is not zero', () => {
+      const result = executeAssembly(`
+        PUSH1 01
+        PUSH1 06
+        JUMPI
+        STOP
+        JUMPDEST
+        PUSH1 FF
+      `)
+      expect(result.error).to.equal(undefined)
+      expect(result.stack.pop().toHexString()).to.equal(Int256.of(0xff))
+    })
+
+    it('does not jump if condition is zero', () => {
+      const result = executeAssembly(`
+        PUSH1 00
+        PUSH1 08
+        JUMPI
+        PUSH1 EE
+        STOP
+        JUMPDEST
+        PUSH1 FF
+      `)
+      expect(result.error).to.equal(undefined)
+      expect(result.stack.pop().toHexString()).to.equal(Int256.of(0xee))
+    })
+
+    it('fails to jump to non JUMPDEST location', () => {
+      const result = executeAssembly('PUSH1 01 PUSH1 02 JUMPI')
+      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+    })
+
+    it('fails to jump to a JUMPDEST inside a push', () => {
+      const result = executeAssembly('PUSH1 JUMPDEST PUSH1 01 JUMPI')
+      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+    })
+
+    it('fails to jump with an empty stack', () => {
+      const result = executeAssembly('JUMPI')
+      expect(result.error).to.be.instanceOf(StackUnderflow)
+    })
+
+    it('fails to jump with stack of depth 1', () => {
+      const result = executeAssembly('PUSH1 00 JUMPI')
+      expect(result.error).to.be.instanceOf(StackUnderflow)
+    })
+  })
 })

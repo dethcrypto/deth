@@ -23,7 +23,11 @@ export class MachineWord {
   }
 
   toUnsignedNumber () {
-    return this.value.toNumber()
+    try {
+      return this.value.toNumber()
+    } catch {
+      return Infinity
+    }
   }
 
   toHexString () {
@@ -32,6 +36,10 @@ export class MachineWord {
 
   private get signed () {
     return this.value.fromTwos(256)
+  }
+
+  equals (other: MachineWord) {
+    return this.value.eq(other.value)
   }
 
   /**
