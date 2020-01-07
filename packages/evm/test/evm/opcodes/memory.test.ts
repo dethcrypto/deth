@@ -44,7 +44,7 @@ describe('Memory opcodes', () => {
       expect(result.error).to.equal(undefined)
       expect(result.gasUsed).to.equal(
         GasCost.VERYLOW * 9 + // PUSH, DUP and MSTORE
-        memoryGas(0x100001 + 32)
+        memoryGas(0x100001 + 32),
       )
     })
 
@@ -88,7 +88,7 @@ describe('Memory opcodes', () => {
       expect(result.error).to.equal(undefined)
       expect(result.gasUsed).to.equal(
         GasCost.VERYLOW * 9 + // PUSH, DUP and MSTORE8
-        memoryGas(0x100001 + 1)
+        memoryGas(0x100001 + 1),
       )
     })
 
@@ -129,7 +129,7 @@ describe('Memory opcodes', () => {
       expect(result.error).to.equal(undefined)
       expect(result.gasUsed).to.equal(
         GasCost.VERYLOW * 6 + // PUSH, DUP and MLOAD
-        memoryGas(0x100001 + 32)
+        memoryGas(0x100001 + 32),
       )
     })
 
