@@ -53,6 +53,14 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     evm_mine: async () => {
       await ctx.chain.mineBlock()
       return numberToQuantity(0)
-    }
+    },
+    evm_snapshot: async () => {
+      // await ctx.chain.mineBlock()
+      return numberToQuantity(0)
+    },
+    evm_revert: async ([n]) => {
+      console.log(`Reverting to ${n}`)
+      return true as const
+    },
   }
 }

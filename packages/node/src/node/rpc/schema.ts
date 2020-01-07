@@ -128,6 +128,14 @@ export const rpcCommandsDescription = {
   evm_mine: {
     parameters: t.undefined, // @todo: missing param, timestamp of a block to be mined
     returns: quantity,
+  },
+  evm_snapshot: {
+    parameters: t.undefined,
+    returns: quantity,
+  },
+  evm_revert: {
+    parameters: t.tuple([quantity]),
+    returns: t.literal(true),
   }
 }
 
