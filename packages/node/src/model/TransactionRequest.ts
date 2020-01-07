@@ -17,7 +17,7 @@ export interface RpcTransactionRequest {
 
 export function toFakeTransaction (tx: RpcTransactionRequest) {
   return new FakeTransaction({
-    from: tx.from,
+    from: tx.from ?? '0x0000000000000000000000000000000000000000', // @TODO what should be a default address to use?
     to: tx.to,
     data: tx.data,
     gasLimit: tx.gas,

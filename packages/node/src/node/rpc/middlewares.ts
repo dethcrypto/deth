@@ -1,12 +1,15 @@
 import { assert, Dictionary } from 'ts-essentials'
+import { Mutex } from 'async-mutex'
 import * as t from 'io-ts'
 import { isRight, isLeft } from 'fp-ts/lib/Either'
 import { responseOf } from '@restless/restless'
 import { IOTSError, NotFoundHttpError } from '../errorHandler'
 import { Request } from 'express'
 
-type RPCSchema = Dictionary<{ parameters: t.Type<any>, returns: t.Type<any> }>;
-type RPCExecutors = Dictionary<Function>;
+type RPCSchema = Dictionary<{ parameters: t.Type<any>, returns: t.Type<any> }>
+type RPCExecutors = Dictionary<Function>
+
+const executionMutex = new Mutex()
 
 const jsonRpcEnvelope = t.type({
   jsonrpc: t.literal('2.0'),
@@ -25,9 +28,7 @@ export function sanitizeRPCEnvelope () {
   }
 }
 
-export function sanitizeRPC<T extends t.Any> (
-  schema: RPCSchema,
-): (data: unknown, req: Request) => t.OutputOf<T> {
+export function sanitizeRPC<T extends t.Any> (schema: RPCSchema): (data: unknown, req: Request) => t.OutputOf<T> {
   return (_data, req) => {
     const m = req.body.method
     const rpcDescription = schema[m]
@@ -36,8 +37,7 @@ export function sanitizeRPC<T extends t.Any> (
     }
     const params = req.body.params
     // we need to normalize empty arrays to undefineds
-    const normalizedParams =
-      Array.isArray(params) && params.length === 0 ? undefined : params
+    const normalizedParams = Array.isArray(params) && params.length === 0 ? undefined : params
 
     const res = rpcDescription.parameters.decode(normalizedParams)
 
@@ -56,7 +56,10 @@ export function executeRPC (executors: RPCExecutors) {
     const executor = executors[method]
     assert(executor, `Couldn't find executor for ${method}`)
 
-    return executor(data)
+    // @todo: NOTE currently we run RPC calls sequentially. This limits performance but solves concurrency issues.
+    return executionMutex.runExclusive(async () => {
+      return executor(data)
+    })
   }
 }
 

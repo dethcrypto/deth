@@ -409,6 +409,11 @@ async-eventemitter@^0.2.2:
   dependencies:
     async "^2.4.0"
 
+async-mutex@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/async-mutex/-/async-mutex-0.1.4.tgz#a47d1eebf584f7dcdd760e3642dc2c58613bef5c"
+  integrity sha512-zVWTmAnxxHaeB2B1te84oecI8zTDJ/8G49aVBblRX6be0oq6pAybNcUSxwfgVOmOjSCvN4aYZAqwtyNI8e1YGw==
+
 async@^1.4.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"

@@ -173,4 +173,84 @@ describe('RPC', () => {
     expect(request).to.have.status(200)
     expect(request.body.result).to.a('string')
   })
+
+  it('supports eth_sendTransaction with missing nonce', async () => {
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
+
+    const request1 = await makeRpcCall(app, 'eth_sendTransaction', [
+      {
+        from: sender.address,
+        gas: numberToQuantity(5_000_000),
+        // note: gasLimit is totally missing ie undefined
+        to: recipient.address,
+        // note: data is passed as null
+        data: null,
+      },
+    ])
+    expect(request1).to.have.status(200)
+    expect(request1.body.result).to.a('string')
+
+    const request2 = await makeRpcCall(app, 'eth_sendTransaction', [
+      {
+        from: sender.address,
+        gas: numberToQuantity(5_000_000),
+        // note: gasLimit is totally missing ie undefined
+        to: recipient.address,
+        // note: data is passed as null
+        data: null,
+      },
+    ])
+    expect(request2).to.have.status(200)
+    expect(request2.body.result).to.a('string')
+  })
+  // this should already work but test is missing
+  xit('supports eth_sendTransaction with explicit nonce')
+
+  xit('supports eth_call calling smartcontracts')
+  // next test probably can be removed after writing proper test 1) deploying sc 2) calling it
+  it('supports eth_call', async () => {
+    const recipient = ctx.walletManager.createEmptyWallet()
+
+    const request = await makeRpcCall(app, 'eth_call', [
+      {
+        gas: numberToQuantity(5_000_000),
+        gasPrice: numberToQuantity(1_000_000_000),
+        to: recipient.address,
+      },
+      'latest',
+    ])
+
+    expect(request).to.have.status(200)
+    expect(request.body.result).to.a('string')
+  })
+
+  it('multiple eth_sendRawTransaction should not throw an error', async () => {
+    // NOTE: current impl runs rpc calls sequentially
+    const [sender] = ctx.walletManager.getWallets()
+    const recipient = ctx.walletManager.createEmptyWallet()
+
+    const sendTx = () =>
+      makeRpcCall(app, 'eth_sendTransaction', [
+        {
+          from: sender.address,
+          gas: numberToQuantity(5_000_000),
+          gasPrice: numberToQuantity(1_000_000_000),
+          to: recipient.address,
+          value: numberToQuantity(1_000),
+        },
+      ])
+
+    const requests = await Promise.all(
+      Array(5)
+
+        .fill(5)
+        .map(sendTx),
+    )
+
+    for (const request of requests) {
+      await expect(request).to.have.status(200)
+      expect(request.body.result).to.a('string')
+    }
+  })
 })
