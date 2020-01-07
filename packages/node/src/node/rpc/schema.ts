@@ -117,6 +117,18 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([callTtx, quantityOrTag]),
     returns: hexData,
   },
+
+  // ganache compatibility
+  // docs: https://github.com/trufflesuite/ganache-cli#custom-methods
+  // note: ganache uses regular numbers as types
+  evm_increaseTime: {
+    parameters: t.tuple([t.number]),
+    returns: quantity,
+  },
+  evm_mine: {
+    parameters: t.undefined, // @todo: missing param, timestamp of a block to be mined
+    returns: quantity,
+  }
 }
 
 type rpcCommandsDescriptionType = typeof rpcCommandsDescription

@@ -44,5 +44,15 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       return ctx.chain.sendTransaction(signedTx)
     },
     eth_call: ([tx, _blockTag]) => ctx.chain.call(tx, 'latest'),
+
+    // ganache compatibility
+    evm_increaseTime: ([n]) => {
+      // @TODO implement
+      return numberToQuantity(n)
+    },
+    evm_mine: async () => {
+      await ctx.chain.mineBlock()
+      return numberToQuantity(0)
+    }
   }
 }
