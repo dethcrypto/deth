@@ -1,6 +1,5 @@
 import { WalletManager } from '../../src/WalletManager'
 import { expect } from 'chai'
-import { TestProvider } from '../../src'
 import { makeAddress } from '../../src/primitives'
 
 describe('WalletManager.getWalletForAddress', () => {
