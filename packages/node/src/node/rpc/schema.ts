@@ -136,7 +136,7 @@ export const rpcCommandsDescription = {
   evm_revert: {
     parameters: t.tuple([quantity]),
     returns: t.literal(true),
-  }
+  },
 }
 
 type rpcCommandsDescriptionType = typeof rpcCommandsDescription
