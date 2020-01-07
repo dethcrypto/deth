@@ -206,7 +206,7 @@ describe('RPC', () => {
   })
   // this should already work but test is missing
   xit('supports eth_sendTransaction with explicit nonce')
-
+  xit('supports eth_sendTransaction with default gas')
   xit('supports eth_call calling smartcontracts')
   // next test probably can be removed after writing proper test 1) deploying sc 2) calling it
   it('supports eth_call', async () => {
