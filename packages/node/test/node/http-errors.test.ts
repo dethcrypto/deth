@@ -1,7 +1,8 @@
 import { request, expect } from 'chai'
 import { getApp } from '../../src/node/node'
-import { TestChain, TestProvider } from '../../src'
+import { TestChain } from '../../src'
 import { NodeCtx } from '../../src/node/ctx'
+import { WalletManager } from '../../src/WalletManager'
 
 describe('HTTP/errors', () => {
   let app: Express.Application
@@ -10,7 +11,7 @@ describe('HTTP/errors', () => {
     const chain = new TestChain()
     ctx = {
       chain,
-      provider: new TestProvider(chain),
+      walletManager: new WalletManager(chain.options.privateKeys),
     }
 
     app = getApp(ctx)

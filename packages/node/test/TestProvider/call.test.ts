@@ -9,7 +9,7 @@ describe('TestProvider.call', () => {
 
   it('can call a contract method directly', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -25,7 +25,7 @@ describe('TestProvider.call', () => {
 
   it('can call a contract method indirectly', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(42)

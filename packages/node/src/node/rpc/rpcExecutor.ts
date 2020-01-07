@@ -1,4 +1,4 @@
-import { RPCExecutorType } from './description'
+import { RPCExecutorType } from './schema'
 import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
@@ -26,12 +26,12 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       const block = await ctx.chain.getBlock('latest', false)
       return block as SafeBlock
     },
-    // @TODO: rewrite chain to return undefined instead of throw
-    eth_getTransactionReceipt: ([txHash]) => catchAsNull(() => ctx.chain.getTransactionReceipt(txHash) as any),
+    // @TODO: as any b/c logs are not implemented properly right now...
+    eth_getTransactionReceipt: ([txHash]) => ctx.chain.getTransactionReceipt(txHash) as any,
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
       const { from, ...pureTx } = tx
-      const wallet = ctx.provider.getWalletForAddress(from)
+      const wallet = ctx.walletManager.getWalletForAddress(from)
       if (!wallet) {
         throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
       }
@@ -39,13 +39,5 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
 
       return ctx.chain.sendTransaction(signedTx)
     },
-  }
-}
-
-const catchAsNull = <T>(fn: () => T): T | null => {
-  try {
-    return fn()
-  } catch (e) {
-    return null
   }
 }

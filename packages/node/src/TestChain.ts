@@ -134,12 +134,8 @@ export class TestChain {
     return transaction
   }
 
-  getTransactionReceipt (transactionHash: Hash): RpcTransactionReceipt {
-    const transaction = this.tvm.getTransactionReceipt(transactionHash)
-    if (!transaction) {
-      throw transactionNotFound(transactionHash)
-    }
-    return transaction
+  getTransactionReceipt (transactionHash: Hash): RpcTransactionReceipt | undefined {
+    return this.tvm.getTransactionReceipt(transactionHash)
   }
 
   async getLogs (filter: FilterRequest): Promise<RpcLogObject[]> {

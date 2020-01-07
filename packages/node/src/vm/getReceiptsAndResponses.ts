@@ -35,7 +35,7 @@ export function getReceiptsAndResponses (
     const hash = bufferToHash(tx.hash())
 
     const from = bufferToAddress(tx.getSenderAddress())
-    const to = bufferToMaybeAddress(tx.to) ?? null
+    const to = bufferToMaybeAddress(tx.to)
     const created = bufferToMaybeAddress(result.createdAddress)
 
     const gasUsed = new BN(result.gasUsed)
@@ -71,7 +71,7 @@ export function getReceiptsAndResponses (
       logs,
       transactionHash: hash,
       transactionIndex,
-      contractAddress: created ?? null,
+      contractAddress: created,
       from,
       to,
       logsBloom: bufferToHexData(result.bloom.bitvector),

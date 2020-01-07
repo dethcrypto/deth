@@ -5,7 +5,7 @@ import { utils } from 'ethers'
 describe('TestProvider.getBlock', () => {
   it('can return a zero balance', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
 
     const balance = await provider.getBalance(wallet.address)
     expect(balance.eq(0)).to.equal(true)
@@ -13,8 +13,8 @@ describe('TestProvider.getBlock', () => {
 
   it('can return a non-zero balance', async () => {
     const provider = new TestProvider()
-    const [sender] = provider.getWallets()
-    const recipient = provider.createEmptyWallet()
+    const [sender] = provider.walletManager.getWallets()
+    const recipient = provider.walletManager.createEmptyWallet()
 
     const value = utils.parseEther('3.1415')
     await sender.sendTransaction({
@@ -28,8 +28,8 @@ describe('TestProvider.getBlock', () => {
 
   it('can return a balance turned zero', async () => {
     const provider = new TestProvider()
-    const [sender] = provider.getWallets()
-    const recipient = provider.createEmptyWallet()
+    const [sender] = provider.walletManager.getWallets()
+    const recipient = provider.walletManager.createEmptyWallet()
 
     const value = utils.parseEther('3.1415')
     await sender.sendTransaction({
@@ -52,7 +52,7 @@ describe('TestProvider.getBlock', () => {
 
   it('throws for blockTag !== latest', async () => {
     const provider = new TestProvider()
-    const wallet = provider.createEmptyWallet()
+    const wallet = provider.walletManager.createEmptyWallet()
 
     await expect(
       provider.getBalance(wallet.address, 'pending'),

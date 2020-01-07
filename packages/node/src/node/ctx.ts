@@ -1,9 +1,9 @@
-import { TestProvider } from '../TestProvider'
 import { TestChain } from '../TestChain'
+import { WalletManager } from '../WalletManager'
 
 export interface NodeCtx {
   chain: TestChain,
-  provider: TestProvider,
+  walletManager: WalletManager,
 }
 
 export function makeDefaultCtx (): NodeCtx {
@@ -11,6 +11,6 @@ export function makeDefaultCtx (): NodeCtx {
 
   return {
     chain,
-    provider: new TestProvider(chain),
+    walletManager: new WalletManager(chain.options.privateKeys),
   }
 }

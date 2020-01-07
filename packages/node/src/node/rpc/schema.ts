@@ -1,6 +1,6 @@
 import * as t from 'io-ts'
 import { AsyncOrSync } from 'ts-essentials'
-import { quantity, hash, hexData, address, nullable, undefinable } from './codecs'
+import { quantity, hash, hexData, address, undefinable } from './codecs'
 
 export const tag = t.union([t.literal('earliest'), t.literal('latest'), t.literal('pending')])
 
@@ -36,10 +36,10 @@ const txReceipt = t.type({
   blockHash: hash,
   blockNumber: quantity,
   from: address,
-  to: nullable(address),
+  to: undefinable(address),
   cumulativeGasUsed: quantity,
   gasUsed: quantity,
-  contractAddress: nullable(address),
+  contractAddress: undefinable(address),
   logs: t.array(hexData), // @TODO types
   logsBloom: hexData,
   status: quantity,
@@ -98,7 +98,7 @@ export const rpcCommandsDescription = {
   },
   eth_getTransactionReceipt: {
     parameters: t.tuple([hash]),
-    returns: nullable(txReceipt),
+    returns: undefinable(txReceipt),
   },
   eth_sendTransaction: {
     parameters: t.tuple([tx]),

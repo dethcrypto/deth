@@ -8,7 +8,7 @@ import { randomHash } from '../testutils'
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
     const provider = new TestProvider()
-    const [sender, recipient] = provider.getWallets()
+    const [sender, recipient] = provider.walletManager.getWallets()
 
     const value = utils.parseEther('3.1415')
     const response = await sender.sendTransaction({
@@ -45,7 +45,7 @@ describe('TestProvider.getTransaction', () => {
 
   it('can return a contract creation', async () => {
     const provider = new TestProvider()
-    const [wallet] = provider.getWallets()
+    const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -60,7 +60,7 @@ describe('TestProvider.getTransaction', () => {
 
   it('can return an old transaction', async () => {
     const provider = new TestProvider()
-    const [sender, recipient] = provider.getWallets()
+    const [sender, recipient] = provider.walletManager.getWallets()
 
     const value = utils.parseEther('3.1415')
     const response = await sender.sendTransaction({
