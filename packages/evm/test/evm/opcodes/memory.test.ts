@@ -24,7 +24,27 @@ describe('Memory opcodes', () => {
     })
   })
 
-  xit('MSTORE')
-  xit('MSTOR8')
-  xit('MLOAD')
+  it('MSTORE', () => {
+    xit(`uses ${GasCost.VERYLOW} gas`)
+    xit('causes memory expansion')
+    xit('stores data in memory')
+    xit('fails for stack of depth 1')
+    xit('fails for stack of depth 0')
+  })
+
+  xit('MSTOR8', () => {
+    xit(`uses ${GasCost.VERYLOW} gas`)
+    xit('causes memory expansion')
+    xit('stores data in memory')
+    xit('fails for stack of depth 1')
+    xit('fails for stack of depth 0')
+  })
+
+  xit('MLOAD', () => {
+    xit(`uses ${GasCost.VERYLOW} gas`)
+    xit('causes memory expansion')
+    xit('loads data from memory')
+    xit('fails for stack of depth 1')
+    xit('fails for stack of depth 0')
+  })
 })

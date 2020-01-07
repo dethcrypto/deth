@@ -25,7 +25,7 @@ describe('gas costs', () => {
     xit('RETURNDATASIZE')
     // POP tested separately
     xit('PC')
-    xit('MSIZE')
+    // MSIZE tested separately
     xit('GAS')
   })
 
@@ -48,18 +48,12 @@ describe('gas costs', () => {
     testGasPushN(2, 'SAR', GasCost.VERYLOW)
 
     xit('CALLDATALOAD')
-    xit('MLOAD')
-    xit('MSTORE')
-    xit('MSTORE8')
-
+    // MLOAD tested separately
+    // MSTORE tested separately
+    // MSTORE8 tested separately
     // PUSH* tested separately
     // DUP* tested separately
-
-    describe('SWAP*', () => {
-      for (let i = 1; i <= 16; i++) {
-        testGasPushN(i + 1, 'SWAP' + i, GasCost.VERYLOW)
-      }
-    })
+    // SWAP* tested separately
   })
 
   describe('GasCost.LOW', () => {
@@ -74,12 +68,11 @@ describe('gas costs', () => {
   describe('GasCost.MEDIUM', () => {
     testGasPushN(3, 'ADDMOD', GasCost.MID)
     testGasPushN(3, 'MULMOD', GasCost.MID)
-
-    xit('JUMP')
+    // JUMP tested separately
   })
 
   describe('GasCosts.HIGH', () => {
-    xit('JUMPI')
+    // JUMPI tested separately
   })
 
   xit('other opcodes')
