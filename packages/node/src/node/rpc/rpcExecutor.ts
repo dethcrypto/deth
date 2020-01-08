@@ -3,7 +3,7 @@ import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
 import { BadRequestHttpError } from '../errorHandler'
-import { makeHexData } from '../../primitives'
+import { makeHexData, numberToQuantity } from '../../primitives'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }
 type SafeBlock = NoNullProperties<RpcBlockResponse>
@@ -30,14 +30,37 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     eth_getTransactionReceipt: ([txHash]) => ctx.chain.getTransactionReceipt(txHash) as any,
     eth_sendRawTransaction: ([signedTx]) => ctx.chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
-      const { from, ...pureTx } = tx
+      const { from, nonce: _nonce, gas: _gas, ...restTx } = tx
       const wallet = ctx.walletManager.getWalletForAddress(from)
       if (!wallet) {
         throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
       }
-      const signedTx = makeHexData(await wallet.sign(toEthersTransaction(pureTx)))
+
+      const nonce = _nonce ?? (await ctx.chain.getTransactionCount(from, 'latest'))
+      const gas = _gas ?? numberToQuantity(90_000)
+
+      const signedTx = makeHexData(await wallet.sign(toEthersTransaction({ ...restTx, gas, nonce })))
 
       return ctx.chain.sendTransaction(signedTx)
+    },
+    eth_call: ([tx, _blockTag]) => ctx.chain.call(tx, 'latest'),
+
+    // ganache compatibility
+    evm_increaseTime: ([n]) => {
+      // @TODO implement
+      return numberToQuantity(n)
+    },
+    evm_mine: async () => {
+      await ctx.chain.mineBlock()
+      return numberToQuantity(0)
+    },
+    evm_snapshot: async () => {
+      // await ctx.chain.mineBlock()
+      return numberToQuantity(0)
+    },
+    evm_revert: async ([n]) => {
+      console.log(`Reverting to ${n}`)
+      return true as const
     },
   }
 }

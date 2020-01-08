@@ -56,6 +56,15 @@ const tx = t.type({
   data: undefinable(hexData),
   nonce: undefinable(quantity),
 })
+// https://github.com/ethereum/wiki/wiki/JSON-RPC#parameters-24
+const callTtx = t.type({
+  from: undefinable(address),
+  to: undefinable(address),
+  gas: undefinable(quantity),
+  gasPrice: undefinable(quantity),
+  value: undefinable(quantity),
+  data: undefinable(hexData),
+})
 
 export const rpcCommandsDescription = {
   web3_clientVersion: {
@@ -103,6 +112,30 @@ export const rpcCommandsDescription = {
   eth_sendTransaction: {
     parameters: t.tuple([tx]),
     returns: hash,
+  },
+  eth_call: {
+    parameters: t.tuple([callTtx, quantityOrTag]),
+    returns: hexData,
+  },
+
+  // ganache compatibility
+  // docs: https://github.com/trufflesuite/ganache-cli#custom-methods
+  // note: ganache uses regular numbers as types
+  evm_increaseTime: {
+    parameters: t.tuple([t.number]),
+    returns: quantity,
+  },
+  evm_mine: {
+    parameters: t.undefined, // @todo: missing param, timestamp of a block to be mined
+    returns: quantity,
+  },
+  evm_snapshot: {
+    parameters: t.undefined,
+    returns: quantity,
+  },
+  evm_revert: {
+    parameters: t.tuple([quantity]),
+    returns: t.literal(true),
   },
 }
 
