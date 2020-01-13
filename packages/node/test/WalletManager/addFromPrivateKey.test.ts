@@ -1,6 +1,6 @@
 import { WalletManager } from '../../src/WalletManager'
 import { expect } from 'chai'
-import { TestProvider } from '../../src'
+import { createTestProvider } from '../testutils'
 
 describe('WalletManager.addFromPrivateKey', () => {
   it('adds not connected wallet', () => {
@@ -25,8 +25,8 @@ describe('WalletManager.addFromPrivateKey', () => {
     expect(allWallets).to.have.length(1)
   })
 
-  it('adds connected wallet', () => {
-    const provider = new TestProvider()
+  it('adds connected wallet', async () => {
+    const provider = await createTestProvider()
 
     const walletManager = new WalletManager(undefined, provider)
 

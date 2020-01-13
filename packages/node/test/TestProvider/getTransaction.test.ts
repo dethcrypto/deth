@@ -1,13 +1,12 @@
 import { expect } from 'chai'
 import { utils, ContractFactory } from 'ethers'
-import { TestProvider } from '../../src/TestProvider'
 import { CHAIN_ID } from '../../src/constants'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
-import { randomHash } from '../testutils'
+import { randomHash, createTestProvider } from '../testutils'
 
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender, recipient] = provider.walletManager.getWallets()
 
     const value = utils.parseEther('3.1415')
@@ -44,7 +43,7 @@ describe('TestProvider.getTransaction', () => {
   })
 
   it('can return a contract creation', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
@@ -59,7 +58,7 @@ describe('TestProvider.getTransaction', () => {
   })
 
   it('can return an old transaction', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender, recipient] = provider.walletManager.getWallets()
 
     const value = utils.parseEther('3.1415')
@@ -79,7 +78,7 @@ describe('TestProvider.getTransaction', () => {
   })
 
   it('throws on nonexistent transaction', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const hash = randomHash()
 
     await expect(

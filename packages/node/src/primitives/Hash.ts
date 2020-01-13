@@ -1,6 +1,6 @@
 import { Opaque } from 'ts-essentials'
 import { HEX_REGEX } from './common'
-import { bufferToHex } from 'ethereumjs-util'
+import { bufferToHex, toBuffer } from 'ethereumjs-util'
 
 /**
  * A hexadecimal string representing a hash.
@@ -16,4 +16,8 @@ export function makeHash (value: string): Hash {
 
 export function bufferToHash (buffer: Buffer): Hash {
   return makeHash(bufferToHex(buffer))
+}
+
+export function hashToBuffer (hash: Hash): Buffer {
+  return toBuffer(hash)
 }

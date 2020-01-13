@@ -6,8 +6,9 @@ export interface NodeCtx {
   walletManager: WalletManager,
 }
 
-export function makeDefaultCtx (): NodeCtx {
+export async function makeDefaultCtx (): Promise<NodeCtx> {
   const chain = new TestChain()
+  await chain.init()
 
   return {
     chain,

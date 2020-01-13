@@ -4,6 +4,7 @@ import { CHAIN_NAME, CHAIN_ID } from './constants'
 import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
+import { makeAddress } from './primitives'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
@@ -20,6 +21,10 @@ export class TestProvider extends providers.BaseProvider {
     }
   }
 
+  async init () {
+    await this.chain.init()
+  }
+
   async mineBlock () {
     return this.chain.mineBlock()
   }
@@ -32,13 +37,13 @@ export class TestProvider extends providers.BaseProvider {
       case 'getGasPrice':
         return this.chain.getGasPrice()
       case 'getBalance':
-        return this.chain.getBalance(params.address, params.blockTag)
+        return this.chain.getBalance(makeAddress(params.address), params.blockTag)
       case 'getTransactionCount':
-        return this.chain.getTransactionCount(params.address, params.blockTag)
+        return this.chain.getTransactionCount(makeAddress(params.address), params.blockTag)
       case 'getCode':
-        return this.chain.getCode(params.address, params.blockTag)
+        return this.chain.getCode(makeAddress(params.address), params.blockTag)
       case 'getStorageAt':
-        return this.chain.getStorageAt(params.address, params.position, params.blockTag)
+        return this.chain.getStorageAt(makeAddress(params.address), params.position, params.blockTag)
       case 'sendTransaction':
         return this.chain.sendTransaction(params.signedTransaction)
       case 'call':

@@ -40,8 +40,8 @@ export function getApp (ctx: NodeCtx) {
   return app
 }
 
-export function runNode (port: number) {
-  const app = getApp(makeDefaultCtx())
+export async function runNode (port: number) {
+  const app = getApp(await makeDefaultCtx())
 
   return app.listen(port)
 }
