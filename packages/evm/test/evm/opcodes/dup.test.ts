@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { StackUnderflow } from '../../../src/evm/errors'
+import { expectUnderflow } from './helpers'
 
 describe('DUP* opcodes', () => {
   const stack = new Array(16).fill(0)
@@ -19,12 +19,9 @@ describe('DUP* opcodes', () => {
         expect(result.stack.pop().toHexString()).to.equal(stack[stack.length - n])
       })
 
-      for (let i = 0; i < n; i++) {
-        it(`fails for stack of depth ${i}`, () => {
-          const result = executeAssembly(`${'PUSH1 00 '.repeat(i)} DUP${n}`)
-          expect(result.error).to.be.instanceOf(StackUnderflow)
-        })
-      }
+      it('can cause stack underflow', () => {
+        expectUnderflow(`DUP${n}`, n)
+      })
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
         const result = executeAssembly(`${assembly} DUP${n}`)

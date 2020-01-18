@@ -2,7 +2,8 @@ import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 import { executeAssembly } from '../executeAssembly'
 import { Int256 } from './machineWord/cases/helpers'
-import { InvalidJumpDestination, StackUnderflow } from '../../../src/evm/errors'
+import { InvalidJumpDestination } from '../../../src/evm/errors'
+import { expectUnderflow } from './helpers'
 
 describe('JUMP* opcodes', () => {
   describe('JUMPDEST', () => {
@@ -36,9 +37,8 @@ describe('JUMP* opcodes', () => {
       expect(result.error).to.be.instanceOf(InvalidJumpDestination)
     })
 
-    it('fails to jump with an empty stack', () => {
-      const result = executeAssembly('JUMP')
-      expect(result.error).to.be.instanceOf(StackUnderflow)
+    it('can cause a stack underflow', () => {
+      expectUnderflow('JUMP', 1)
     })
   })
 
@@ -86,14 +86,8 @@ describe('JUMP* opcodes', () => {
       expect(result.error).to.be.instanceOf(InvalidJumpDestination)
     })
 
-    it('fails to jump with an empty stack', () => {
-      const result = executeAssembly('JUMPI')
-      expect(result.error).to.be.instanceOf(StackUnderflow)
-    })
-
-    it('fails to jump with stack of depth 1', () => {
-      const result = executeAssembly('PUSH1 00 JUMPI')
-      expect(result.error).to.be.instanceOf(StackUnderflow)
+    it('can cause a stack underflow', () => {
+      expectUnderflow('JUMPI', 2)
     })
   })
 })

@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 import { executeAssembly } from '../executeAssembly'
-import { StackUnderflow } from '../../../src/evm/errors'
 import { Int256 } from './machineWord/cases/helpers'
+import { expectUnderflow } from './helpers'
 
 describe('POP opcode', () => {
   it(`uses ${GasCost.BASE} gas`, () => {
@@ -17,8 +17,7 @@ describe('POP opcode', () => {
     expect(result.stack.pop().toHexString()).to.equal(Int256.of(1))
   })
 
-  it('fails for an empty stack', () => {
-    const result = executeAssembly('POP')
-    expect(result.error).to.be.instanceOf(StackUnderflow)
+  it('can cause a stack underflow', () => {
+    expectUnderflow('POP', 1)
   })
 })

@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { StackUnderflow } from '../../../src/evm/errors'
 import { MachineWord } from '../../../src/evm/MachineWord'
+import { expectUnderflow } from './helpers'
 
 describe('SWAP* opcodes', () => {
   const stack = new Array(17).fill(0)
@@ -26,12 +26,9 @@ describe('SWAP* opcodes', () => {
         expect(result.error).to.equal(undefined)
       })
 
-      for (let i = 0; i <= n; i++) {
-        it(`fails for stack of depth ${i}`, () => {
-          const result = executeAssembly(`${'PUSH1 00 '.repeat(i)} SWAP${n}`)
-          expect(result.error).to.be.instanceOf(StackUnderflow)
-        })
-      }
+      it('can cause a stack underflow', () => {
+        expectUnderflow(`SWAP${n}`, n + 1)
+      })
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
         const result = executeAssembly(`${assembly} SWAP${n}`)
