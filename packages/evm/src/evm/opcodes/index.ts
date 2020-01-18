@@ -1,5 +1,12 @@
 import { Opcode } from './Opcode'
-import { opSTOP, opJUMP, opJUMPI, opJUMPDEST } from './control'
+import {
+  opSTOP,
+  opJUMP,
+  opJUMPI,
+  opJUMPDEST,
+  opRETURN,
+  opREVERT,
+} from './control'
 import {
   opADD,
   opMUL,
@@ -109,4 +116,6 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '9d': makeOpSWAP(14),
   '9e': makeOpSWAP(15),
   '9f': makeOpSWAP(16),
+  'f3': opRETURN,
+  'fd': opREVERT,
 }

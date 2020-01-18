@@ -3,20 +3,23 @@ import { ExecutionContext } from './ExecutionContext'
 import { Stack } from './Stack'
 import { VMError } from './errors'
 import { IMemory } from './Memory'
+import { opSTOP } from './opcodes/control'
 
 export interface ExecutionResult {
   stack: Stack,
   memory: IMemory,
   gasUsed: number,
   programCounter: number,
+  reverted: boolean,
+  returnValue?: number[],
   error?: VMError,
 }
 
 export function executeCode (code: Opcode[], gasLimit: number): ExecutionResult {
   const ctx = new ExecutionContext(code, gasLimit)
 
-  while (ctx.programCounter < code.length && ctx.running) {
-    const opCode = code[ctx.programCounter]
+  while (ctx.returnValue === undefined) {
+    const opCode = code[ctx.programCounter] || opSTOP
     ctx.programCounter++
     try {
       opCode(ctx)
@@ -39,7 +42,9 @@ function toResult (ctx: ExecutionContext, error?: VMError): ExecutionResult {
     // This prevents us from retaining a reference to ctx
     memory: ctx.memory.memory,
     gasUsed: ctx.getGasUsed(),
+    reverted: ctx.reverted,
     programCounter: ctx.programCounter,
+    returnValue: ctx.returnValue,
     error,
   }
 }

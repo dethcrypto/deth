@@ -30,3 +30,15 @@ export function expectError (assembly: string, error: unknown) {
   const result = executeAssembly(assembly)
   expect(result.error).to.be.instanceOf(error)
 }
+
+export function expectReturn (assembly: string, value: number[]) {
+  const result = executeAssembly(assembly)
+  expect(result.reverted).to.equal(false)
+  expect(result.returnValue).to.deep.equal(value)
+}
+
+export function expectRevert (assembly: string, value: number[]) {
+  const result = executeAssembly(assembly)
+  expect(result.reverted).to.equal(true)
+  expect(result.returnValue).to.deep.equal(value)
+}
