@@ -1,8 +1,7 @@
 import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 import { MachineWord } from '../../../src/evm/MachineWord'
-import { expectUnderflow } from './helpers'
+import { executeAssembly, expectUnderflow } from '../helpers'
 
 describe('SWAP* opcodes', () => {
   const stack = new Array(17).fill(0)

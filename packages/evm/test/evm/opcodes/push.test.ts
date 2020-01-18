@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
+import { executeAssembly } from '../helpers'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 import { StackOverflow } from '../../../src/evm/errors'
 

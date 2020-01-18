@@ -1,7 +1,6 @@
 import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { Int256 } from './machineWord/cases/helpers'
+import { executeAssembly, Int256 } from '../helpers'
 
 describe('STOP opcode', () => {
   it(`uses ${GasCost.ZERO} gas`, () => {

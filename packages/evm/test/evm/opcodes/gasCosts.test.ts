@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { executeAssembly } from '../executeAssembly'
+import { executeAssembly } from '../helpers'
 
 describe('gas costs', () => {
   describe('GasCost.ZERO', () => {

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { executeAssembly } from './executeAssembly'
+import { executeAssembly } from './helpers'
 import { OutOfGas } from '../../src/evm/errors'
 
 describe('gasLimit', () => {

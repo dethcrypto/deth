@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
-import { executeAssembly } from '../../executeAssembly'
+import { executeAssembly } from '../../helpers'
 
 describe('machineWord opcodes', () => {
   runTestCases('ADD', TestCases.ADD)

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
 import { InvalidOpcode } from '../../../src/evm/errors'
+import { executeAssembly } from '../helpers'
 
 describe('invalid opcodes', () => {
   const opcodes = [

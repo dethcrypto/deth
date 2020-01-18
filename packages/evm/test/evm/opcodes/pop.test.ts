@@ -1,8 +1,6 @@
 import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { executeAssembly } from '../executeAssembly'
-import { Int256 } from './machineWord/cases/helpers'
-import { expectUnderflow } from './helpers'
+import { executeAssembly, Int256, expectUnderflow } from '../helpers'
 
 describe('POP opcode', () => {
   it(`uses ${GasCost.BASE} gas`, () => {

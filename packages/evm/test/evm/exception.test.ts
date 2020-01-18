@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { executeAssembly } from './executeAssembly'
+import { executeAssembly } from './helpers'
 import { InvalidOpcode } from '../../src/evm/errors'
 
 describe('When an exception occurs', () => {

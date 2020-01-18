@@ -1,7 +1,6 @@
 import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { expectUnderflow } from './helpers'
+import { executeAssembly, expectUnderflow } from '../helpers'
 
 describe('DUP* opcodes', () => {
   const stack = new Array(16).fill(0)
