@@ -5,7 +5,24 @@ import { MachineWord } from '../MachineWord'
 
 export function opSTOP (ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
-  ctx.running = false
+  ctx.returnValue = []
+}
+
+export function opRETURN (ctx: ExecutionContext) {
+  ctx.useGas(GasCost.ZERO)
+  ctx.returnValue = ctx.memory.getBytes(
+    ctx.stack.pop().toUnsignedNumber(),
+    ctx.stack.pop().toUnsignedNumber(),
+  )
+}
+
+export function opREVERT (ctx: ExecutionContext) {
+  ctx.useGas(GasCost.ZERO)
+  ctx.returnValue = ctx.memory.getBytes(
+    ctx.stack.pop().toUnsignedNumber(),
+    ctx.stack.pop().toUnsignedNumber(),
+  )
+  ctx.reverted = true
 }
 
 export function opJUMPDEST (ctx: ExecutionContext) {

@@ -6,7 +6,8 @@ import { Memory, GasAwareMemory } from './Memory'
 export class ExecutionContext {
   stack = new Stack()
   memory = new GasAwareMemory(new Memory(), this.useGas.bind(this))
-  running = true
+  returnValue?: number[]
+  reverted = false
   programCounter = 0
 
   private gasUsed = 0
