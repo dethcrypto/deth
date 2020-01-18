@@ -1,6 +1,5 @@
-import { expect } from 'chai'
 import { InvalidOpcode } from '../../../src/evm/errors'
-import { executeAssembly } from '../helpers'
+import { expectError } from '../helpers'
 
 describe('invalid opcodes', () => {
   const opcodes = [
@@ -15,8 +14,7 @@ describe('invalid opcodes', () => {
   ]
   for (const opcode of opcodes) {
     it(`opcode ${opcode} is invalid`, () => {
-      const result = executeAssembly(opcode)
-      expect(result.error).to.be.instanceOf(InvalidOpcode)
+      expectError(opcode, InvalidOpcode)
     })
 
     xit(`opcode ${opcode} uses all remaining gas`)

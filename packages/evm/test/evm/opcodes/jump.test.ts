@@ -1,38 +1,32 @@
-import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { executeAssembly, Int256, expectUnderflow } from '../helpers'
 import { InvalidJumpDestination } from '../../../src/evm/errors'
+import { Int256, expectUnderflow, expectGas, expectStack, expectError } from '../helpers'
 
 describe('JUMP* opcodes', () => {
   describe('JUMPDEST', () => {
     it(`uses ${GasCost.JUMPDEST} gas`, () => {
-      const result = executeAssembly('JUMPDEST')
-      expect(result.error).to.equal(undefined)
-      expect(result.gasUsed).to.equal(GasCost.JUMPDEST)
+      expectGas('JUMPDEST', GasCost.JUMPDEST)
     })
   })
 
   describe('JUMP', () => {
     it(`uses ${GasCost.MID} gas`, () => {
-      const result = executeAssembly('PUSH1 03 JUMP JUMPDEST')
-      expect(result.error).to.equal(undefined)
-      expect(result.gasUsed - GasCost.VERYLOW - GasCost.JUMPDEST).to.equal(GasCost.MID)
+      const assembly = 'PUSH1 03 JUMP JUMPDEST'
+      const gas = GasCost.VERYLOW + GasCost.JUMPDEST + GasCost.MID
+      expectGas(assembly, gas)
     })
 
     it('jumps to a specified location in code', () => {
-      const result = executeAssembly('PUSH1 04 JUMP STOP JUMPDEST PUSH1 01')
-      expect(result.error).to.equal(undefined)
-      expect(result.stack.pop().toHexString()).to.equal(Int256.of(1))
+      const assembly = 'PUSH1 04 JUMP STOP JUMPDEST PUSH1 01'
+      expectStack(assembly, [Int256.of(1)])
     })
 
     it('fails to jump to non JUMPDEST location', () => {
-      const result = executeAssembly('PUSH1 00 JUMP')
-      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+      expectError('PUSH1 00 JUMP', InvalidJumpDestination)
     })
 
     it('fails to jump to a JUMPDEST inside a push', () => {
-      const result = executeAssembly('PUSH1 JUMPDEST PUSH1 01 JUMP')
-      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+      expectError('PUSH1 JUMPDEST PUSH1 01 JUMP', InvalidJumpDestination)
     })
 
     it('can cause a stack underflow', () => {
@@ -42,26 +36,25 @@ describe('JUMP* opcodes', () => {
 
   describe('JUMPI', () => {
     it(`uses ${GasCost.HIGH} gas`, () => {
-      const result = executeAssembly('PUSH1 01 PUSH1 05 JUMPI JUMPDEST')
-      expect(result.error).to.equal(undefined)
-      expect(result.gasUsed - GasCost.VERYLOW * 2 - GasCost.JUMPDEST).to.equal(GasCost.HIGH)
+      const assembly = 'PUSH1 01 PUSH1 05 JUMPI JUMPDEST'
+      const gas = GasCost.VERYLOW * 2 + GasCost.JUMPDEST + GasCost.HIGH
+      expectGas(assembly, gas)
     })
 
     it('jumps to a specified location in if condition is not zero', () => {
-      const result = executeAssembly(`
+      const assembly = `
         PUSH1 01
         PUSH1 06
         JUMPI
         STOP
         JUMPDEST
         PUSH1 FF
-      `)
-      expect(result.error).to.equal(undefined)
-      expect(result.stack.pop().toHexString()).to.equal(Int256.of(0xff))
+      `
+      expectStack(assembly, [Int256.of(0xff)])
     })
 
     it('does not jump if condition is zero', () => {
-      const result = executeAssembly(`
+      const assembly = `
         PUSH1 00
         PUSH1 08
         JUMPI
@@ -69,19 +62,16 @@ describe('JUMP* opcodes', () => {
         STOP
         JUMPDEST
         PUSH1 FF
-      `)
-      expect(result.error).to.equal(undefined)
-      expect(result.stack.pop().toHexString()).to.equal(Int256.of(0xee))
+      `
+      expectStack(assembly, [Int256.of(0xee)])
     })
 
     it('fails to jump to non JUMPDEST location', () => {
-      const result = executeAssembly('PUSH1 01 PUSH1 02 JUMPI')
-      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+      expectError('PUSH1 01 PUSH1 02 JUMPI', InvalidJumpDestination)
     })
 
     it('fails to jump to a JUMPDEST inside a push', () => {
-      const result = executeAssembly('PUSH1 JUMPDEST PUSH1 01 JUMPI')
-      expect(result.error).to.be.instanceOf(InvalidJumpDestination)
+      expectError('PUSH1 JUMPDEST PUSH1 01 JUMPI', InvalidJumpDestination)
     })
 
     it('can cause a stack underflow', () => {
