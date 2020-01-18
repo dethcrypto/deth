@@ -4,6 +4,7 @@ import { InvalidJumpDestination } from '../errors'
 import { MachineWord } from '../MachineWord'
 
 export function opSTOP (ctx: ExecutionContext) {
+  ctx.useGas(GasCost.ZERO)
   ctx.running = false
 }
 
