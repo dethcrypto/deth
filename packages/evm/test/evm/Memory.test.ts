@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { Memory, GasAwareMemory } from '../../src/evm/Memory'
+import { memoryGas } from './helpers'
 
 describe('Memory', () => {
   it('starts with zero size', () => {
@@ -49,9 +50,6 @@ describe('GasAwareMemory', () => {
     gasUsed += gas
   }
 
-  const expectedGas = (bytes: number) => expectedGasFromWords(Math.ceil(bytes / 32))
-  const expectedGasFromWords = (words: number) => words * 3 + Math.floor(words * words / 512)
-
   beforeEach(() => {
     gasUsed = 0
   })
@@ -59,7 +57,7 @@ describe('GasAwareMemory', () => {
   it('can track a single memory usage', () => {
     const memory = new GasAwareMemory(new Memory(), useGas)
     memory.getBytes(300, 1)
-    expect(gasUsed).to.equal(expectedGas(301))
+    expect(gasUsed).to.equal(memoryGas(301))
   })
 
   it('does not use any gas on zero length access', () => {
@@ -74,13 +72,13 @@ describe('GasAwareMemory', () => {
     memory.getBytes(9_000, 2_000)
     memory.getBytes(15_000_000, 3)
     memory.getBytes(11, 12)
-    expect(gasUsed).to.equal(expectedGas(15_000_003))
+    expect(gasUsed).to.equal(memoryGas(15_000_003))
   })
 
   it('tracks memory use for setBytes', () => {
     const memory = new GasAwareMemory(new Memory(), useGas)
     memory.setBytes(300, [0xBA])
-    expect(gasUsed).to.equal(expectedGas(301))
+    expect(gasUsed).to.equal(memoryGas(301))
   })
 
   it('forwards getSize', () => {
