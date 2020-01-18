@@ -2,9 +2,11 @@ import { Opcode } from './opcodes'
 import { ExecutionContext } from './ExecutionContext'
 import { Stack } from './Stack'
 import { VMError } from './errors'
+import { IMemory } from './Memory'
 
 export interface ExecutionResult {
   stack: Stack,
+  memory: IMemory,
   gasUsed: number,
   programCounter: number,
   error?: VMError,
@@ -34,6 +36,8 @@ export function executeCode (code: Opcode[], gasLimit: number): ExecutionResult 
 function toResult (ctx: ExecutionContext, error?: VMError): ExecutionResult {
   return {
     stack: ctx.stack,
+    // This prevents us from retaining a reference to ctx
+    memory: ctx.memory.memory,
     gasUsed: ctx.getGasUsed(),
     programCounter: ctx.programCounter,
     error,

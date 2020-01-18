@@ -29,6 +29,7 @@ import {
 } from './machineWord'
 import { invalidOpcode } from './invalid'
 import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
+import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
@@ -68,8 +69,12 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '1c': opSHR,
   '1d': opSAR,
   '50': opPOP,
+  '51': opMLOAD,
+  '52': opMSTORE,
+  '53': opMSTORE8,
   '56': opJUMP,
   '57': opJUMPI,
+  '59': opMSIZE,
   '5b': opJUMPDEST,
   // 60 - 7f PUSH - handled differently
   '80': makeOpDUP(1),
