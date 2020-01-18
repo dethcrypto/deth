@@ -1,4 +1,5 @@
-import { Int256, TestCase } from '../helpers'
+import { TestCase } from '../helpers'
+import { Int256 } from '../../../../helpers'
 
 export default [
   {

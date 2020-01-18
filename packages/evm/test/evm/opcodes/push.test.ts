@@ -1,5 +1,4 @@
-import { expect } from 'chai'
-import { executeAssembly } from '../executeAssembly'
+import { expectStack, expectGas, expectError } from '../helpers'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
 import { StackOverflow } from '../../../src/evm/errors'
 
@@ -11,21 +10,16 @@ describe('PUSH* opcodes', () => {
         .join('')
 
       it('pushes a value onto the stack', () => {
-        const result = executeAssembly(`PUSH${n} ${bytes}`)
-        expect(result.error).to.equal(undefined)
-        expect(result.stack.pop().toHexString()).to.equal(bytes.padStart(64, '0'))
+        expectStack(`PUSH${n} ${bytes}`, [bytes.padStart(64, '0')])
       })
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {
-        const result = executeAssembly(`PUSH${n} ${bytes}`)
-        expect(result.error).to.equal(undefined)
-        expect(result.gasUsed).to.equal(GasCost.VERYLOW)
+        expectGas(`PUSH${n} ${bytes}`, GasCost.VERYLOW)
       })
     })
   }
 
   it('results in stackoverflow eventually', () => {
-    const result = executeAssembly('JUMPDEST PUSH1 00 PUSH1 00 JUMP')
-    expect(result.error).to.be.instanceOf(StackOverflow)
+    expectError('JUMPDEST PUSH1 00 PUSH1 00 JUMP', StackOverflow)
   })
 })

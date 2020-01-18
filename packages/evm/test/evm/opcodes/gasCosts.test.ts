@@ -1,6 +1,5 @@
-import { expect } from 'chai'
 import { GasCost } from '../../../src/evm/opcodes/gasCosts'
-import { executeAssembly } from '../executeAssembly'
+import { expectGas } from '../helpers'
 
 describe('gas costs', () => {
   describe('GasCost.ZERO', () => {
@@ -87,17 +86,10 @@ describe('gas costs', () => {
 })
 
 function testGasPushN (n: number, opcode: string, expectedGas: number) {
-  testGas(
-    `${opcode} uses ${expectedGas} gas`,
-    'PUSH1 00 '.repeat(n) + opcode,
-    GasCost.VERYLOW * n + expectedGas,
-  )
-}
-
-function testGas (title: string, assembly: string, expectedGas: number) {
-  it(title, () => {
-    const result = executeAssembly(assembly)
-    expect(result.error).to.equal(undefined)
-    expect(result.gasUsed).to.equal(expectedGas)
+  it(`${opcode} uses ${expectedGas} gas`, () => {
+    expectGas(
+      'PUSH1 00 '.repeat(n) + opcode,
+      GasCost.VERYLOW * n + expectedGas,
+    )
   })
 }

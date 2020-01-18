@@ -1,4 +1,4 @@
-import { Int256 } from '../helpers'
+import { Int256 } from '../../../../helpers'
 
 export default [
   {

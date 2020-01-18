@@ -1,5 +1,5 @@
-import { parseBytecode } from '../../src/evm/parseBytecode'
-import { executeCode } from '../../src/evm/executeCode'
+import { parseBytecode } from '../../../src/evm/parseBytecode'
+import { executeCode } from '../../../src/evm/executeCode'
 
 export function executeAssembly (assembly: string, gasLimit = 10_000_000) {
   const bytecode = assemblyToBytecode(assembly)

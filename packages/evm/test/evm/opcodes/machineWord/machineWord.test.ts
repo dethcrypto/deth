@@ -1,7 +1,6 @@
-import { expect } from 'chai'
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
-import { executeAssembly } from '../../executeAssembly'
+import { expectStack } from '../../helpers'
 
 describe('machineWord opcodes', () => {
   runTestCases('ADD', TestCases.ADD)
@@ -39,9 +38,7 @@ function runTestCases (opcode: string, testCases: TestCase[]) {
           .map(x => `PUSH32 ${x}`)
           .concat(opcode)
           .join(' ')
-        const result = executeAssembly(assembly)
-        const value = result.stack.pop()
-        expect(value.toHexString()).to.equal(testCase.expected)
+        expectStack(assembly, [testCase.expected])
       })
     }
   })
