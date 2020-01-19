@@ -37,7 +37,7 @@ import {
 import { invalidOpcode } from './invalid'
 import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
-import { opSSTORE } from './storage'
+import { opSSTORE, opSLOAD } from './storage'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
@@ -80,6 +80,7 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '51': opMLOAD,
   '52': opMSTORE,
   '53': opMSTORE8,
+  '54': opSLOAD,
   '55': opSSTORE,
   '56': opJUMP,
   '57': opJUMPI,

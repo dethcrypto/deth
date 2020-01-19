@@ -6,6 +6,7 @@ import {
   expectStorage,
   Int256,
   executeAssembly,
+  expectStack,
 } from '../helpers'
 import { OutOfGas } from '../../../src/evm/errors'
 
@@ -93,6 +94,24 @@ describe('Storage opcodes', () => {
         const result = executeAssembly(assembly, { gasLimit: gasUsed - refund })
         expect(result.error).to.be.instanceOf(OutOfGas)
       })
+    })
+  })
+
+  describe('SLOAD', () => {
+    it(`uses ${GasCost.SLOAD} gas`, () => {
+      expectGas('PUSH1 00 SLOAD', GasCost.VERYLOW + GasCost.SLOAD)
+    })
+
+    it('can cause a stack underflow', () => {
+      expectUnderflow('SLOAD', 1)
+    })
+
+    it('can get a value from storage where it defaults to 0', () => {
+      expectStack('PUSH1 00 SLOAD', [Int256.of(0)])
+    })
+
+    it('can get a previously set value from storage', () => {
+      expectStack('PUSH1 01 PUSH1 00 SSTORE PUSH1 00 SLOAD', [Int256.of(1)])
     })
   })
 })

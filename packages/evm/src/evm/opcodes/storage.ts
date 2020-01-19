@@ -14,3 +14,10 @@ export function opSSTORE (ctx: ExecutionContext) {
 
   ctx.storage.set(location, value)
 }
+
+export function opSLOAD (ctx: ExecutionContext) {
+  ctx.useGas(GasCost.SLOAD)
+  const location = ctx.stack.pop()
+  const value = ctx.storage.get(location)
+  ctx.stack.push(value)
+}
