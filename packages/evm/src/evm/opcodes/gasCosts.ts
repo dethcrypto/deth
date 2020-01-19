@@ -7,4 +7,6 @@ export const GasCost = {
   HIGH: 10,
   JUMPDEST: 1,
   MEMORY: 3,
+  SSET: 20_000,
+  SRESET: 5_000,
 }

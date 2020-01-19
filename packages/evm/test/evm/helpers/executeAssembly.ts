@@ -1,10 +1,17 @@
 import { parseBytecode } from '../../../src/evm/parseBytecode'
 import { executeCode } from '../../../src/evm/executeCode'
+import { ExecutionParameters } from '../../../src/evm/ExecutionContext'
+import { Storage } from '../../../src/evm/Storage'
 
-export function executeAssembly (assembly: string, gasLimit = 10_000_000) {
+export const DEFAULT_EXECUTION_PARAMS: ExecutionParameters = {
+  gasLimit: 1_000_000,
+  storage: new Storage(),
+}
+
+export function executeAssembly (assembly: string, params = DEFAULT_EXECUTION_PARAMS) {
   const bytecode = assemblyToBytecode(assembly)
   const code = parseBytecode(bytecode)
-  return executeCode(code, gasLimit)
+  return executeCode(code, params)
 }
 
 function assemblyToBytecode (code: string) {

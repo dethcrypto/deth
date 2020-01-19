@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { StackUnderflow } from '../../../src/evm/errors'
 import { executeAssembly } from './executeAssembly'
 import { Int256 } from './Int256'
+import { MachineWord } from '../../../src/evm/MachineWord'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {
   for (let i = 0; i < minimumDepth; i++) {
@@ -41,4 +42,14 @@ export function expectRevert (assembly: string, value: number[]) {
   const result = executeAssembly(assembly)
   expect(result.reverted).to.equal(true)
   expect(result.returnValue).to.deep.equal(value)
+}
+
+export function expectStorage (assembly: string, values: Record<string, string>) {
+  const result = executeAssembly(assembly)
+  const resultingStorage: Record<string, string> = {}
+  for (const key in values) {
+    const location = MachineWord.fromHexString(key)
+    resultingStorage[key] = result.storage.get(location).toHexString()
+  }
+  expect(resultingStorage).to.deep.equal(values)
 }
