@@ -1,6 +1,5 @@
-import { expect } from 'chai'
 import { InvalidOpcode } from '../../../src/evm/errors'
-import { expectError, executeAssembly, DEFAULT_EXECUTION_PARAMS } from '../helpers'
+import { expectError } from '../helpers'
 
 describe('invalid opcodes', () => {
   const opcodes = [
@@ -16,11 +15,6 @@ describe('invalid opcodes', () => {
   for (const opcode of opcodes) {
     it(`opcode ${opcode} is invalid`, () => {
       expectError(opcode, InvalidOpcode)
-    })
-
-    it(`opcode ${opcode} uses all remaining gas`, () => {
-      const result = executeAssembly(opcode)
-      expect(result.gasUsed).to.equal(DEFAULT_EXECUTION_PARAMS.gasLimit)
     })
   }
 })

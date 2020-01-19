@@ -35,6 +35,7 @@ export function executeCode (code: Opcode[], params: ExecutionParameters): Execu
     }
   }
 
+  ctx.applyRefund()
   return toResult(ctx)
 }
 

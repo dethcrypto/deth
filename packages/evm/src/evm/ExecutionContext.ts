@@ -19,6 +19,7 @@ export class ExecutionContext {
   gasLimit: number
   storage: Storage
   private gasUsed = 0
+  private refund = 0
 
   constructor (
     public code: Opcode[],
@@ -42,5 +43,14 @@ export class ExecutionContext {
 
   useRemainingGas () {
     this.gasUsed = this.gasLimit
+  }
+
+  addRefund (gas: number) {
+    this.refund += gas
+  }
+
+  applyRefund () {
+    const refund = Math.min(Math.floor(this.gasUsed / 2), this.refund)
+    this.gasUsed -= refund
   }
 }

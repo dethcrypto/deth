@@ -1,6 +1,6 @@
 import { MachineWord } from '../MachineWord'
 import { ExecutionContext } from '../ExecutionContext'
-import { GasCost } from './gasCosts'
+import { GasCost, GasRefund } from './gasCosts'
 
 export function opSSTORE (ctx: ExecutionContext) {
   const location = ctx.stack.pop()
@@ -8,6 +8,9 @@ export function opSSTORE (ctx: ExecutionContext) {
 
   const isZero = ctx.storage.get(location).equals(MachineWord.ZERO)
   ctx.useGas(isZero ? GasCost.SSET : GasCost.SRESET)
+  if (!isZero && value.equals(MachineWord.ZERO)) {
+    ctx.addRefund(GasRefund.SCLEAR)
+  }
 
   ctx.storage.set(location, value)
 }

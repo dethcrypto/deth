@@ -3,6 +3,7 @@ import { OutOfGas } from '../../src/evm/errors'
 
 describe('gasLimit', () => {
   it('fails with OutOfGas when reached', () => {
-    expectError('JUMPDEST PUSH1 00 JUMP', OutOfGas)
+    // NOTE: we use SSTORE here to reach OutOfGas quicker
+    expectError('JUMPDEST PUSH1 00 DUP1 DUP1 SSTORE JUMP', OutOfGas)
   })
 })

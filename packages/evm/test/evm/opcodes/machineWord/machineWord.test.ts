@@ -1,6 +1,7 @@
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
-import { expectStack } from '../../helpers'
+import { expectStack, expectGas } from '../../helpers'
+import { GasCost } from '../../../../src/evm/opcodes'
 
 describe('machineWord opcodes', () => {
   runTestCases('ADD', TestCases.ADD)
@@ -28,6 +29,34 @@ describe('machineWord opcodes', () => {
   runTestCases('SHL', TestCases.SHL)
   runTestCases('SHR', TestCases.SHR)
   runTestCases('SAR', TestCases.SAR)
+
+  describe('gas costs', () => {
+    testGasPushN(2, 'ADD', GasCost.VERYLOW)
+    testGasPushN(2, 'MUL', GasCost.LOW)
+    testGasPushN(2, 'SUB', GasCost.VERYLOW)
+    testGasPushN(2, 'DIV', GasCost.LOW)
+    testGasPushN(2, 'SDIV', GasCost.LOW)
+    testGasPushN(2, 'MOD', GasCost.LOW)
+    testGasPushN(2, 'SMOD', GasCost.LOW)
+    testGasPushN(3, 'ADDMOD', GasCost.MID)
+    testGasPushN(3, 'MULMOD', GasCost.MID)
+    // TODO: EXP
+    testGasPushN(2, 'SIGNEXTEND', GasCost.LOW)
+    testGasPushN(2, 'LT', GasCost.VERYLOW)
+    testGasPushN(2, 'GT', GasCost.VERYLOW)
+    testGasPushN(2, 'SLT', GasCost.VERYLOW)
+    testGasPushN(2, 'SGT', GasCost.VERYLOW)
+    testGasPushN(2, 'EQ', GasCost.VERYLOW)
+    testGasPushN(1, 'ISZERO', GasCost.VERYLOW)
+    testGasPushN(2, 'AND', GasCost.VERYLOW)
+    testGasPushN(2, 'OR', GasCost.VERYLOW)
+    testGasPushN(2, 'XOR', GasCost.VERYLOW)
+    testGasPushN(1, 'NOT', GasCost.VERYLOW)
+    testGasPushN(2, 'BYTE', GasCost.VERYLOW)
+    testGasPushN(2, 'SHL', GasCost.VERYLOW)
+    testGasPushN(2, 'SHR', GasCost.VERYLOW)
+    testGasPushN(2, 'SAR', GasCost.VERYLOW)
+  })
 })
 
 function runTestCases (opcode: string, testCases: TestCase[]) {
@@ -41,5 +70,14 @@ function runTestCases (opcode: string, testCases: TestCase[]) {
         expectStack(assembly, [testCase.expected])
       })
     }
+  })
+}
+
+function testGasPushN (n: number, opcode: string, expectedGas: number) {
+  it(`${opcode} uses ${expectedGas} gas`, () => {
+    expectGas(
+      'PUSH1 00 '.repeat(n) + opcode,
+      GasCost.VERYLOW * n + expectedGas,
+    )
   })
 }
