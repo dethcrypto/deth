@@ -1,4 +1,4 @@
-import { expectStack, expectGas, memoryGas, expectRevert } from '../helpers'
+import { expectStack, expectGas, memoryGas, expectRevert, expectStorage, Int256 } from '../helpers'
 import { GasCost } from '../../../src/evm/opcodes'
 
 describe('REVERT opcode', () => {
@@ -36,5 +36,9 @@ describe('REVERT opcode', () => {
     expectGas(assembly, gas)
   })
 
-  xit('reverts state changes')
+  it('reverts state changes', () => {
+    expectStorage('PUSH1 01 PUSH1 00 SSTORE PUSH1 00 DUP1 REVERT', {
+      [Int256.of(0)]: Int256.of(0),
+    })
+  })
 })

@@ -28,6 +28,7 @@ export function executeCode (code: Opcode[], params: ExecutionParameters): Execu
     } catch (e) {
       if (e instanceof VMError) {
         ctx.useRemainingGas()
+        ctx.storage.revert()
         return toResult(ctx, e)
       } else {
         throw e
@@ -35,6 +36,9 @@ export function executeCode (code: Opcode[], params: ExecutionParameters): Execu
     }
   }
 
+  if (ctx.reverted) {
+    ctx.storage.revert()
+  }
   ctx.applyRefund()
   return toResult(ctx)
 }
