@@ -37,11 +37,12 @@ import {
 import { invalidOpcode } from './invalid'
 import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
+import { opSSTORE, opSLOAD } from './storage'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
 export { Opcode } from './Opcode'
-export { GasCost } from './gasCosts'
+export { GasCost, GasRefund } from './gasCosts'
 
 export function getOpcode (hex: string) {
   return OP_CODES[hex] ?? invalidOpcode(hex)
@@ -79,6 +80,8 @@ const OP_CODES: Record<string, Opcode | undefined> = {
   '51': opMLOAD,
   '52': opMSTORE,
   '53': opMSTORE8,
+  '54': opSLOAD,
+  '55': opSSTORE,
   '56': opJUMP,
   '57': opJUMPI,
   '59': opMSIZE,

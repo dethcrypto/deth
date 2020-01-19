@@ -2,6 +2,12 @@ import { Stack } from './Stack'
 import { Opcode } from './opcodes'
 import { OutOfGas } from './errors'
 import { Memory, GasAwareMemory } from './Memory'
+import { Storage } from './Storage'
+
+export interface ExecutionParameters {
+  gasLimit: number,
+  storage: Storage,
+}
 
 export class ExecutionContext {
   stack = new Stack()
@@ -10,12 +16,18 @@ export class ExecutionContext {
   reverted = false
   programCounter = 0
 
+  gasLimit: number
+  storage: Storage
   private gasUsed = 0
+  private refund = 0
 
   constructor (
     public code: Opcode[],
-    public gasLimit: number,
-  ) {}
+    params: ExecutionParameters,
+  ) {
+    this.gasLimit = params.gasLimit
+    this.storage = params.storage.clone()
+  }
 
   getGasUsed () {
     return this.gasUsed
@@ -31,5 +43,14 @@ export class ExecutionContext {
 
   useRemainingGas () {
     this.gasUsed = this.gasLimit
+  }
+
+  addRefund (gas: number) {
+    this.refund += gas
+  }
+
+  applyRefund () {
+    const refund = Math.min(Math.floor(this.gasUsed / 2), this.refund)
+    this.gasUsed -= refund
   }
 }
