@@ -2,11 +2,13 @@ import { Stack } from './Stack'
 import { Opcode } from './opcodes'
 import { OutOfGas } from './errors'
 import { Memory, GasAwareMemory } from './Memory'
-import { Storage } from './Storage'
+import { ReadonlyState, State } from './State'
+import { Address } from './Address'
 
 export interface ExecutionParameters {
+  address: Address,
   gasLimit: number,
-  storage: Storage,
+  state: ReadonlyState,
 }
 
 export class ExecutionContext {
@@ -16,8 +18,9 @@ export class ExecutionContext {
   reverted = false
   programCounter = 0
 
+  address: Address
   gasLimit: number
-  storage: Storage
+  state: State
   private gasUsed = 0
   private refund = 0
 
@@ -25,8 +28,9 @@ export class ExecutionContext {
     public code: Opcode[],
     params: ExecutionParameters,
   ) {
+    this.address = params.address
     this.gasLimit = params.gasLimit
-    this.storage = params.storage.clone()
+    this.state = params.state.clone()
   }
 
   getGasUsed () {

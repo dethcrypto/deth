@@ -1,13 +1,15 @@
 import { expect } from 'chai'
 import { ExecutionContext } from '../../src/evm/ExecutionContext'
 import { OutOfGas } from '../../src/evm/errors'
-import { Storage } from '../../src/evm/Storage'
+import { State } from '../../src/evm/State'
+import { Address } from '../../src/evm/Address'
 
 describe('ExecutionContext', () => {
   function makeContext (gasLimit: number) {
     return new ExecutionContext([], {
+      address: '0x1234' as Address,
       gasLimit,
-      storage: new Storage(),
+      state: new State(),
     })
   }
 
