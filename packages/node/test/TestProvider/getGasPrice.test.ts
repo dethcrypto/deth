@@ -1,10 +1,11 @@
 import { expect } from 'chai'
 import { TestProvider } from '../../src/TestProvider'
 import { utils } from 'ethers'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.getGasPrice', () => {
   it('defaults to one gwei', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const gasPrice = await provider.getGasPrice()
     expect(gasPrice.toNumber()).to.equal(1_000_000_000)
   })

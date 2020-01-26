@@ -3,7 +3,7 @@ import { request, expect } from 'chai'
 export function makeRpcCall (
   app: Express.Application,
   methodName: string,
-  params: any[],
+  params: any[] = [],
 ): Promise<ChaiHttp.Response> {
   return request(app)
     .post('/')

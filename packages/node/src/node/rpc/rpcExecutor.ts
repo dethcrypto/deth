@@ -3,7 +3,7 @@ import { NodeCtx } from '../ctx'
 import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
 import { BadRequestHttpError } from '../errorHandler'
-import { makeHexData, numberToQuantity } from '../../primitives'
+import { makeHexData, numberToQuantity, quantityToNumber } from '../../primitives'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }
 type SafeBlock = NoNullProperties<RpcBlockResponse>
@@ -55,11 +55,12 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       return numberToQuantity(0)
     },
     evm_snapshot: async () => {
-      // await ctx.chain.mineBlock()
-      return numberToQuantity(0)
+      return numberToQuantity(ctx.chain.makeSnapshot())
     },
-    evm_revert: async ([n]) => {
+    evm_revert: async ([_n]) => {
+      const n = quantityToNumber(_n)
       console.log(`Reverting to ${n}`)
+      ctx.chain.revertToSnapshot(n)
       return true as const
     },
   }

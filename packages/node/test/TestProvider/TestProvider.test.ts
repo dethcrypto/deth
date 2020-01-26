@@ -1,11 +1,11 @@
 import { expect } from 'chai'
 import { utils, Wallet } from 'ethers'
-import { TestProvider } from '../../src/TestProvider'
 import { CHAIN_NAME, CHAIN_ID } from '../../src/constants'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider', () => {
   it('sets the network correctly', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     expect(await provider.getNetwork()).to.deep.equal({
       name: CHAIN_NAME,
       chainId: CHAIN_ID,
@@ -13,7 +13,7 @@ describe('TestProvider', () => {
   })
 
   it('supports sending transactions', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
     const other = Wallet.createRandom().connect(provider)
 
@@ -29,7 +29,7 @@ describe('TestProvider', () => {
   })
 
   it('can get blocks', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet, other] = provider.walletManager.getWallets()
 
     const blockZero = await provider.getBlock(0)

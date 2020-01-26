@@ -1,5 +1,7 @@
 import { Opaque } from 'ts-essentials'
 import { BN } from 'ethereumjs-util'
+// eslint-disable-next-line
+import { BigNumber } from 'ethers/utils'
 
 const HEX_NO_LEADING_ZERO_REGEX = /^0x[1-9a-fA-F][\da-fA-F]*$/
 
@@ -29,4 +31,11 @@ export function bnToQuantity (bn: BN): Quantity {
 
 export function numberToQuantity (number: number): Quantity {
   return makeQuantity('0x' + number.toString(16))
+}
+
+/**
+ * NOTE: this might throw when dealing with big number
+ */
+export function quantityToNumber (quantity: Quantity) {
+  return new BigNumber(quantity).toNumber()
 }

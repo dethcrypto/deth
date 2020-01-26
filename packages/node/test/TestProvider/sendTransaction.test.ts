@@ -1,11 +1,11 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { utils, ContractFactory, providers } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.sendTransaction', () => {
   it('can send a simple transfer', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender, recipient] = provider.walletManager.getWallets()
 
     const response = await sender.sendTransaction({
@@ -17,7 +17,7 @@ describe('TestProvider.sendTransaction', () => {
   })
 
   it('can deploy a contract', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
@@ -30,7 +30,7 @@ describe('TestProvider.sendTransaction', () => {
   })
 
   it('can call a contract method', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
