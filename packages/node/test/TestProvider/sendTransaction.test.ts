@@ -38,8 +38,26 @@ describe('TestProvider.sendTransaction', () => {
 
     const response: providers.TransactionResponse = await contract.increment(1)
     const receipt = await response.wait()
+    const value = await contract.value()
 
     expect(response).not.to.equal(undefined)
     expect(receipt.status).to.equal(1)
+    expect(value.toNumber()).to.equal(1)
+  })
+
+  it('can call a contract method that reverts', async () => {
+    const provider = await createTestProvider()
+    const [wallet] = provider.walletManager.getWallets()
+
+    const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
+    const contract = await factory.deploy(0)
+
+    const response: providers.TransactionResponse = await contract.incrementAndRevert(1)
+    const receipt = await response.wait()
+    const value = await contract.value()
+
+    expect(response).not.to.equal(undefined)
+    expect(receipt.status).to.equal(1)
+    expect(value.toNumber()).to.equal(0)
   })
 })
