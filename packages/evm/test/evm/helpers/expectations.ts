@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { StackUnderflow } from '../../../src/evm/errors'
 import { executeAssembly } from './executeAssembly'
 import { Int256 } from './Int256'
-import { MachineWord } from '../../../src/evm/MachineWord'
+import { Bytes32 } from '../../../src/evm/Bytes32'
 import { Address } from '../../../src/evm/Address'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {
@@ -50,7 +50,7 @@ export function expectStorage (assembly: string, values: Record<string, string>)
   const result = executeAssembly(assembly, { address })
   const resultingStorage: Record<string, string> = {}
   for (const key in values) {
-    const location = MachineWord.fromHexString(key)
+    const location = Bytes32.fromHexString(key)
     resultingStorage[key] = result.state.getStorage(address, location).toHexString()
   }
   expect(resultingStorage).to.deep.equal(values)

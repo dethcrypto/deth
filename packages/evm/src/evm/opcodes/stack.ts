@@ -1,9 +1,9 @@
-import { MachineWord } from '../MachineWord'
+import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
 
 export function makeOpPUSH (bytes: string) {
-  const word = MachineWord.fromHexString(bytes)
+  const word = Bytes32.fromHexString(bytes)
   const count = bytes.length / 2
   return function opPUSH (ctx: ExecutionContext) {
     ctx.useGas(GasCost.VERYLOW)

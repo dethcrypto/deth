@@ -1,25 +1,25 @@
-import { MachineWord } from './MachineWord'
+import { Bytes32 } from './Bytes32'
 import { Address } from './Address'
 
 export interface ReadonlyState {
-  getBalance (address: Address): MachineWord,
+  getBalance (address: Address): Bytes32,
   getNonce (address: Address): number,
-  getStorage (address: Address, location: MachineWord): MachineWord,
+  getStorage (address: Address, location: Bytes32): Bytes32,
   getCode (address: Address): readonly number[],
   clone (): State,
 }
 
 export class State {
-  private balances: Record<string, MachineWord | undefined> = {}
+  private balances: Record<string, Bytes32 | undefined> = {}
   private nonces: Record<string, number | undefined> = {}
-  private storage: Record<string, MachineWord | undefined> = {}
+  private storage: Record<string, Bytes32 | undefined> = {}
   private codes: Record<string, readonly number[] | undefined> = {}
 
-  getBalance (address: Address): MachineWord {
-    return this.balances[address] ?? MachineWord.ZERO
+  getBalance (address: Address): Bytes32 {
+    return this.balances[address] ?? Bytes32.ZERO
   }
 
-  setBalance (address: Address, balance: MachineWord) {
+  setBalance (address: Address, balance: Bytes32) {
     this.balances[address] = balance
   }
 
@@ -31,11 +31,11 @@ export class State {
     this.nonces[address] = value
   }
 
-  getStorage (address: Address, location: MachineWord): MachineWord {
-    return this.storage[getStorageKey(address, location)] ?? MachineWord.ZERO
+  getStorage (address: Address, location: Bytes32): Bytes32 {
+    return this.storage[getStorageKey(address, location)] ?? Bytes32.ZERO
   }
 
-  setStorage (address: Address, location: MachineWord, value: MachineWord) {
+  setStorage (address: Address, location: Bytes32, value: Bytes32) {
     this.storage[getStorageKey(address, location)] = value
   }
 
@@ -57,6 +57,6 @@ export class State {
   }
 }
 
-function getStorageKey (address: Address, location: MachineWord) {
+function getStorageKey (address: Address, location: Bytes32) {
   return address + '.' + location.toHexString()
 }

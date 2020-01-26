@@ -1,4 +1,4 @@
-import { MachineWord } from './MachineWord'
+import { Bytes32 } from './Bytes32'
 
 export class VMError extends Error {
   constructor (message: string) {
@@ -37,7 +37,7 @@ export class UnreachableInstruction extends VMError {
 }
 
 export class InvalidJumpDestination extends VMError {
-  constructor (destination: MachineWord) {
+  constructor (destination: Bytes32) {
     super(`Invalid jump destination ${destination.toHexString()}`)
   }
 }

@@ -1,9 +1,9 @@
 import { expect } from 'chai'
-import { MachineWord } from '../../src/evm/MachineWord'
+import { Bytes32 } from '../../src/evm/Bytes32'
 import { Stack } from '../../src/evm/Stack'
 import { StackOverflow, StackUnderflow } from '../../src/evm/errors'
 
-const A = MachineWord.ONE
+const A = Bytes32.ONE
 const B = A.add(A)
 const C = B.add(A)
 

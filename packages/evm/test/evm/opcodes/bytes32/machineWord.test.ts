@@ -3,7 +3,7 @@ import { TestCase } from './cases/helpers'
 import { expectStack, expectGas } from '../../helpers'
 import { GasCost } from '../../../../src/evm/opcodes'
 
-describe('machineWord opcodes', () => {
+describe('bytes32 opcodes', () => {
   runTestCases('ADD', TestCases.ADD)
   runTestCases('MUL', TestCases.MUL)
   runTestCases('SUB', TestCases.SUB)
