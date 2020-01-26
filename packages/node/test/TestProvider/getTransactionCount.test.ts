@@ -1,10 +1,10 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { utils } from 'ethers'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.getTransactionCount', () => {
   it('can return a zero transaction count', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     const transactionCount = await provider.getTransactionCount(wallet.address)
@@ -12,7 +12,7 @@ describe('TestProvider.getTransactionCount', () => {
   })
 
   it('can return a non-zero transaction count', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender, recipient] = provider.walletManager.getWallets()
 
     await sender.sendTransaction({
@@ -32,7 +32,7 @@ describe('TestProvider.getTransactionCount', () => {
   xit('query pending')
 
   it('throws for blockTag !== latest or pending', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     await expect(

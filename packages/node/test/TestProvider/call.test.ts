@@ -1,14 +1,14 @@
 import { expect } from 'chai'
 import { ContractFactory, utils } from 'ethers'
-import { TestProvider } from '../../src/TestProvider'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.call', () => {
   xit('can call a simple transfer')
   xit('can call a contract deploy')
 
   it('can call a contract method directly', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
@@ -24,7 +24,7 @@ describe('TestProvider.call', () => {
   })
 
   it('can call a contract method indirectly', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
@@ -39,7 +39,7 @@ describe('TestProvider.call', () => {
   xit('handles execution errors')
 
   it('throws for blockTag !== latest', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
 
     await expect(
       provider.call({}, 'pending'),

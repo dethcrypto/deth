@@ -1,11 +1,11 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE, COUNTER_RUNTIME } from '../contracts/Counter'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.getCode', () => {
   it('returns empty value for normal addresses', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     const code = await provider.getCode(wallet.address)
@@ -13,7 +13,7 @@ describe('TestProvider.getCode', () => {
   })
 
   it('returns runtime bytecode for contracts', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [wallet] = provider.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
@@ -24,7 +24,7 @@ describe('TestProvider.getCode', () => {
   })
 
   it('throws for blockTag !== latest', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     await expect(

@@ -1,12 +1,5 @@
 import { utils } from 'ethers'
-import {
-  Address,
-  Hash,
-  Quantity,
-  bnToQuantity,
-  HexData,
-  bufferToHexData,
-} from './primitives'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData } from './primitives'
 import {
   Tag,
   RpcTransactionRequest,
@@ -20,11 +13,7 @@ import {
 } from './model'
 import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
-import {
-  transactionNotFound,
-  unsupportedBlockTag,
-  unsupportedOperation,
-} from './errors'
+import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -38,6 +27,18 @@ export class TestChain {
   constructor (options?: Partial<TestChainOptions>) {
     this.options = getOptionsWithDefaults(options)
     this.tvm = new TestVM(this.options)
+  }
+
+  async init () {
+    await this.tvm.init()
+  }
+
+  makeSnapshot (): number {
+    return this.tvm.makeSnapshot()
+  }
+
+  revertToSnapshot (id: number) {
+    return this.tvm.revertToSnapshot(id)
   }
 
   async mineBlock () {
@@ -115,9 +116,8 @@ export class TestChain {
       throw unsupportedBlockTag('call', blockTagOrHash)
     }
 
-    const block = blockTagOrHash === 'latest'
-      ? await this.tvm.getLatestBlock()
-      : await this.tvm.getBlock(blockTagOrHash)
+    const block =
+      blockTagOrHash === 'latest' ? await this.tvm.getLatestBlock() : await this.tvm.getBlock(blockTagOrHash)
 
     if (!includeTransactions) {
       return block

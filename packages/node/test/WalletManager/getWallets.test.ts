@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { utils } from 'ethers'
 import { getOptionsWithDefaults } from '../../src/TestChainOptions'
 import { WalletManager } from '../../src/WalletManager'
-import { TestProvider } from '../../src'
+import { createTestProvider } from '../testutils'
 
 const { privateKeys } = getOptionsWithDefaults()
 
@@ -15,7 +15,7 @@ describe('WalletManager.getWallets', () => {
   })
 
   it('all wallets are connected to the provider', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const walletManager = new WalletManager(privateKeys, provider)
     const wallets = walletManager.getWallets()
 
@@ -25,7 +25,7 @@ describe('WalletManager.getWallets', () => {
   })
 
   it('every wallet has an initial balance of 100 ETH', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallets = provider.walletManager.getWallets()
 
     for (const wallet of wallets) {
@@ -36,7 +36,7 @@ describe('WalletManager.getWallets', () => {
 
   it('the initial balance can be customized', async () => {
     const initialBalance = utils.parseEther('42.69')
-    const provider = new TestProvider({ initialBalance })
+    const provider = await createTestProvider({ initialBalance })
     const wallets = provider.walletManager.getWallets()
 
     for (const wallet of wallets) {
@@ -46,7 +46,7 @@ describe('WalletManager.getWallets', () => {
   })
 
   it('every wallet has an initial transaction count of 0', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallets = provider.walletManager.getWallets()
 
     for (const wallet of wallets) {

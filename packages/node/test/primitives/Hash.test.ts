@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import { makeHash } from '../../src/primitives'
+import { makeHash, bufferToHash } from '../../src/primitives'
+import { toBuffer } from 'ethereumjs-util'
 
 describe('makeHash', () => {
   it('accepts hashes and turns them to lowercase', () => {
@@ -15,5 +16,14 @@ describe('makeHash', () => {
 
   it('throws for non hex strings', () => {
     expect(() => makeHash('foo')).to.throw(TypeError)
+  })
+})
+
+describe('bufferToHash', () => {
+  it('works with makeHash', () => {
+    const validHash = '0x' + '1234abcd'.repeat(8)
+    const validHashBuffer = toBuffer(validHash)
+
+    expect(bufferToHash(validHashBuffer)).to.be.eq(validHash)
   })
 })

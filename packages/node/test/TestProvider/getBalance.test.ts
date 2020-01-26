@@ -1,10 +1,10 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../src/TestProvider'
 import { utils } from 'ethers'
+import { createTestProvider } from '../testutils'
 
 describe('TestProvider.getBalance', () => {
   it('can return a zero balance', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     const balance = await provider.getBalance(wallet.address)
@@ -12,7 +12,7 @@ describe('TestProvider.getBalance', () => {
   })
 
   it('can return a non-zero balance', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender] = provider.walletManager.getWallets()
     const recipient = provider.walletManager.createEmptyWallet()
 
@@ -27,7 +27,7 @@ describe('TestProvider.getBalance', () => {
   })
 
   it('can return a balance turned zero', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const [sender] = provider.walletManager.getWallets()
     const recipient = provider.walletManager.createEmptyWallet()
 
@@ -51,7 +51,7 @@ describe('TestProvider.getBalance', () => {
   })
 
   it('throws for blockTag !== latest', async () => {
-    const provider = new TestProvider()
+    const provider = await createTestProvider()
     const wallet = provider.walletManager.createEmptyWallet()
 
     await expect(
