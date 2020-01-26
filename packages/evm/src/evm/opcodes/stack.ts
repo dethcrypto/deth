@@ -3,7 +3,7 @@ import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
 
 export function makeOpPUSH (bytes: string) {
-  const word = Bytes32.fromHexString(bytes)
+  const word = Bytes32.fromHex(bytes)
   const count = bytes.length / 2
   return function opPUSH (ctx: ExecutionContext) {
     ctx.useGas(GasCost.VERYLOW)

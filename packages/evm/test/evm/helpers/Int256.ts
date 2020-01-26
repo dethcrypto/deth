@@ -27,6 +27,6 @@ export const Int256 = {
 
 function negative (value: string) {
   return Bytes32.ZERO
-    .sub(Bytes32.fromHexString(value))
-    .toHexString()
+    .sub(Bytes32.fromHex(value))
+    .toHex()
 }

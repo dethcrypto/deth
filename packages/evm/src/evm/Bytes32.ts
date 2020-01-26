@@ -23,7 +23,7 @@ export class Bytes32 {
     return new Bytes32(new BN(value).toTwos(256))
   }
 
-  static fromHexString (value: string) {
+  static fromHex (value: string) {
     return new Bytes32(new BN(value, 16))
   }
 
@@ -39,7 +39,7 @@ export class Bytes32 {
     }
   }
 
-  toHexString () {
+  toHex () {
     return this.value.toString(16, 64)
   }
 

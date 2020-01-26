@@ -38,7 +38,7 @@ export class UnreachableInstruction extends VMError {
 
 export class InvalidJumpDestination extends VMError {
   constructor (destination: Bytes32) {
-    super(`Invalid jump destination ${destination.toHexString()}`)
+    super(`Invalid jump destination ${destination.toHex()}`)
   }
 }
 

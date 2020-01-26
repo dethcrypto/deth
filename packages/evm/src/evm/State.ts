@@ -59,5 +59,5 @@ export class State {
 }
 
 function getStorageKey (address: Address, location: Bytes32) {
-  return address + '.' + location.toHexString()
+  return address + '.' + location.toHex()
 }

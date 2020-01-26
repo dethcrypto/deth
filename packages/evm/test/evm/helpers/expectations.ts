@@ -20,7 +20,7 @@ export function makeStack (depth: number) {
 
 export function expectStack (assembly: string, stack: string[]) {
   const result = executeAssembly(assembly)
-  const items = result.stack['items'].map(x => x.toHexString())
+  const items = result.stack['items'].map(x => x.toHex())
   expect(items).to.deep.equal(stack)
 }
 
@@ -51,8 +51,8 @@ export function expectStorage (assembly: string, values: Record<string, string>)
   const result = executeAssembly(assembly, { address })
   const resultingStorage: Record<string, string> = {}
   for (const key in values) {
-    const location = Bytes32.fromHexString(key)
-    resultingStorage[key] = result.state.getStorage(address, location).toHexString()
+    const location = Bytes32.fromHex(key)
+    resultingStorage[key] = result.state.getStorage(address, location).toHex()
   }
   expect(resultingStorage).to.deep.equal(values)
 }

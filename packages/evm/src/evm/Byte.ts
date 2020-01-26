@@ -6,10 +6,10 @@ export const Byte = {
     }
     return value as Byte
   },
-  fromHexString (value: string) {
+  fromHex (value: string) {
     if (!/^[\da-f]{2}$/i.test(value)) {
       throw new TypeError(`Cannot cast "${value}" to byte`)
     }
     return parseInt(value, 16) as Byte
-  }
+  },
 }

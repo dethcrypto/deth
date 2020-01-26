@@ -22,23 +22,23 @@ describe('Byte', () => {
     })
   })
 
-  describe('fromHexString', () => {
+  describe('fromHex', () => {
     it('fails for non-hex strings', () => {
-      expect(() => Byte.fromHexString('goo')).to.throw(TypeError)
-      expect(() => Byte.fromHexString('i like dogs')).to.throw(TypeError)
+      expect(() => Byte.fromHex('goo')).to.throw(TypeError)
+      expect(() => Byte.fromHex('i like dogs')).to.throw(TypeError)
     })
 
     it('fails for hex stings of not 2 digit', () => {
-      expect(() => Byte.fromHexString('')).to.throw(TypeError)
-      expect(() => Byte.fromHexString('f')).to.throw(TypeError)
-      expect(() => Byte.fromHexString('eff')).to.throw(TypeError)
-      expect(() => Byte.fromHexString('eff0')).to.throw(TypeError)
+      expect(() => Byte.fromHex('')).to.throw(TypeError)
+      expect(() => Byte.fromHex('f')).to.throw(TypeError)
+      expect(() => Byte.fromHex('eff')).to.throw(TypeError)
+      expect(() => Byte.fromHex('eff0')).to.throw(TypeError)
     })
 
     it('works for bytes', () => {
-      expect(Byte.fromHexString('00')).to.equal(0)
-      expect(Byte.fromHexString('01')).to.equal(1)
-      expect(Byte.fromHexString('fF')).to.equal(255)
+      expect(Byte.fromHex('00')).to.equal(0)
+      expect(Byte.fromHex('01')).to.equal(1)
+      expect(Byte.fromHex('fF')).to.equal(255)
     })
   })
 })
