@@ -4,12 +4,12 @@ import { Stack } from './Stack'
 import { VMError } from './errors'
 import { IMemory } from './Memory'
 import { opSTOP } from './opcodes/control'
-import { Storage } from './Storage'
+import { ReadonlyState } from './State'
 
 export interface ExecutionResult {
   stack: Stack,
   memory: IMemory,
-  storage: Storage,
+  state: ReadonlyState,
   gasUsed: number,
   programCounter: number,
   reverted: boolean,
@@ -28,8 +28,7 @@ export function executeCode (code: Opcode[], params: ExecutionParameters): Execu
     } catch (e) {
       if (e instanceof VMError) {
         ctx.useRemainingGas()
-        ctx.storage.revert()
-        return toResult(ctx, e)
+        return toResult(ctx, params.state, e)
       } else {
         throw e
       }
@@ -37,18 +36,23 @@ export function executeCode (code: Opcode[], params: ExecutionParameters): Execu
   }
 
   if (ctx.reverted) {
-    ctx.storage.revert()
+    // TODO: should there be a refund here?
+    return toResult(ctx, params.state)
   }
   ctx.applyRefund()
   return toResult(ctx)
 }
 
-function toResult (ctx: ExecutionContext, error?: VMError): ExecutionResult {
+function toResult (
+  ctx: ExecutionContext,
+  state?: ReadonlyState,
+  error?: VMError,
+): ExecutionResult {
   return {
     stack: ctx.stack,
     // This prevents us from retaining a reference to ctx
     memory: ctx.memory.memory,
-    storage: ctx.storage,
+    state: state ?? ctx.state,
     gasUsed: ctx.getGasUsed(),
     reverted: ctx.reverted,
     programCounter: ctx.programCounter,

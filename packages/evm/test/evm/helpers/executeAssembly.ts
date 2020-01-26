@@ -1,11 +1,13 @@
 import { parseBytecode } from '../../../src/evm/parseBytecode'
 import { executeCode } from '../../../src/evm/executeCode'
 import { ExecutionParameters } from '../../../src/evm/ExecutionContext'
-import { Storage } from '../../../src/evm/Storage'
+import { State } from '../../../src/evm/State'
+import { Address } from '../../../src/evm/Address'
 
 const DEFAULT_EXECUTION_PARAMS: ExecutionParameters = {
+  address: '0x1234' as Address,
   gasLimit: 1_000_000_000,
-  storage: new Storage(),
+  state: new State(),
 }
 
 export function executeAssembly (assembly: string, params: Partial<ExecutionParameters> = {}) {
