@@ -1,5 +1,8 @@
 import { callbackify } from 'util'
 import { BN } from 'ethereumjs-util'
+// we need this import for proper build
+// eslint-disable-next-line
+import Block from 'ethereumjs-block'
 
 import { DethBlockchain } from './DethBlockchain'
 import { bnToQuantity, numberToQuantity, bufferToHash } from '../../primitives'
