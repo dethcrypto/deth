@@ -1,9 +1,10 @@
 import { GasCost } from './opcodes'
+import { Byte } from './Byte'
 
 export interface IMemory {
   getSize (): number,
-  getBytes (offset: number, length: number): number[],
-  setBytes (offset: number, bytes: number[]): void,
+  getBytes (offset: number, length: number): Byte[],
+  setBytes (offset: number, bytes: Byte[]): void,
 }
 
 export class GasAwareMemory implements IMemory {
@@ -39,19 +40,19 @@ export class GasAwareMemory implements IMemory {
     return this.memory.getBytes(offset, length)
   }
 
-  setBytes (offset: number, bytes: number[]) {
+  setBytes (offset: number, bytes: Byte[]) {
     this.onMemoryAccess(offset, bytes.length)
     this.memory.setBytes(offset, bytes)
   }
 }
 
 export class Memory implements IMemory {
-  private items: number[] = []
+  private items: Byte[] = []
 
   private expand (targetSize: number) {
     const targetLength = 32 * Math.ceil(targetSize / 32)
     for (let i = this.items.length; i < targetLength; i++) {
-      this.items[i] = 0
+      this.items[i] = 0 as Byte
     }
   }
 
@@ -67,7 +68,7 @@ export class Memory implements IMemory {
     return this.items.slice(offset, offset + length)
   }
 
-  setBytes (offset: number, bytes: number[]) {
+  setBytes (offset: number, bytes: Byte[]) {
     if (bytes.length === 0) {
       return
     }

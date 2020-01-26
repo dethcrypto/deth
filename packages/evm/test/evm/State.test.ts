@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { State } from '../../src/evm/State'
 import { Address } from '../../src/evm/Address'
 import { Bytes32 } from '../../src/evm/Bytes32'
+import { Byte } from '../../src/evm/Byte'
 
 describe('State', () => {
   const address = '0x1234' as Address
@@ -53,7 +54,7 @@ describe('State', () => {
 
   it('getCode returns previously set value', () => {
     const state = new State()
-    state.setCode(address, [1, 2, 3])
+    state.setCode(address, [1, 2, 3] as Byte[])
     const result = state.getCode(address)
     expect(result).to.deep.equal([1, 2, 3])
   })
@@ -64,7 +65,7 @@ describe('State', () => {
     state.setBalance(address, Bytes32.ONE)
     state.setNonce(address, 1)
     state.setStorage(address, Bytes32.ZERO, Bytes32.ONE)
-    state.setCode(address, [1, 2, 3])
+    state.setCode(address, [1, 2, 3] as Byte[])
 
     const clone = state.clone()
 
@@ -72,7 +73,7 @@ describe('State', () => {
     clone.setNonce(address, 2)
     clone.setStorage(address, Bytes32.ZERO, Bytes32.MAX)
     clone.setStorage(address, Bytes32.ONE, Bytes32.ONE)
-    clone.setCode(address, [4, 5])
+    clone.setCode(address, [4, 5] as Byte[])
 
     expect(state.getBalance(address).equals(Bytes32.ONE)).to.equal(true)
     expect(state.getStorage(address, Bytes32.ZERO).equals(Bytes32.ONE)).to.equal(true)

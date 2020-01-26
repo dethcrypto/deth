@@ -4,6 +4,7 @@ import { executeAssembly } from './executeAssembly'
 import { Int256 } from './Int256'
 import { Bytes32 } from '../../../src/evm/Bytes32'
 import { Address } from '../../../src/evm/Address'
+import { Byte } from '../../../src/evm/Byte'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {
   for (let i = 0; i < minimumDepth; i++) {
@@ -33,13 +34,13 @@ export function expectError (assembly: string, error: unknown) {
   expect(result.error).to.be.instanceOf(error)
 }
 
-export function expectReturn (assembly: string, value: number[]) {
+export function expectReturn (assembly: string, value: Byte[]) {
   const result = executeAssembly(assembly)
   expect(result.reverted).to.equal(false)
   expect(result.returnValue).to.deep.equal(value)
 }
 
-export function expectRevert (assembly: string, value: number[]) {
+export function expectRevert (assembly: string, value: Byte[]) {
   const result = executeAssembly(assembly)
   expect(result.reverted).to.equal(true)
   expect(result.returnValue).to.deep.equal(value)

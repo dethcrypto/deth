@@ -1,11 +1,12 @@
 import { Bytes32 } from './Bytes32'
 import { Address } from './Address'
+import { Byte } from './Byte'
 
 export interface ReadonlyState {
   getBalance (address: Address): Bytes32,
   getNonce (address: Address): number,
   getStorage (address: Address, location: Bytes32): Bytes32,
-  getCode (address: Address): readonly number[],
+  getCode (address: Address): readonly Byte[],
   clone (): State,
 }
 
@@ -13,7 +14,7 @@ export class State {
   private balances: Record<string, Bytes32 | undefined> = {}
   private nonces: Record<string, number | undefined> = {}
   private storage: Record<string, Bytes32 | undefined> = {}
-  private codes: Record<string, readonly number[] | undefined> = {}
+  private codes: Record<string, readonly Byte[] | undefined> = {}
 
   getBalance (address: Address): Bytes32 {
     return this.balances[address] ?? Bytes32.ZERO
@@ -39,11 +40,11 @@ export class State {
     this.storage[getStorageKey(address, location)] = value
   }
 
-  getCode (address: Address): readonly number[] {
+  getCode (address: Address): readonly Byte[] {
     return this.codes[address] ?? []
   }
 
-  setCode (address: Address, value: readonly number[]) {
+  setCode (address: Address, value: readonly Byte[]) {
     this.codes[address] = [...value]
   }
 

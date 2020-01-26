@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { Bytes32 } from '../../src/evm/Bytes32'
 import { TestCases } from './opcodes/bytes32/cases'
 import { TestCase } from './opcodes/bytes32/cases/helpers'
+import { Byte } from '../../src/evm/Byte'
 
 describe('Bytes32', () => {
   runTestCases('add', TestCases.ADD)
@@ -89,7 +90,7 @@ describe('Bytes32', () => {
 
   describe('from and to bytes', () => {
     it('fromBytes works for small numbers', () => {
-      const a = Bytes32.fromBytes([0x11, 0x22])
+      const a = Bytes32.fromBytes([0x11, 0x22] as Byte[])
       const b = Bytes32.fromHexString('1122')
       expect(a.equals(b)).to.equal(true)
     })
@@ -101,7 +102,7 @@ describe('Bytes32', () => {
     })
 
     it('toBytes pads zeroes at the start', () => {
-      const result = Bytes32.fromBytes([0x1, 0x3]).toBytes()
+      const result = Bytes32.fromBytes([0x1, 0x3] as Byte[]).toBytes()
       expect(result).to.deep.equal(new Array(30).fill(0x00).concat(0x1, 0x3))
     })
   })
