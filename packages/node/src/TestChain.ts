@@ -14,6 +14,7 @@ import {
 import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
+import { eventLogger, revertLogger } from './debugger/stepsLoggers'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -31,6 +32,8 @@ export class TestChain {
 
   async init () {
     await this.tvm.init()
+    this.tvm.installStepHook(eventLogger)
+    this.tvm.installStepHook(revertLogger)
   }
 
   makeSnapshot (): number {
