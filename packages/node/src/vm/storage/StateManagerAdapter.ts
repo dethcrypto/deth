@@ -47,31 +47,36 @@ export class StateManagerAdapter {
     },
   )
 
+  accountIsEmpty = callbackify(async (address: Buffer) => {
+    return this.dethStateManager.isAccountEmpty(bufferToAddress(address))
+  })
+
   setStateRoot = callbackify(async (root: Buffer) => {
     return this.dethStateManager.setStateRoot(bufferToHash(root))
   })
 
   getOriginalContractStorage = () => {
+    console.trace()
     throw new Error('Not implemented yet!')
   }
 
   dumpStorage = () => {
+    console.trace()
     throw new Error('Not implemented yet!')
   }
 
   hasGenesisState = () => {
+    console.trace()
     throw new Error('Not implemented yet!')
   }
 
   generateCanonicalGenesis = () => {
+    console.trace()
     throw new Error('Not implemented yet!')
   }
 
   generateGenesis = () => {
-    throw new Error('Not implemented yet!')
-  }
-
-  accountIsEmpty = () => {
+    console.trace()
     throw new Error('Not implemented yet!')
   }
 

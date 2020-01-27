@@ -1,6 +1,6 @@
 import { Opaque } from 'ts-essentials'
 import { HEX_REGEX } from './common'
-import { bufferToHex } from 'ethereumjs-util'
+import { bufferToHex, BN } from 'ethereumjs-util'
 
 /**
  * An hexadecimal string representing an ethereum address.
@@ -22,4 +22,8 @@ export function bufferToMaybeAddress (buffer?: Buffer): Address | undefined {
   return buffer && buffer.length > 0
     ? bufferToAddress(buffer)
     : undefined
+}
+
+export function bnToAddress (address: BN): Address {
+  return makeAddress('0x' + address.toString('hex', 40))
 }
