@@ -118,4 +118,9 @@ export class DethStateManger {
       this.storageState = s
     }
   }
+
+  isAccountEmpty (address: Address): boolean {
+    // @todo fix, it's simplified implementation
+    return !!this.accountsState.get(address)
+  }
 }
