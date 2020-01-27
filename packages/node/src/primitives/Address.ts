@@ -22,6 +22,7 @@ export function bufferToMaybeAddress (buffer?: Buffer): Address | undefined {
   return buffer && buffer.length > 0
     ? bufferToAddress(buffer)
     : undefined
+}
 
 export function bnToAddress (address: BN): Address {
   return makeAddress('0x' + address.toString('hex', 40))
