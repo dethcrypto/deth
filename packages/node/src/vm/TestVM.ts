@@ -44,6 +44,11 @@ export class TestVM {
     this.vm = await initializeVM(this.options, this.stateManger, this.blockchain)
   }
 
+  // @todo this requires better typings (whole step hooks mechanism)
+  installStepHook (hook: Function) {
+    this.vm.on('step', hook)
+  }
+
   makeSnapshot (): number {
     const snapshotId = this.snapshots.length
 
