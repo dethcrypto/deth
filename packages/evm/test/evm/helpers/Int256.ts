@@ -1,4 +1,4 @@
-import { MachineWord } from '../../../src/evm/MachineWord'
+import { Bytes32 } from '../../../src/evm/Bytes32'
 
 const HEX_REGEX = /^0x[\da-f]*$/
 
@@ -26,7 +26,7 @@ export const Int256 = {
 }
 
 function negative (value: string) {
-  return MachineWord.ZERO
-    .sub(MachineWord.fromHexString(value))
-    .toHexString()
+  return Bytes32.ZERO
+    .sub(Bytes32.fromHex(value))
+    .toHex()
 }

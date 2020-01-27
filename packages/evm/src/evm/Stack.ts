@@ -1,12 +1,12 @@
-import { MachineWord } from './MachineWord'
+import { Bytes32 } from './Bytes32'
 import { StackUnderflow, StackOverflow } from './errors'
 
 const MAX_STACK_SIZE = 1024
 
 export class Stack {
-  private items: MachineWord[] = []
+  private items: Bytes32[] = []
 
-  push (word: MachineWord) {
+  push (word: Bytes32) {
     if (this.items.length === MAX_STACK_SIZE) {
       throw new StackOverflow()
     }

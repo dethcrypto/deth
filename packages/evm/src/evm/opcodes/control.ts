@@ -1,7 +1,7 @@
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
 import { InvalidJumpDestination } from '../errors'
-import { MachineWord } from '../MachineWord'
+import { Bytes32 } from '../Bytes32'
 
 export function opSTOP (ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
@@ -49,7 +49,7 @@ export function opJUMPI (ctx: ExecutionContext) {
   const location = destination.toUnsignedNumber()
   const condition = ctx.stack.pop()
 
-  if (!condition.equals(MachineWord.ZERO)) {
+  if (!condition.equals(Bytes32.ZERO)) {
     if (ctx.code[location] === opJUMPDEST) {
       ctx.programCounter = location
     } else {

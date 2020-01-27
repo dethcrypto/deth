@@ -33,7 +33,7 @@ import {
   opSHL,
   opSHR,
   opSAR,
-} from './machineWord'
+} from './bytes32'
 import { invalidOpcode } from './invalid'
 import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'

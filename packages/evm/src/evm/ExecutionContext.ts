@@ -4,6 +4,7 @@ import { OutOfGas } from './errors'
 import { Memory, GasAwareMemory } from './Memory'
 import { ReadonlyState, State } from './State'
 import { Address } from './Address'
+import { Byte } from './Byte'
 
 export interface ExecutionParameters {
   address: Address,
@@ -14,7 +15,7 @@ export interface ExecutionParameters {
 export class ExecutionContext {
   stack = new Stack()
   memory = new GasAwareMemory(new Memory(), this.useGas.bind(this))
-  returnValue?: number[]
+  returnValue?: Byte[]
   reverted = false
   programCounter = 0
 

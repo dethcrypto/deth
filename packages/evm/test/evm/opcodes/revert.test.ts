@@ -1,5 +1,6 @@
 import { expectStack, expectGas, memoryGas, expectRevert, expectStorage, Int256 } from '../helpers'
 import { GasCost } from '../../../src/evm/opcodes'
+import { Byte } from '../../../src/evm/Byte'
 
 describe('REVERT opcode', () => {
   it('halts execution', () => {
@@ -23,7 +24,7 @@ describe('REVERT opcode', () => {
       PUSH1 1C
       REVERT
     `
-    expectRevert(assembly, [0x01, 0x02, 0x03, 0x04, 0x00])
+    expectRevert(assembly, [0x01, 0x02, 0x03, 0x04, 0x00] as Byte[])
   })
 
   it('causes memory expansion', () => {

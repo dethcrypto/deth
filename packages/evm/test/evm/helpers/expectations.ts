@@ -2,8 +2,9 @@ import { expect } from 'chai'
 import { StackUnderflow } from '../../../src/evm/errors'
 import { executeAssembly } from './executeAssembly'
 import { Int256 } from './Int256'
-import { MachineWord } from '../../../src/evm/MachineWord'
+import { Bytes32 } from '../../../src/evm/Bytes32'
 import { Address } from '../../../src/evm/Address'
+import { Byte } from '../../../src/evm/Byte'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {
   for (let i = 0; i < minimumDepth; i++) {
@@ -19,7 +20,7 @@ export function makeStack (depth: number) {
 
 export function expectStack (assembly: string, stack: string[]) {
   const result = executeAssembly(assembly)
-  const items = result.stack['items'].map(x => x.toHexString())
+  const items = result.stack['items'].map(x => x.toHex())
   expect(items).to.deep.equal(stack)
 }
 
@@ -33,13 +34,13 @@ export function expectError (assembly: string, error: unknown) {
   expect(result.error).to.be.instanceOf(error)
 }
 
-export function expectReturn (assembly: string, value: number[]) {
+export function expectReturn (assembly: string, value: Byte[]) {
   const result = executeAssembly(assembly)
   expect(result.reverted).to.equal(false)
   expect(result.returnValue).to.deep.equal(value)
 }
 
-export function expectRevert (assembly: string, value: number[]) {
+export function expectRevert (assembly: string, value: Byte[]) {
   const result = executeAssembly(assembly)
   expect(result.reverted).to.equal(true)
   expect(result.returnValue).to.deep.equal(value)
@@ -50,8 +51,8 @@ export function expectStorage (assembly: string, values: Record<string, string>)
   const result = executeAssembly(assembly, { address })
   const resultingStorage: Record<string, string> = {}
   for (const key in values) {
-    const location = MachineWord.fromHexString(key)
-    resultingStorage[key] = result.state.getStorage(address, location).toHexString()
+    const location = Bytes32.fromHex(key)
+    resultingStorage[key] = result.state.getStorage(address, location).toHex()
   }
   expect(resultingStorage).to.deep.equal(values)
 }

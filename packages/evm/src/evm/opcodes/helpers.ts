@@ -1,9 +1,9 @@
-import { MachineWord } from '../MachineWord'
+import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 
 export function makeUnaryOp (
   gasCost: number,
-  operation: (a: MachineWord) => MachineWord,
+  operation: (a: Bytes32) => Bytes32,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.useGas(gasCost)
@@ -15,7 +15,7 @@ export function makeUnaryOp (
 
 export function makeBinaryOp (
   gasCost: number,
-  operation: (a: MachineWord, b: MachineWord) => MachineWord,
+  operation: (a: Bytes32, b: Bytes32) => Bytes32,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.useGas(gasCost)
@@ -28,7 +28,7 @@ export function makeBinaryOp (
 
 export function makeTernaryOp (
   gasCost: number,
-  operation: (a: MachineWord, b: MachineWord, c: MachineWord) => MachineWord,
+  operation: (a: Bytes32, b: Bytes32, c: Bytes32) => Bytes32,
 ) {
   return (ctx: ExecutionContext) => {
     ctx.useGas(gasCost)

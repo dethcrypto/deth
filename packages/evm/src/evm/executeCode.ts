@@ -5,6 +5,7 @@ import { VMError } from './errors'
 import { IMemory } from './Memory'
 import { opSTOP } from './opcodes/control'
 import { ReadonlyState } from './State'
+import { Byte } from './Byte'
 
 export interface ExecutionResult {
   stack: Stack,
@@ -13,7 +14,7 @@ export interface ExecutionResult {
   gasUsed: number,
   programCounter: number,
   reverted: boolean,
-  returnValue?: number[],
+  returnValue?: Byte[],
   error?: VMError,
 }
 
