@@ -1,14 +1,12 @@
-import { expect } from 'chai'
 import { GasCost, GasRefund } from '../../../src/evm/opcodes'
 import {
   expectGas,
   expectUnderflow,
   expectStorage,
   Int256,
-  executeAssembly,
   expectStack,
+  expectRefund,
 } from '../helpers'
-import { OutOfGas } from '../../../src/evm/errors'
 
 describe('Storage opcodes', () => {
   describe('SSTORE', () => {
@@ -49,50 +47,17 @@ describe('Storage opcodes', () => {
 
     describe('refund', () => {
       it(`gets ${GasRefund.SCLEAR} refund when changing non-zero`, () => {
-        // NOTE: we do a "redundant" SSTORE here to make total gas larger than refund * 2
         const assembly = `
           PUSH1 01
           PUSH1 00
-          SSTORE
-          PUSH1 01
-          PUSH1 01
           SSTORE
           PUSH1 00
           PUSH1 00
           SSTORE
         `
-        const gas = GasCost.VERYLOW * 6 + GasCost.SSET * 2 + GasCost.SRESET - GasRefund.SCLEAR
+        const gas = GasCost.VERYLOW * 4 + GasCost.SSET + GasCost.SRESET
         expectGas(assembly, gas)
-      })
-
-      it('the refund is limited to half of the gas used', () => {
-        const assembly = `
-          PUSH1 01
-          PUSH1 00
-          SSTORE
-          PUSH1 00
-          PUSH1 00
-          SSTORE
-        `
-        const gasUsed = GasCost.VERYLOW * 4 + GasCost.SSET + GasCost.SRESET
-        const refund = Math.floor(gasUsed / 2)
-        expectGas(assembly, gasUsed - refund)
-      })
-
-      it('ignores refund in case of out of gas', () => {
-        const assembly = `
-          PUSH1 01
-          PUSH1 00
-          SSTORE
-          PUSH1 00
-          PUSH1 00
-          SSTORE
-        `
-        const gasUsed = GasCost.VERYLOW * 4 + GasCost.SSET + GasCost.SRESET
-        const refund = Math.floor(gasUsed / 2)
-
-        const result = executeAssembly(assembly, { gasLimit: gasUsed - refund })
-        expect(result.error).to.be.instanceOf(OutOfGas)
+        expectRefund(assembly, GasRefund.SCLEAR)
       })
     })
   })

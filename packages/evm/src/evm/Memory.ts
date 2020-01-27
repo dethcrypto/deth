@@ -9,7 +9,7 @@ export interface IMemory {
 
 export class GasAwareMemory implements IMemory {
   constructor (
-    public memory: IMemory,
+    public memory: Memory,
     private useGas: (gas: number) => void,
   ) {}
 

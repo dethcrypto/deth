@@ -1,15 +1,13 @@
 import { expect } from 'chai'
 import { ExecutionContext } from '../../src/evm/ExecutionContext'
 import { OutOfGas } from '../../src/evm/errors'
-import { State } from '../../src/evm/State'
-import { Address } from '../../src/evm/Address'
+import { DEFAULT_MESSAGE } from './helpers'
 
 describe('ExecutionContext', () => {
   function makeContext (gasLimit: number) {
-    return new ExecutionContext([], {
-      address: '0x1234' as Address,
+    return new ExecutionContext({
+      ...DEFAULT_MESSAGE,
       gasLimit,
-      state: new State(),
     })
   }
 
@@ -17,7 +15,7 @@ describe('ExecutionContext', () => {
     const ctx = makeContext(Infinity)
     ctx.useGas(10)
     ctx.useGas(15)
-    expect(ctx.getGasUsed()).to.equal(25)
+    expect(ctx.gasUsed).to.equal(25)
   })
 
   it('throws when too much gas is used', () => {
@@ -30,23 +28,15 @@ describe('ExecutionContext', () => {
   it('can use all gas', () => {
     const ctx = makeContext(300)
     ctx.useRemainingGas()
-    expect(ctx.getGasUsed()).to.equal(300)
+    expect(ctx.gasUsed).to.equal(300)
   })
 
-  it('can apply refund', () => {
+  it('can track refund', () => {
     const ctx = makeContext(Infinity)
     ctx.useGas(100)
-    ctx.addRefund(10)
-    ctx.addRefund(15)
-    ctx.applyRefund()
-    expect(ctx.getGasUsed()).to.equal(75)
-  })
-
-  it('refund cannot exceed 50% gas used rounded down', () => {
-    const ctx = makeContext(Infinity)
-    ctx.useGas(101)
-    ctx.addRefund(51)
-    ctx.applyRefund()
-    expect(ctx.getGasUsed()).to.equal(51)
+    ctx.refund(10)
+    ctx.refund(15)
+    expect(ctx.gasUsed).to.equal(100)
+    expect(ctx.gasRefund).to.equal(25)
   })
 })

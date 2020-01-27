@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { StackUnderflow } from '../../../src/evm/errors'
-import { executeAssembly } from './executeAssembly'
+import { executeAssembly, ADDRESS_ZERO } from './executeAssembly'
 import { Int256 } from './Int256'
 import { Bytes32 } from '../../../src/evm/Bytes32'
 import { Address } from '../../../src/evm/Address'
@@ -29,6 +29,11 @@ export function expectGas (assembly: string, gasUsed: number) {
   expect(result.gasUsed).to.equal(gasUsed)
 }
 
+export function expectRefund (assembly: string, refund: number) {
+  const result = executeAssembly(assembly)
+  expect(result.gasRefund).to.equal(refund)
+}
+
 export function expectError (assembly: string, error: unknown) {
   const result = executeAssembly(assembly)
   expect(result.error).to.be.instanceOf(error)
@@ -47,12 +52,12 @@ export function expectRevert (assembly: string, value: Byte[]) {
 }
 
 export function expectStorage (assembly: string, values: Record<string, string>) {
-  const address = '0x1234' as Address
-  const result = executeAssembly(assembly, { address })
+  const account = ADDRESS_ZERO
+  const result = executeAssembly(assembly, { account })
   const resultingStorage: Record<string, string> = {}
   for (const key in values) {
     const location = Bytes32.fromHex(key)
-    resultingStorage[key] = result.state.getStorage(address, location).toHex()
+    resultingStorage[key] = result.state.getStorage(account, location).toHex()
   }
   expect(resultingStorage).to.deep.equal(values)
 }

@@ -2,14 +2,6 @@ import { Bytes32 } from './Bytes32'
 import { Address } from './Address'
 import { Byte } from './Byte'
 
-export interface ReadonlyState {
-  getBalance (address: Address): Bytes32,
-  getNonce (address: Address): number,
-  getStorage (address: Address, location: Bytes32): Bytes32,
-  getCode (address: Address): readonly Byte[],
-  clone (): State,
-}
-
 export class State {
   private balances: Record<string, Bytes32 | undefined> = {}
   private nonces: Record<string, number | undefined> = {}
