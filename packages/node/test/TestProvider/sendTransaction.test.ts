@@ -53,11 +53,11 @@ describe('TestProvider.sendTransaction', () => {
     const contract = await factory.deploy(0)
 
     const response: providers.TransactionResponse = await contract.incrementAndRevert(1)
-    const receipt = await response.wait()
+    const receipt = await provider.getTransactionReceipt(response.hash!) // note: potential race
     const value = await contract.value()
 
     expect(response).not.to.equal(undefined)
-    expect(receipt.status).to.equal(1)
+    expect(receipt.status).to.equal(0)
     expect(value.toNumber()).to.equal(0)
   })
 })
