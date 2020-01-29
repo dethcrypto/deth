@@ -44,6 +44,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       return ctx.chain.sendTransaction(signedTx)
     },
     eth_call: ([tx, _blockTag]) => ctx.chain.call(tx, 'latest'),
+    eth_estimateGas: ([tx]) => ctx.chain.estimateGas(tx),
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {
