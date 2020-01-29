@@ -17,6 +17,8 @@ export const errorHandler: ErrorRequestHandler = function (err, req, res, next) 
     console.error('Internal error occured: ', err)
   }
 
+  console.error(`<-- ERROR: ${httpError.code} - ${httpError.message} (${httpError.details})`)
+
   const isRPC = req.method === 'POST' && req.url === '/'
   if (isRPC) {
     res.status(httpError.code)
