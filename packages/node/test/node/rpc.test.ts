@@ -374,4 +374,6 @@ describe('RPC', () => {
     )
     expect(codeAfterRevert).to.eq('0x')
   })
+
+  it.skip('sends eth_estimateGas')
 })

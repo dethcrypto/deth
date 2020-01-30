@@ -75,7 +75,7 @@ export function getReceiptsAndResponses (
       from,
       to,
       logsBloom: bufferToHexData(result.bloom.bitvector),
-      status: numberToQuantity(1), // TODO: this
+      status: numberToQuantity(result.execResult.exceptionError ? 0 : 1),
     })
   }
 

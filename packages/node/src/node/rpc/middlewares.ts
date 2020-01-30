@@ -5,6 +5,9 @@ import { isRight, isLeft } from 'fp-ts/lib/Either'
 import { responseOf } from '@restless/restless'
 import { IOTSError, NotFoundHttpError } from '../errorHandler'
 import { Request } from 'express'
+import debug from 'debug'
+
+const d = debug('deth:rpc')
 
 type RPCSchema = Dictionary<{ parameters: t.Type<any>, returns: t.Type<any> }>
 type RPCExecutors = Dictionary<Function>
@@ -32,6 +35,8 @@ export function sanitizeRPC<T extends t.Any> (schema: RPCSchema): (data: unknown
   return (_data, req) => {
     const m = req.body.method
     const rpcDescription = schema[m]
+    d(`--> RPC call ${m}`)
+    d(`--> RPC call data ${JSON.stringify(req.body.params)}`)
     if (!rpcDescription) {
       throw new NotFoundHttpError()
     }
@@ -67,6 +72,7 @@ export function respondRPC (schema: RPCSchema) {
   return (data: unknown, req: Request) => {
     const method = req.body.method
     const rpcDescription = schema[method]
+    d(`<-- RES: ${JSON.stringify(data)}`)
     assert(rpcDescription, `Couldn't find rpc description for ${method}`)
 
     const result = rpcDescription.returns.encode(data)
