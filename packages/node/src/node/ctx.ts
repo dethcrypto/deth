@@ -8,10 +8,9 @@ export interface NodeCtx {
   options: TestChainOptions,
 }
 
-export async function makeDefaultCtx (): Promise<NodeCtx> {
+export async function makeDefaultCtx (options: TestChainOptions = getOptionsWithDefaults()): Promise<NodeCtx> {
   const chain = new TestChain()
   await chain.init()
-  const options = getOptionsWithDefaults()
 
   return {
     chain,
