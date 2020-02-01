@@ -8,6 +8,7 @@ import { getOptionsWithDefaults } from '../TestChainOptions'
  * - support autofinding file based only on dir path
  * - support at least JSON/JS/TS
  * - typecheck config with iots
+ * - load BN values as strings in JSON
  */
 export function loadConfig (fs: FileSystem, path: Path) {
   const exists = fs.fileExists(path)
