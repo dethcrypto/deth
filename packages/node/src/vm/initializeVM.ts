@@ -5,7 +5,6 @@ import { toBuffer } from 'ethereumjs-util'
 import { Wallet } from 'ethers'
 import BN from 'bn.js'
 import { TestChainOptions } from '../TestChainOptions'
-import { CHAIN_ID, CHAIN_NAME } from '../constants'
 import { putGenesisBlock } from './putGenesisBlock'
 import { DethBlockchain } from './storage/DethBlockchain'
 import { DethStateManger } from './storage/DethStateManger'
@@ -21,9 +20,9 @@ export async function initializeVM (
   const common = Common.forCustomChain(
     'mainnet',
     {
-      chainId: CHAIN_ID,
-      networkId: CHAIN_ID,
-      name: CHAIN_NAME,
+      chainId: options.chainId,
+      networkId: options.chainId,
+      name: options.chainName,
     },
     options.hardfork,
   )

@@ -1,17 +1,17 @@
 import { providers } from 'ethers'
 import { TestChain } from './TestChain'
-import { CHAIN_NAME, CHAIN_ID } from './constants'
 import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
 import { makeAddress } from './primitives'
+import { DEFAULTS } from './TestChainOptions'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
   readonly walletManager: WalletManager
 
   constructor (chainOrOptions?: TestChain | TestProviderOptions) {
-    super({ name: CHAIN_NAME, chainId: CHAIN_ID })
+    super({ name: DEFAULTS.chainName, chainId: DEFAULTS.chainId })
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
       this.walletManager = new WalletManager(undefined, this)

@@ -7,6 +7,9 @@ import { errorHandler, NotFoundHttpError } from './errorHandler'
 import { rpcCommandsDescription } from './rpc/schema'
 import { rpcExecutorFromCtx } from './rpc/rpcExecutor'
 import { NodeCtx, makeDefaultCtx } from './ctx'
+import { Path } from '../fs/Path'
+import { loadConfig } from '../config/loader'
+import { RealFileSystem } from '../fs/RealFileSystem'
 
 export function getApp (ctx: NodeCtx) {
   const rpcExecutor = rpcExecutorFromCtx(ctx)
@@ -40,8 +43,13 @@ export function getApp (ctx: NodeCtx) {
   return app
 }
 
-export async function runNode (port: number) {
-  const app = getApp(await makeDefaultCtx())
+export async function runNode (port: number, configPath: Path | undefined) {
+  const fs = new RealFileSystem()
+  if (configPath) {
+    console.log(`Using ${configPath}`)
+  }
+
+  const app = getApp(await makeDefaultCtx(configPath && loadConfig(fs, configPath)))
 
   return app.listen(port)
 }

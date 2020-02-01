@@ -2,12 +2,12 @@ import { expect, request } from 'chai'
 import { makeRpcCall, unwrapRpcResponse } from './common'
 import { getApp } from '../../src/node/node'
 import { TestChain } from '../../src'
-import { CHAIN_ID } from '../../src/constants'
 import { utils, ContractFactory, Contract } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { NodeCtx } from '../../src/node/ctx'
 import { numberToQuantity } from '../../src/primitives'
 import { WalletManager } from '../../src/WalletManager'
+import { getOptionsWithDefaults, DEFAULTS } from '../../src/TestChainOptions'
 
 describe('RPC', () => {
   let app: Express.Application
@@ -15,9 +15,11 @@ describe('RPC', () => {
   beforeEach(async () => {
     const chain = new TestChain()
     await chain.init()
+    const options = getOptionsWithDefaults()
     ctx = {
       chain,
       walletManager: new WalletManager(chain.options.privateKeys),
+      options,
     }
 
     app = getApp(ctx)
@@ -43,7 +45,7 @@ describe('RPC', () => {
     const res = await makeRpcCall(app, 'net_version', [])
 
     expect(res).to.have.status(200)
-    expect(res.body.result).to.be.eq(CHAIN_ID.toString())
+    expect(res.body.result).to.be.eq(DEFAULTS.chainId.toString())
   })
 
   it('supports eth_getBalance call for account with non-zero balance', async () => {
