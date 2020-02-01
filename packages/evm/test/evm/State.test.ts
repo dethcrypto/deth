@@ -1,11 +1,11 @@
 import { expect } from 'chai'
 import { State } from '../../src/evm/State'
-import { Address } from '../../src/evm/Address'
 import { Bytes32 } from '../../src/evm/Bytes32'
 import { Byte } from '../../src/evm/Byte'
+import { ADDRESS_ZERO } from './helpers'
 
 describe('State', () => {
-  const address = '0x1234' as Address
+  const address = ADDRESS_ZERO
 
   it('getBalance returns ZERO by default', () => {
     const state = new State()

@@ -1,8 +1,7 @@
 import { expect } from 'chai'
-import { executeAssembly } from './helpers'
+import { executeAssembly, ADDRESS_ZERO } from './helpers'
 import { InvalidOpcode } from '../../src/evm/errors'
 import { Bytes32 } from '../../src/evm/Bytes32'
-import { Address } from '../../src/evm/Address'
 import { State } from '../../src/evm/State'
 
 describe('When an exception occurs', () => {
@@ -14,9 +13,9 @@ describe('When an exception occurs', () => {
   })
 
   it('state changes are reverted', () => {
-    const address = '0x1234' as Address
+    const account = ADDRESS_ZERO
     const state = new State()
-    state.setStorage(address, Bytes32.ZERO, Bytes32.ONE)
+    state.setStorage(account, Bytes32.ZERO, Bytes32.ONE)
 
     const assembly = `
       PUSH1 02
@@ -27,11 +26,11 @@ describe('When an exception occurs', () => {
       SSTORE
       INVALID
     `
-    const result = executeAssembly(assembly, { address, state })
+    const result = executeAssembly(assembly, { account, state })
 
     expect(result.error).to.be.instanceOf(InvalidOpcode)
-    const storageAt0 = result.state.getStorage(address, Bytes32.ZERO)
-    const storageAt1 = result.state.getStorage(address, Bytes32.ONE)
+    const storageAt0 = result.state.getStorage(account, Bytes32.ZERO)
+    const storageAt1 = result.state.getStorage(account, Bytes32.ONE)
     expect(storageAt0.equals(Bytes32.ONE)).to.equal(true)
     expect(storageAt1.equals(Bytes32.ZERO)).to.equal(true)
   })

@@ -1,61 +1,54 @@
 import { Stack } from './Stack'
-import { Opcode } from './opcodes'
 import { OutOfGas } from './errors'
 import { Memory, GasAwareMemory } from './Memory'
-import { ReadonlyState, State } from './State'
-import { Address } from './Address'
+import { State } from './State'
 import { Byte } from './Byte'
-
-export interface ExecutionParameters {
-  address: Address,
-  gasLimit: number,
-  state: ReadonlyState,
-}
+import { Message } from './Message'
+import { Opcode } from './opcodes'
+import { parseBytecode } from './parseBytecode'
 
 export class ExecutionContext {
+  code: Opcode[]
   stack = new Stack()
-  memory = new GasAwareMemory(new Memory(), this.useGas.bind(this))
+  memory: GasAwareMemory
+  state: State
   returnValue?: Byte[]
   reverted = false
   programCounter = 0
 
-  address: Address
-  gasLimit: number
-  state: State
-  private gasUsed = 0
-  private refund = 0
+  private _gasUsed = 0
+  private _gasRefund = 0
 
-  constructor (
-    public code: Opcode[],
-    params: ExecutionParameters,
-  ) {
-    this.address = params.address
-    this.gasLimit = params.gasLimit
-    this.state = params.state.clone()
+  constructor (public message: Message) {
+    this.state = message.state.clone()
+    this.code = parseBytecode(message.code)
+    this.memory = new GasAwareMemory(
+      new Memory(),
+      this.useGas.bind(this),
+    )
   }
 
-  getGasUsed () {
-    return this.gasUsed
+  get gasUsed () {
+    return this._gasUsed
   }
 
   useGas (gas: number) {
-    this.gasUsed += gas
-    if (this.gasUsed > this.gasLimit) {
-      this.gasUsed = this.gasLimit
+    this._gasUsed += gas
+    if (this._gasUsed > this.message.gasLimit) {
+      this._gasUsed = this.message.gasLimit
       throw new OutOfGas()
     }
   }
 
   useRemainingGas () {
-    this.gasUsed = this.gasLimit
+    this._gasUsed = this.message.gasLimit
   }
 
-  addRefund (gas: number) {
-    this.refund += gas
+  get gasRefund () {
+    return this._gasRefund
   }
 
-  applyRefund () {
-    const refund = Math.min(Math.floor(this.gasUsed / 2), this.refund)
-    this.gasUsed -= refund
+  refund (gas: number) {
+    this._gasRefund += gas
   }
 }

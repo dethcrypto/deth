@@ -1,13 +1,13 @@
 import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
+import { Byte } from '../Byte'
 
-export function makeOpPUSH (bytes: string) {
-  const word = Bytes32.fromHex(bytes)
-  const count = bytes.length / 2
+export function makeOpPUSH (bytes: Byte[]) {
+  const word = Bytes32.fromBytes(bytes)
   return function opPUSH (ctx: ExecutionContext) {
     ctx.useGas(GasCost.VERYLOW)
-    ctx.programCounter += count
+    ctx.programCounter += bytes.length
     ctx.stack.push(word)
   }
 }
