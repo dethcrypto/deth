@@ -8,9 +8,11 @@ export interface TestChainOptions {
   blockGasLimit: BN,
   defaultGasPrice: BN,
   coinbaseAddress: string,
+  chainId: number,
+  chainName: string,
 }
 
-const DEFAULTS: TestChainOptions = {
+export const DEFAULTS: TestChainOptions = {
   hardfork: 'petersburg',
   privateKeys: [
     // mnemonic: sunset setup guard source about taste volume clown method shield height butter
@@ -29,6 +31,8 @@ const DEFAULTS: TestChainOptions = {
   blockGasLimit: new BN(10_000_000),
   defaultGasPrice: new BN(1_000_000_000), // one gwei
   coinbaseAddress: '0xdEadBeEf00000000DeADBeef00000000dEAdBeeF',
+  chainId: 1337,
+  chainName: 'test-chain',
 }
 
 export function getOptionsWithDefaults (options: Partial<TestChainOptions> = {}): TestChainOptions {
