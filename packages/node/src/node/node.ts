@@ -11,7 +11,7 @@ import { Path } from '../fs/Path'
 import { loadConfig } from '../config/loader'
 import { RealFileSystem } from '../fs/RealFileSystem'
 
-export function getApp(ctx: NodeCtx) {
+export function getApp (ctx: NodeCtx) {
   const rpcExecutor = rpcExecutorFromCtx(ctx)
 
   const app = express()
@@ -24,13 +24,13 @@ export function getApp(ctx: NodeCtx) {
       sanitizeRPCEnvelope(),
       sanitizeRPC(rpcCommandsDescription),
       executeRPC(rpcExecutor),
-      respondRPC(rpcCommandsDescription)
-    )
+      respondRPC(rpcCommandsDescription),
+    ),
   )
 
   app.use('/health', (req, res) => {
     res.status(200).json({
-      status: 'OK'
+      status: 'OK',
     })
   })
 
@@ -43,7 +43,7 @@ export function getApp(ctx: NodeCtx) {
   return app
 }
 
-export async function runNode(port: number, configPath: Path | undefined) {
+export async function runNode (port: number, configPath: Path | undefined) {
   const fs = new RealFileSystem()
   if (configPath) {
     console.log(`Using ${configPath}`)
