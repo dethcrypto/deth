@@ -1,4 +1,3 @@
-import { utils } from 'ethers'
 import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData } from './primitives'
 import {
   Tag,
@@ -101,14 +100,15 @@ export class TestChain {
     return bufferToHexData(result.execResult.returnValue)
   }
 
-  async estimateGas (transactionRequest: RpcTransactionRequest): Promise<utils.BigNumber> {
+  // @NOTE: this is very simplified implementation
+  async estimateGas (transactionRequest: RpcTransactionRequest): Promise<Quantity> {
     if (!transactionRequest.gas) {
       transactionRequest.gas = bnToQuantity(this.options.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
     const result = await this.tvm.runIsolatedTransaction(tx)
     // TODO: handle errors
-    return utils.bigNumberify(result.gasUsed.toString())
+    return bnToQuantity(result.gasUsed)
   }
 
   async getBlock (

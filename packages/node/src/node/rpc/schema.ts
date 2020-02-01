@@ -117,6 +117,10 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([callTtx, quantityOrTag]),
     returns: hexData,
   },
+  eth_estimateGas: {
+    parameters: t.tuple([callTtx]),
+    returns: quantity,
+  },
 
   // ganache compatibility
   // docs: https://github.com/trufflesuite/ganache-cli#custom-methods

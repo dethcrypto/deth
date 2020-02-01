@@ -1,6 +1,5 @@
 import { RPCExecutorType } from './schema'
 import { NodeCtx } from '../ctx'
-import { CHAIN_ID } from '../../constants'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
 import { BadRequestHttpError } from '../errorHandler'
 import { makeHexData, numberToQuantity, quantityToNumber } from '../../primitives'
@@ -11,8 +10,8 @@ type SafeBlock = NoNullProperties<RpcBlockResponse>
 // NOTE: we don't pass real blockOrTag value here but rather always use latest b/c it's not yet properly implemented
 export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
   return {
-    web3_clientVersion: () => 'Deth/0.0.1', // @todo real value here
-    net_version: () => CHAIN_ID.toString(),
+    web3_clientVersion: () => `${ctx.options.chainName}/0.0.1`, // @todo real version here
+    net_version: () => ctx.options.chainId.toString(),
 
     // eth
     eth_gasPrice: () => ctx.chain.getGasPrice(),
@@ -44,6 +43,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       return ctx.chain.sendTransaction(signedTx)
     },
     eth_call: ([tx, _blockTag]) => ctx.chain.call(tx, 'latest'),
+    eth_estimateGas: ([tx]) => ctx.chain.estimateGas(tx),
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {

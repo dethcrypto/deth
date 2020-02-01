@@ -4,15 +4,18 @@ import { getApp } from '../../src/node/node'
 import { TestChain } from '../../src'
 import { NodeCtx } from '../../src/node/ctx'
 import { WalletManager } from '../../src/WalletManager'
+import { getOptionsWithDefaults } from '../../src/TestChainOptions'
 
 describe('RPC/errors', () => {
   let app: Express.Application
   let ctx: NodeCtx
   beforeEach(() => {
     const chain = new TestChain()
+    const options = getOptionsWithDefaults()
     ctx = {
       chain,
       walletManager: new WalletManager(chain.options.privateKeys),
+      options,
     }
 
     app = getApp(ctx)

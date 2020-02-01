@@ -19,7 +19,8 @@
     "build": "yarn build:esm && yarn build:cjs",
     "build:esm": "tsc -p tsconfig.build.json --outDir dist/esm --module ES6",
     "build:cjs": "tsc -p tsconfig.build.json --outDir dist/cjs --declaration false",
-    "test": "mocha"
+    "test": "mocha",
+    "test:fix": "yarn lint:fix && yarn test && yarn typecheck"
   },
   "dependencies": {
     "@restless/restless": "^0.4.2",
