@@ -3,7 +3,6 @@ import { StackUnderflow } from '../../../src/evm/errors'
 import { executeAssembly, ADDRESS_ZERO } from './executeAssembly'
 import { Int256 } from './Int256'
 import { Bytes32 } from '../../../src/evm/Bytes32'
-import { Address } from '../../../src/evm/Address'
 import { Byte } from '../../../src/evm/Byte'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {

@@ -24,7 +24,7 @@ export class ExecutionContext {
     this.code = parseBytecode(message.code)
     this.memory = new GasAwareMemory(
       new Memory(),
-      this.useGas.bind(this)
+      this.useGas.bind(this),
     )
   }
 
