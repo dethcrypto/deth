@@ -10,14 +10,14 @@ describe('State', () => {
   it('getBalance returns ZERO by default', () => {
     const state = new State()
     const result = state.getBalance(address)
-    expect(result.equals(Bytes32.ZERO)).to.equal(true)
+    expect(result.iszero()).to.equal(true)
   })
 
   it('getBalance returns previously set value', () => {
     const state = new State()
     state.setBalance(address, Bytes32.ONE)
     const result = state.getBalance(address)
-    expect(result.equals(Bytes32.ONE)).to.equal(true)
+    expect(result.eq(Bytes32.ONE)).to.equal(true)
   })
 
   it('getNonce returns 0 by default', () => {
@@ -36,14 +36,14 @@ describe('State', () => {
   it('getStorage returns ZERO by default', () => {
     const state = new State()
     const result = state.getStorage(address, Bytes32.ZERO)
-    expect(result.equals(Bytes32.ZERO)).to.equal(true)
+    expect(result.iszero()).to.equal(true)
   })
 
   it('getStorage returns previously set value', () => {
     const state = new State()
     state.setStorage(address, Bytes32.ZERO, Bytes32.ONE)
     const result = state.getStorage(address, Bytes32.ZERO)
-    expect(result.equals(Bytes32.ONE)).to.equal(true)
+    expect(result.eq(Bytes32.ONE)).to.equal(true)
   })
 
   it('getCode returns [] by default', () => {
@@ -75,15 +75,15 @@ describe('State', () => {
     clone.setStorage(address, Bytes32.ONE, Bytes32.ONE)
     clone.setCode(address, [4, 5] as Byte[])
 
-    expect(state.getBalance(address).equals(Bytes32.ONE)).to.equal(true)
-    expect(state.getStorage(address, Bytes32.ZERO).equals(Bytes32.ONE)).to.equal(true)
-    expect(state.getStorage(address, Bytes32.ONE).equals(Bytes32.ZERO)).to.equal(true)
+    expect(state.getBalance(address).eq(Bytes32.ONE)).to.equal(true)
+    expect(state.getStorage(address, Bytes32.ZERO).eq(Bytes32.ONE)).to.equal(true)
+    expect(state.getStorage(address, Bytes32.ONE).iszero()).to.equal(true)
     expect(state.getNonce(address)).to.equal(1)
     expect(state.getCode(address)).to.deep.equal([1, 2, 3])
 
-    expect(clone.getBalance(address).equals(Bytes32.MAX)).to.equal(true)
-    expect(clone.getStorage(address, Bytes32.ZERO).equals(Bytes32.MAX)).to.equal(true)
-    expect(clone.getStorage(address, Bytes32.ONE).equals(Bytes32.ONE)).to.equal(true)
+    expect(clone.getBalance(address).eq(Bytes32.MAX)).to.equal(true)
+    expect(clone.getStorage(address, Bytes32.ZERO).eq(Bytes32.MAX)).to.equal(true)
+    expect(clone.getStorage(address, Bytes32.ONE).eq(Bytes32.ONE)).to.equal(true)
     expect(clone.getNonce(address)).to.equal(2)
     expect(clone.getCode(address)).to.deep.equal([4, 5])
   })
