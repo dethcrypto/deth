@@ -13,7 +13,6 @@ export const DEFAULT_MESSAGE: Message = {
   origin: ADDRESS_ZERO,
   gasLimit: 1_000_000_000,
   gasPrice: Bytes32.ZERO,
-  state: new State(),
   callDepth: 0,
   data: [],
   enableStateModifications: true,
@@ -21,9 +20,13 @@ export const DEFAULT_MESSAGE: Message = {
   code: [],
 }
 
-export function executeAssembly (assembly: string, params?: Partial<Message>) {
+export function executeAssembly (
+  assembly: string,
+  params?: Partial<Message>,
+  state = new State(),
+) {
   const code = assemblyToBytecode(assembly)
-  return executeCode({ ...DEFAULT_MESSAGE, ...params, code })
+  return executeCode({ ...DEFAULT_MESSAGE, ...params, code }, state)
 }
 
 function assemblyToBytecode (code: string): Byte[] {

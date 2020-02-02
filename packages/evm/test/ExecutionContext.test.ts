@@ -2,13 +2,14 @@ import { expect } from 'chai'
 import { ExecutionContext } from '../src/ExecutionContext'
 import { OutOfGas } from '../src/errors'
 import { DEFAULT_MESSAGE } from './helpers'
+import { State } from '../src/State'
 
 describe('ExecutionContext', () => {
   function makeContext (gasLimit: number) {
     return new ExecutionContext({
       ...DEFAULT_MESSAGE,
       gasLimit,
-    })
+    }, new State())
   }
 
   it('can track gas usage', () => {
@@ -23,12 +24,6 @@ describe('ExecutionContext', () => {
     ctx.useGas(10)
     ctx.useGas(90)
     expect(() => ctx.useGas(1)).to.throw(OutOfGas)
-  })
-
-  it('can use all gas', () => {
-    const ctx = makeContext(300)
-    ctx.useRemainingGas()
-    expect(ctx.gasUsed).to.equal(300)
   })
 
   it('can track refund', () => {

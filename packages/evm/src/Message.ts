@@ -1,18 +1,16 @@
 import { Address } from './Address'
 import { Bytes32 } from './Bytes32'
 import { Byte } from './Byte'
-import { State } from './State'
 
 export interface Message {
-  account: Address,
-  code: Byte[],
-  data: Byte[],
-  origin: Address,
-  sender: Address,
-  gasLimit: number,
-  gasPrice: Bytes32,
-  value: Bytes32,
-  enableStateModifications: boolean,
-  callDepth: number,
-  state: State,
+  readonly account: Address,
+  readonly code: readonly Byte[],
+  readonly data: readonly Byte[],
+  readonly origin: Address,
+  readonly sender: Address,
+  readonly gasLimit: number,
+  readonly gasPrice: Bytes32,
+  readonly value: Bytes32,
+  readonly enableStateModifications: boolean,
+  readonly callDepth: number,
 }

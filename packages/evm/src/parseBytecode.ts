@@ -2,7 +2,7 @@ import { InvalidBytecode } from './errors'
 import { Opcode, getOpcode, makeOpPUSH, opUnreachable } from './opcodes'
 import { Byte } from './Byte'
 
-export function parseBytecode (bytes: Byte[]) {
+export function parseBytecode (bytes: readonly Byte[]) {
   const result: Opcode[] = []
   for (let i = 0; i < bytes.length; i++) {
     const pushSize = getPushSize(bytes[i])

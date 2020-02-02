@@ -11,7 +11,6 @@ export class ExecutionContext {
   code: Opcode[]
   stack = new Stack()
   memory: GasAwareMemory
-  state: State
   returnValue?: Byte[]
   reverted = false
   programCounter = 0
@@ -19,8 +18,7 @@ export class ExecutionContext {
   private _gasUsed = 0
   private _gasRefund = 0
 
-  constructor (public message: Message) {
-    this.state = message.state.clone()
+  constructor (public message: Message, public state: State) {
     this.code = parseBytecode(message.code)
     this.memory = new GasAwareMemory(
       new Memory(),
@@ -38,10 +36,6 @@ export class ExecutionContext {
       this._gasUsed = this.message.gasLimit
       throw new OutOfGas()
     }
-  }
-
-  useRemainingGas () {
-    this._gasUsed = this.message.gasLimit
   }
 
   get gasRefund () {
