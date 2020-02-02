@@ -14,6 +14,8 @@ import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
 import { eventLogger, revertLogger } from './debugger/stepsLoggers'
+import { AbiDecoder } from './debugger/AbiDecoder'
+import { RealFileSystem } from './fs/RealFileSystem'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -31,7 +33,13 @@ export class TestChain {
 
   async init () {
     await this.tvm.init()
-    this.tvm.installStepHook(eventLogger)
+    // @TODO: initialization of deps should be moved out from here
+    const abiDecoder = new AbiDecoder(new RealFileSystem())
+    if (this.options.abiFilesGlob) {
+      abiDecoder.loadAbis(this.options.abiFilesGlob, this.options.cwd)
+    }
+
+    this.tvm.installStepHook(eventLogger(abiDecoder))
     this.tvm.installStepHook(revertLogger)
   }
 

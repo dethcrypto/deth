@@ -1,5 +1,5 @@
 import { FileSystem } from '../fs/FileSystem'
-import { Path } from '../fs/Path'
+import { Path, getDirName } from '../fs/Path'
 import { getOptionsWithDefaults } from '../TestChainOptions'
 
 /**
@@ -18,7 +18,8 @@ export function loadConfig (fs: FileSystem, path: Path) {
   }
 
   // @todo parse / typecheck config. We can utilize io-ts for that
-  const parsedConfig = JSON.parse(fs.readFile(path))
+  const config = fs.requireFile(path)
+  config.cwd = getDirName(path) // set cwd to config path
 
-  return getOptionsWithDefaults(parsedConfig)
+  return getOptionsWithDefaults(config)
 }

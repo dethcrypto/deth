@@ -1,13 +1,9 @@
 // eslint-disable-next-line
 import { InterpreterStep } from 'ethereumjs-vm/dist/evm/interpreter'
 import { bufferToHex } from 'ethereumjs-util'
+import { AbiDecoder } from './AbiDecoder'
 
-// eslint-disable-next-line
-const abiDecoder = require('abi-decoder')
-// eslint-disable-next-line
-abiDecoder.addABI(require('./known-abi.json'))
-
-export function eventLogger (runState: InterpreterStep) {
+export const eventLogger = (abiDecoder: AbiDecoder) => (runState: InterpreterStep) => {
   const opcodeName = runState.opcode.name
   if (!opcodeName.startsWith('LOG')) {
     return
@@ -26,19 +22,24 @@ export function eventLogger (runState: InterpreterStep) {
       : getMemoryAsBuffer(runState.memory, memOffset.toNumber(), memLength.toNumber()),
   )
 
-  const logs = [
-    {
-      data,
-      topics: topicsBuf.map(bufferToHex),
-    },
-  ]
-
-  const decodedLog = abiDecoder.decodeLogs(logs)[0]
+  const decodedLog = abiDecoder.decodeLog({
+    data,
+    topics: topicsBuf.map(bufferToHex),
+  })
   if (decodedLog) {
-    console.log('LOG: ', decodedLog.name, decodedLog.events)
+    // @todo improve output here
+    console.log('LOG: ', decodedLog.signature, stringifyEthersValue(decodedLog.values))
   } else {
     console.log('LOG: (unrecognized)')
   }
+}
+
+function stringifyEthersValue (value: any) {
+  const result: string[] = []
+  for (let i = 0; i < value.length; i++) {
+    result.push(value[i])
+  }
+  return result.join(', ')
 }
 
 export function revertLogger (runState: InterpreterStep) {

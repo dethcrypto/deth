@@ -25,6 +25,8 @@
   "dependencies": {
     "@restless/restless": "^0.4.2",
     "@restless/sanitizers": "^0.2.3",
+    "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.149",
     "@types/lru-cache": "^5.1.0",
     "abi-decoder": "^2.2.2",
     "debug": "^4.1.1",
@@ -38,7 +40,9 @@
     "ethers": "^4.0.0",
     "express": "^4.17.1",
     "fp-ts": "^2.3.1",
+    "glob": "^7.1.6",
     "io-ts": "^2.0.2",
+    "lodash": "^4.17.15",
     "ts-essentials": "^4.0.0"
   },
   "devDependencies": {
