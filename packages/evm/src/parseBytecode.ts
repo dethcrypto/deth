@@ -6,7 +6,9 @@ export function parseBytecode (bytes: readonly Byte[]) {
   const result: Opcode[] = []
   for (let i = 0; i < bytes.length; i++) {
     const pushSize = getPushSize(bytes[i])
-    if (pushSize !== 0) {
+    if (pushSize === 0) {
+      result.push(getOpcode(bytes[i]))
+    } else {
       if (i + pushSize >= bytes.length) {
         throw new InvalidBytecode()
       }
@@ -16,8 +18,6 @@ export function parseBytecode (bytes: readonly Byte[]) {
         result.push(opUnreachable)
       }
       i += pushSize
-    } else {
-      result.push(getOpcode(bytes[i]))
     }
   }
   return result
