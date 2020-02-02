@@ -1,6 +1,6 @@
 import { TestCases } from './cases'
 import { TestCase } from './cases/helpers'
-import { expectStack, expectGas } from '../../helpers'
+import { expectGas, expectStackTop } from '../../helpers'
 import { GasCost } from '../../../src/opcodes'
 
 describe('bytes32 opcodes', () => {
@@ -65,9 +65,9 @@ function runTestCases (opcode: string, testCases: TestCase[]) {
       it(testCase.title, () => {
         const assembly = testCase.stack
           .map(x => `PUSH32 ${x}`)
-          .concat(opcode)
+          .concat([opcode])
           .join(' ')
-        expectStack(assembly, [testCase.expected])
+        expectStackTop(assembly, testCase.expected)
       })
     }
   })

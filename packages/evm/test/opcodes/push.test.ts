@@ -1,4 +1,4 @@
-import { expectStack, expectGas, expectError } from '../helpers'
+import { expectStackTop, expectGas, expectError } from '../helpers'
 import { GasCost } from '../../src/opcodes/gasCosts'
 import { StackOverflow } from '../../src/errors'
 
@@ -10,7 +10,7 @@ describe('PUSH* opcodes', () => {
         .join('')
 
       it('pushes a value onto the stack', () => {
-        expectStack(`PUSH${n} ${bytes}`, [bytes.padStart(64, '0')])
+        expectStackTop(`PUSH${n} ${bytes}`, bytes.padStart(64, '0'))
       })
 
       it(`uses ${GasCost.VERYLOW} gas`, () => {

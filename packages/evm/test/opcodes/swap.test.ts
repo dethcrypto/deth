@@ -1,5 +1,5 @@
 import { GasCost } from '../../src/opcodes/gasCosts'
-import { expectUnderflow, makeStack, expectStack, expectGas } from '../helpers'
+import { expectUnderflow, makeStack, expectStackTop, expectGas } from '../helpers'
 
 describe('SWAP* opcodes', () => {
   const stack = makeStack(17)
@@ -11,10 +11,8 @@ describe('SWAP* opcodes', () => {
   for (let n = 1; n <= 16; n++) {
     describe(`SWAP${n}`, () => {
       it('swaps the values on the stack', () => {
-        const expected = [...stack]
-        expected[expected.length - 1] = stack[expected.length - 1 - n]
-        expected[expected.length - 1 - n] = stack[expected.length - 1]
-        expectStack(`${assembly} SWAP${n}`, expected)
+        expectStackTop(`${assembly} SWAP${n}`, stack[stack.length - 1 - n])
+        expectStackTop(`${assembly} SWAP${n} POP DUP${n}`, stack[stack.length - 1])
       })
 
       it('can cause a stack underflow', () => {

@@ -1,10 +1,12 @@
-import { expectStack, expectReturn, expectGas, memoryGas } from '../helpers'
+import { expectReturn, expectGas, memoryGas, Int256, expectStorage } from '../helpers'
 import { GasCost } from '../../src/opcodes'
 import { Byte } from '../../src/Byte'
 
 describe('RETURN opcode', () => {
   it('halts execution', () => {
-    expectStack('PUSH1 00 PUSH1 00 RETURN PUSH1 01', [])
+    expectStorage('PUSH1 00 PUSH1 00 RETURN PUSH1 01 PUSH1 00 SSTORE', {
+      '00': Int256.of(0),
+    })
   })
 
   it(`uses ${GasCost.ZERO} gas`, () => {

@@ -1,5 +1,11 @@
 import { GasCost } from '../../src/opcodes'
-import { expectGas, memoryGas, expectStack, Int256, expectUnderflow } from '../helpers'
+import {
+  expectGas,
+  memoryGas,
+  expectStackTop,
+  Int256,
+  expectUnderflow,
+} from '../helpers'
 
 describe('Memory opcodes', () => {
   describe('MSIZE', () => {
@@ -8,13 +14,13 @@ describe('Memory opcodes', () => {
     })
 
     it('returns 0 initially', () => {
-      expectStack('MSIZE', [Int256.of(0)])
+      expectStackTop('MSIZE', Int256.of(0))
     })
 
     it('returns the size of memory used', () => {
       const assembly = 'PUSH1 00 PUSH3 100001 MSTORE MSIZE'
       const expected = Math.ceil((0x100001 + 32) / 32) * 32
-      expectStack(assembly, [Int256.of(expected)])
+      expectStackTop(assembly, Int256.of(expected))
     })
   })
 
@@ -44,7 +50,7 @@ describe('Memory opcodes', () => {
         PUSH1 00
         MLOAD
       `
-      expectStack(assembly, [word])
+      expectStackTop(assembly, word)
     })
 
     it('can cause stack underflow', () => {
@@ -78,7 +84,7 @@ describe('Memory opcodes', () => {
         PUSH1 00
         MLOAD
       `
-      expectStack(assembly, ['ef'.padEnd(64, '0')])
+      expectStackTop(assembly, 'ef'.padEnd(64, '0'))
     })
 
     it('can cause stack underflow', () => {
@@ -111,7 +117,7 @@ describe('Memory opcodes', () => {
         PUSH1 10
         MLOAD
       `
-      expectStack(assembly, ['e'.repeat(32) + 'b'.repeat(32)])
+      expectStackTop(assembly, 'e'.repeat(32) + 'b'.repeat(32))
     })
 
     it('can cause stack underflow', () => {

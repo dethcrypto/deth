@@ -1,5 +1,5 @@
 import { GasCost } from '../../src/opcodes/gasCosts'
-import { makeStack, expectUnderflow, expectStack, expectGas } from '../helpers'
+import { makeStack, expectUnderflow, expectGas, expectStackTop } from '../helpers'
 
 describe('DUP* opcodes', () => {
   const stack = makeStack(16)
@@ -10,10 +10,7 @@ describe('DUP* opcodes', () => {
   for (let n = 1; n <= 16; n++) {
     describe(`DUP${n}`, () => {
       it('duplicates the value on the stack', () => {
-        expectStack(`${assembly} DUP${n}`, [
-          ...stack,
-          stack[stack.length - n],
-        ])
+        expectStackTop(`${assembly} DUP${n}`, stack[stack.length - n])
       })
 
       it('can cause stack underflow', () => {

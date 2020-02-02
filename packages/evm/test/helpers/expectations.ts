@@ -17,10 +17,11 @@ export function makeStack (depth: number) {
     .map((value, index) => Int256.of(depth - index))
 }
 
-export function expectStack (assembly: string, stack: string[]) {
-  const result = executeAssembly(assembly)
-  const items = result.stack['items'].map(x => x.toHex())
-  expect(items).to.deep.equal(stack)
+export function expectStackTop (assembly: string, value: string) {
+  const account = ADDRESS_ZERO
+  const result = executeAssembly(assembly + ' PUSH1 00 SSTORE', { account })
+  const item = result.state.getStorage(account, Bytes32.ZERO)
+  expect(item.toHex()).to.equal(value)
 }
 
 export function expectGas (assembly: string, gasUsed: number) {

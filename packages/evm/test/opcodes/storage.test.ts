@@ -4,8 +4,8 @@ import {
   expectUnderflow,
   expectStorage,
   Int256,
-  expectStack,
   expectRefund,
+  expectStackTop,
 } from '../helpers'
 
 describe('Storage opcodes', () => {
@@ -72,11 +72,11 @@ describe('Storage opcodes', () => {
     })
 
     it('can get a value from storage where it defaults to 0', () => {
-      expectStack('PUSH1 00 SLOAD', [Int256.of(0)])
+      expectStackTop('PUSH1 00 SLOAD', Int256.of(0))
     })
 
     it('can get a previously set value from storage', () => {
-      expectStack('PUSH1 01 PUSH1 00 SSTORE PUSH1 00 SLOAD', [Int256.of(1)])
+      expectStackTop('PUSH1 01 PUSH1 00 SSTORE PUSH1 00 SLOAD', Int256.of(1))
     })
   })
 })

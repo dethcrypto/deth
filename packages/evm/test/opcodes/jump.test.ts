@@ -1,6 +1,13 @@
 import { GasCost } from '../../src/opcodes/gasCosts'
 import { InvalidJumpDestination } from '../../src/errors'
-import { Int256, expectUnderflow, expectGas, expectStack, expectError } from '../helpers'
+import {
+  Int256,
+  expectUnderflow,
+  expectGas,
+  expectStackTop,
+  expectError,
+  expectStorage,
+} from '../helpers'
 
 describe('JUMP* opcodes', () => {
   describe('JUMPDEST', () => {
@@ -18,7 +25,7 @@ describe('JUMP* opcodes', () => {
 
     it('jumps to a specified location in code', () => {
       const assembly = 'PUSH1 04 JUMP STOP JUMPDEST PUSH1 01'
-      expectStack(assembly, [Int256.of(1)])
+      expectStackTop(assembly, Int256.of(1))
     })
 
     it('fails to jump to non JUMPDEST location', () => {
@@ -50,7 +57,7 @@ describe('JUMP* opcodes', () => {
         JUMPDEST
         PUSH1 FF
       `
-      expectStack(assembly, [Int256.of(0xff)])
+      expectStackTop(assembly, Int256.of(0xff))
     })
 
     it('does not jump if condition is zero', () => {
@@ -58,12 +65,13 @@ describe('JUMP* opcodes', () => {
         PUSH1 00
         PUSH1 08
         JUMPI
-        PUSH1 EE
         STOP
         JUMPDEST
         PUSH1 FF
+        PUSH1 00
+        SSTORE
       `
-      expectStack(assembly, [Int256.of(0xee)])
+      expectStorage(assembly, { '00': Int256.of(0) })
     })
 
     it('fails to jump to non JUMPDEST location', () => {
