@@ -1,6 +1,6 @@
 import { Stack } from './Stack'
 import { OutOfGas } from './errors'
-import { Memory, GasAwareMemory } from './Memory'
+import { Memory } from './Memory'
 import { State } from './State'
 import { Byte } from './Byte'
 import { Message } from './Message'
@@ -10,7 +10,7 @@ import { parseBytecode } from './parseBytecode'
 export class ExecutionContext {
   code: Opcode[]
   stack = new Stack()
-  memory: GasAwareMemory
+  memory: Memory
   returnValue?: Byte[]
   reverted = false
   programCounter = 0
@@ -20,10 +20,7 @@ export class ExecutionContext {
 
   constructor (public message: Message, public state: State) {
     this.code = parseBytecode(message.code)
-    this.memory = new GasAwareMemory(
-      new Memory(),
-      this.useGas.bind(this),
-    )
+    this.memory = new Memory(this.useGas.bind(this))
   }
 
   get gasUsed () {
