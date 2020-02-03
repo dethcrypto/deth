@@ -28,7 +28,7 @@ export const eventLogger = (abiDecoder: AbiDecoder) => (runState: InterpreterSte
   })
   if (decodedLog) {
     // @todo improve output here
-    console.log('LOG: ', decodedLog.signature, stringifyEthersValue(decodedLog.values))
+    console.log('LOG:', decodedLog.signature, stringifyEthersValue(decodedLog.values))
   } else {
     console.log('LOG: (unrecognized)')
   }

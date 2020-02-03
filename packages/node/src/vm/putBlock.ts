@@ -5,8 +5,8 @@ import { TestChainOptions } from '../TestChainOptions'
 import { getNextBlock } from './getNextBlock'
 import { getReceiptsAndResponses } from './getReceiptsAndResponses'
 
-export async function putBlock (vm: VM, transactions: Transaction[], options: TestChainOptions) {
-  const block = await getNextBlock(vm, transactions, options)
+export async function putBlock (vm: VM, transactions: Transaction[], options: TestChainOptions, clockSkew: number) {
+  const block = await getNextBlock(vm, transactions, options, clockSkew)
 
   const { results } = await vm.runBlock({
     block,

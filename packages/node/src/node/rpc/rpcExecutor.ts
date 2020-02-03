@@ -47,8 +47,16 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {
-      // @TODO implement
-      return numberToQuantity(n)
+      ctx.chain.clockSkew += n
+      return numberToQuantity(ctx.chain.clockSkew)
+    },
+    miner_start: () => {
+      ctx.chain.startAutoMining()
+      return true
+    },
+    miner_stop: () => {
+      ctx.chain.stopAutoMining()
+      return true
     },
     evm_mine: async () => {
       await ctx.chain.mineBlock()

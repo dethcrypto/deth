@@ -129,6 +129,14 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([t.number]),
     returns: quantity,
   },
+  miner_start: {
+    parameters: t.undefined,
+    returns: t.literal(true),
+  },
+  miner_stop: {
+    parameters: t.undefined,
+    returns: t.literal(true),
+  },
   evm_mine: {
     parameters: t.undefined, // @todo: missing param, timestamp of a block to be mined
     returns: quantity,

@@ -24,6 +24,8 @@ import { RealFileSystem } from './fs/RealFileSystem'
  */
 export class TestChain {
   private tvm: TestVM
+  private autoMining = true
+  clockSkew = 0;
   options: TestChainOptions
 
   constructor (options?: Partial<TestChainOptions>) {
@@ -51,8 +53,16 @@ export class TestChain {
     return this.tvm.revertToSnapshot(id)
   }
 
+  startAutoMining () {
+    this.autoMining = true
+  }
+
+  stopAutoMining () {
+    this.autoMining = false
+  }
+
   async mineBlock () {
-    return this.tvm.mineBlock()
+    return this.tvm.mineBlock(this.clockSkew)
   }
 
   async getBlockNumber (): Promise<Quantity> {
@@ -91,7 +101,9 @@ export class TestChain {
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
-    await this.tvm.mineBlock()
+    if (this.autoMining) {
+      await this.tvm.mineBlock(this.clockSkew)
+    }
     return hash
   }
 
@@ -103,7 +115,7 @@ export class TestChain {
       ...transactionRequest,
       gas: bnToQuantity(this.options.blockGasLimit),
     })
-    const result = await this.tvm.runIsolatedTransaction(tx)
+    const result = await this.tvm.runIsolatedTransaction(tx, this.clockSkew)
     // TODO: handle errors
     return bufferToHexData(result.execResult.returnValue)
   }
@@ -114,7 +126,7 @@ export class TestChain {
       transactionRequest.gas = bnToQuantity(this.options.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
-    const result = await this.tvm.runIsolatedTransaction(tx)
+    const result = await this.tvm.runIsolatedTransaction(tx, this.clockSkew)
     // TODO: handle errors
     return bnToQuantity(result.gasUsed)
   }

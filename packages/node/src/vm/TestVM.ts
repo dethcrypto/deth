@@ -97,11 +97,11 @@ export class TestVM {
     return bufferToHash(transaction.hash())
   }
 
-  async mineBlock () {
+  async mineBlock (clockSkew: number) {
     const transactions = this.pendingTransactions
     this.pendingTransactions = []
 
-    const { receipts, responses } = await putBlock(this.vm, transactions, this.options)
+    const { receipts, responses } = await putBlock(this.vm, transactions, this.options, clockSkew)
 
     for (const receipt of receipts) {
       this.receipts.set(receipt.transactionHash, receipt)
@@ -138,8 +138,8 @@ export class TestVM {
     return bufferToHexData(code)
   }
 
-  async runIsolatedTransaction (transaction: Transaction) {
-    return runIsolatedTransaction(this.vm, transaction, this.options)
+  async runIsolatedTransaction (transaction: Transaction, clockSkew: number) {
+    return runIsolatedTransaction(this.vm, transaction, this.options, clockSkew)
   }
 
   async getBlock (hashOrNumber: string): Promise<RpcBlockResponse> {

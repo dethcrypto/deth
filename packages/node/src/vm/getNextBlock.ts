@@ -10,19 +10,20 @@ export async function getNextBlock (
   vm: VM,
   transactions: Transaction[],
   options: TestChainOptions,
+  clockSkew: number,
 ): Promise<Block> {
-  const block = await getEmptyNextBlock(vm, options)
+  const block = await getEmptyNextBlock(vm, options, clockSkew)
   await addTransactionsToBlock(block, transactions)
   return block
 }
 
-async function getEmptyNextBlock (vm: VM, options: TestChainOptions) {
+async function getEmptyNextBlock (vm: VM, options: TestChainOptions, clockSkew: number) {
   const latestBlock = await getLatestBlock(vm)
 
   const header: BlockHeaderData = {
     gasLimit: options.blockGasLimit,
     nonce: 42,
-    timestamp: Math.floor(Date.now() / 1000),
+    timestamp: Math.floor(Date.now() / 1000) + clockSkew,
     number: new BN(latestBlock.header.number).addn(1),
     parentHash: latestBlock.hash(),
     coinbase: options.coinbaseAddress,
