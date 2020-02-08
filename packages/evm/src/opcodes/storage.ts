@@ -1,4 +1,3 @@
-import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost, GasRefund } from './gasCosts'
 
@@ -7,9 +6,9 @@ export function opSSTORE (ctx: ExecutionContext) {
   const value = ctx.stack.pop()
 
   const stored = ctx.state.getStorage(ctx.message.account, location)
-  const isZero = stored.equals(Bytes32.ZERO)
+  const isZero = stored.iszero()
   ctx.useGas(isZero ? GasCost.SSET : GasCost.SRESET)
-  if (!isZero && value.equals(Bytes32.ZERO)) {
+  if (!isZero && value.iszero()) {
     ctx.refund(GasRefund.SCLEAR)
   }
 

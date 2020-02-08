@@ -51,10 +51,6 @@ export class Bytes32 {
     return this.value.fromTwos(256)
   }
 
-  equals (other: Bytes32) {
-    return this.value.eq(other.value)
-  }
-
   /**
    * Returns the result of adding the argument to this machine word
    */
@@ -175,57 +171,51 @@ export class Bytes32 {
   }
 
   /**
-   * Returns ONE if this machine word is lesser than the argument. Otherwise
-   * returns ZERO
+   * Returns `true` if this machine word is lesser than the argument. Otherwise
+   * returns `false`
    */
   lt (other: Bytes32) {
-    const result = this.value.lt(other.value)
-    return Bytes32.fromBoolean(result)
+    return this.value.lt(other.value)
   }
 
   /**
-   * Returns ONE if this machine word is greater than the argument. Otherwise
-   * returns ZERO
+   * Returns `true` if this machine word is greater than the argument. Otherwise
+   * returns `false`
    */
   gt (other: Bytes32) {
-    const result = this.value.gt(other.value)
-    return Bytes32.fromBoolean(result)
+    return this.value.gt(other.value)
   }
 
   /**
-   * Returns ONE if this machine word is lesser than the argument. Otherwise
-   * returns ZERO. Treats the contents as two's complement signed integers
+   * Returns `true` if this machine word is lesser than the argument. Otherwise
+   * returns `false`. Treats the contents as two's complement signed integers
    */
   slt (other: Bytes32) {
-    const result = this.signed.lt(other.signed)
-    return Bytes32.fromBoolean(result)
+    return this.signed.lt(other.signed)
   }
 
   /**
-   * Returns ONE if this machine word is greater than the argument. Otherwise
-   * returns ZERO. Treats the contents as two's complement signed integers
+   * Returns `true` if this machine word is greater than the argument. Otherwise
+   * returns `false`. Treats the contents as two's complement signed integers
    */
   sgt (other: Bytes32) {
-    const result = this.signed.gt(other.signed)
-    return Bytes32.fromBoolean(result)
+    return this.signed.gt(other.signed)
   }
 
   /**
-   * Returns ONE if this machine word is equal to the argument. Otherwise
-   * returns ZERO
+   * Returns `true` if this machine word is equal to the argument. Otherwise
+   * returns `false`
    */
   eq (other: Bytes32) {
-    const result = this.value.eq(other.value)
-    return Bytes32.fromBoolean(result)
+    return this.value.eq(other.value)
   }
 
   /**
-   * Returns ONE if this machine word is equal to ZERO. Otherwise
-   * returns ZERO
+   * Returns `true` if this machine word is equal to ZERO. Otherwise
+   * returns `false`
    */
   iszero () {
-    const result = this.value.isZero()
-    return Bytes32.fromBoolean(result)
+    return this.value.isZero()
   }
 
   /**

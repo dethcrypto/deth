@@ -33,19 +33,19 @@ describe('Bytes32', () => {
     it('fromNumber works for positive numbers', () => {
       const a = Bytes32.fromNumber(42)
       const b = Bytes32.fromHex('2a')
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('fromNumber works for zero', () => {
       const a = Bytes32.fromNumber(0)
       const b = Bytes32.ZERO
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('fromNumber works for negative numbers', () => {
       const a = Bytes32.fromNumber(-42)
       const b = Bytes32.ZERO.sub(Bytes32.fromNumber(42))
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('toUnsignedNumber returns a number', () => {
@@ -61,13 +61,13 @@ describe('Bytes32', () => {
     it('fromHex works for small numbers', () => {
       const a = Bytes32.fromHex('1')
       const b = Bytes32.ONE
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('fromHex works for large numbers', () => {
       const a = Bytes32.fromHex('f'.repeat(64))
       const b = Bytes32.MAX
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('toHex pads zeroes at the start', () => {
@@ -79,12 +79,12 @@ describe('Bytes32', () => {
   describe('fromBoolean', () => {
     it('creates ZERO from false', () => {
       const result = Bytes32.fromBoolean(false)
-      expect(result.equals(Bytes32.ZERO)).to.equal(true)
+      expect(result.iszero()).to.equal(true)
     })
 
     it('creates ONE from true', () => {
       const result = Bytes32.fromBoolean(true)
-      expect(result.equals(Bytes32.ONE)).to.equal(true)
+      expect(result.eq(Bytes32.ONE)).to.equal(true)
     })
   })
 
@@ -92,13 +92,13 @@ describe('Bytes32', () => {
     it('fromBytes works for small numbers', () => {
       const a = Bytes32.fromBytes([0x11, 0x22] as Byte[])
       const b = Bytes32.fromHex('1122')
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('fromBytes works for large numbers', () => {
       const a = Bytes32.fromBytes(new Array(32).fill(0xff))
       const b = Bytes32.MAX
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('toBytes pads zeroes at the start', () => {
@@ -111,11 +111,11 @@ describe('Bytes32', () => {
     it('equals returns true for equal MachineWords', () => {
       const a = Bytes32.fromHex('6').div(Bytes32.fromHex('2'))
       const b = Bytes32.fromHex('3')
-      expect(a.equals(b)).to.equal(true)
+      expect(a.eq(b)).to.equal(true)
     })
 
     it('equals returns false for unequal MachineWords', () => {
-      expect(Bytes32.ONE.equals(Bytes32.MAX)).to.equal(false)
+      expect(Bytes32.ONE.eq(Bytes32.MAX)).to.equal(false)
     })
   })
 })

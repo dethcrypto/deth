@@ -1,5 +1,6 @@
 import { makeUnaryOp, makeBinaryOp, makeTernaryOp } from './helpers'
 import { GasCost } from './gasCosts'
+import { Bytes32 } from '../Bytes32'
 
 // Arithmetic
 
@@ -62,32 +63,32 @@ export const opSIGNEXTEND = makeBinaryOp(
 
 export const opLT = makeBinaryOp(
   GasCost.VERYLOW,
-  (a, b) => a.lt(b),
+  (a, b) => Bytes32.fromBoolean(a.lt(b)),
 )
 
 export const opGT = makeBinaryOp(
   GasCost.VERYLOW,
-  (a, b) => a.gt(b),
+  (a, b) => Bytes32.fromBoolean(a.gt(b)),
 )
 
 export const opSLT = makeBinaryOp(
   GasCost.VERYLOW,
-  (a, b) => a.slt(b),
+  (a, b) => Bytes32.fromBoolean(a.slt(b)),
 )
 
 export const opSGT = makeBinaryOp(
   GasCost.VERYLOW,
-  (a, b) => a.sgt(b),
+  (a, b) => Bytes32.fromBoolean(a.sgt(b)),
 )
 
 export const opEQ = makeBinaryOp(
   GasCost.VERYLOW,
-  (a, b) => a.eq(b),
+  (a, b) => Bytes32.fromBoolean(a.eq(b)),
 )
 
 export const opISZERO = makeUnaryOp(
   GasCost.VERYLOW,
-  (a) => a.iszero(),
+  (a) => Bytes32.fromBoolean(a.iszero()),
 )
 
 // Bitwise Logic
