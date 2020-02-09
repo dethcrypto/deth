@@ -2,27 +2,14 @@ import { expect } from 'chai'
 import { utils } from 'ethers'
 
 import { NodeCtx } from '../../../src/node/ctx'
-import { TestChain } from '../../../src'
-import { getOptionsWithDefaults } from '../../../src/TestChainOptions'
-import { WalletManager } from '../../../src/WalletManager'
-import { getApp } from '../../../src/node/node'
-import { makeRpcCall } from '../common'
+import { makeRpcCall, runRpcHarness } from '../common'
 import { numberToQuantity } from '../../../src/primitives'
 
 describe('rpc -> getBalance', () => {
   let app: Express.Application
   let ctx: NodeCtx
   beforeEach(async () => {
-    const chain = new TestChain()
-    await chain.init()
-    const options = getOptionsWithDefaults()
-    ctx = {
-      chain,
-      walletManager: new WalletManager(chain.options.privateKeys),
-      options,
-    }
-
-    app = getApp(ctx)
+    ({ app, ctx } = await runRpcHarness())
   })
 
   it('supports eth_getBalance call for account with non-zero balance', async () => {

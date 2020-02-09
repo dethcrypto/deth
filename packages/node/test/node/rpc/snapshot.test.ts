@@ -3,27 +3,14 @@ import { ContractFactory, Contract } from 'ethers'
 
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { NodeCtx } from '../../../src/node/ctx'
-import { TestChain } from '../../../src'
-import { getOptionsWithDefaults } from '../../../src/TestChainOptions'
-import { WalletManager } from '../../../src/WalletManager'
-import { getApp } from '../../../src/node/node'
-import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
 import { numberToQuantity } from '../../../src/primitives'
 
 describe('rpc -> snapshot', () => {
   let app: Express.Application
   let ctx: NodeCtx
   beforeEach(async () => {
-    const chain = new TestChain()
-    await chain.init()
-    const options = getOptionsWithDefaults()
-    ctx = {
-      chain,
-      walletManager: new WalletManager(chain.options.privateKeys),
-      options,
-    }
-
-    app = getApp(ctx)
+    ({ app, ctx } = await runRpcHarness())
   })
 
   it('support evm_snapshots', async () => {

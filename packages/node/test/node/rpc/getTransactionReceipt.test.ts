@@ -2,26 +2,13 @@ import { expect } from 'chai'
 import { utils } from 'ethers'
 
 import { NodeCtx } from '../../../src/node/ctx'
-import { TestChain } from '../../../src'
-import { getOptionsWithDefaults } from '../../../src/TestChainOptions'
-import { WalletManager } from '../../../src/WalletManager'
-import { getApp } from '../../../src/node/node'
-import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
 
 describe('rpc -> getTransactionReceipt', () => {
   let app: Express.Application
   let ctx: NodeCtx
   beforeEach(async () => {
-    const chain = new TestChain()
-    await chain.init()
-    const options = getOptionsWithDefaults()
-    ctx = {
-      chain,
-      walletManager: new WalletManager(chain.options.privateKeys),
-      options,
-    }
-
-    app = getApp(ctx)
+    ({ app, ctx } = await runRpcHarness())
   })
 
   it('supports eth_getTransactionReceipt for not existing txs', async () => {
