@@ -39,6 +39,7 @@ import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
 import { opSSTORE, opSLOAD } from './storage'
 import { Byte } from '../Byte'
+import { opCODESIZE, opCODECOPY } from './code'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
@@ -76,6 +77,8 @@ const OP_CODES: Record<number, Opcode | undefined> = {
   0x1b: opSHL,
   0x1c: opSHR,
   0x1d: opSAR,
+  0x38: opCODESIZE,
+  0x39: opCODECOPY,
   0x50: opPOP,
   0x51: opMLOAD,
   0x52: opMSTORE,

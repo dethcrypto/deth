@@ -29,7 +29,7 @@ export function executeAssembly (
   return executeCode({ ...DEFAULT_MESSAGE, ...params, code }, state)
 }
 
-function assemblyToBytecode (code: string): Byte[] {
+export function assemblyToBytecode (code: string): Byte[] {
   const instructions = code.trim().split(/\s+/)
   const result: Byte[] = []
   for (const instruction of instructions) {

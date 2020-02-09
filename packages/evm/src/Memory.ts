@@ -15,7 +15,7 @@ export class Memory {
   }
 
   getBytes (offset: number, length: number) {
-    this.onMemoryAccess(offset, length)
+    this.useGasForAccess(offset, length)
     if (length === 0) {
       return []
     }
@@ -24,7 +24,7 @@ export class Memory {
   }
 
   setBytes (offset: number, bytes: Byte[]) {
-    this.onMemoryAccess(offset, bytes.length)
+    this.useGasForAccess(offset, bytes.length)
     if (bytes.length === 0) {
       return
     }
@@ -34,7 +34,7 @@ export class Memory {
     }
   }
 
-  private onMemoryAccess (offset: number, length: number) {
+  useGasForAccess (offset: number, length: number) {
     if (length === 0) {
       return
     }
