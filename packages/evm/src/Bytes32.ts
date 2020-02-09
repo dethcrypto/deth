@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import { Byte } from './Byte'
+import { Address } from './Address'
 
 const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
@@ -23,6 +24,10 @@ export class Bytes32 {
     return new Bytes32(new BN(value).toTwos(256))
   }
 
+  static fromAddress (value: Address) {
+    return Bytes32.fromHex(value)
+  }
+
   static fromHex (value: string) {
     return new Bytes32(new BN(value, 16))
   }
@@ -41,6 +46,11 @@ export class Bytes32 {
 
   toHex () {
     return this.value.toString(16, 64)
+  }
+
+  toAddress () {
+    const hex = this.toHex()
+    return hex.substring(24) as Address
   }
 
   toBytes () {

@@ -40,6 +40,7 @@ import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
 import { opSSTORE, opSLOAD } from './storage'
 import { Byte } from '../Byte'
 import { opCODESIZE, opCODECOPY } from './code'
+import { opCREATE } from './create'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
@@ -122,6 +123,7 @@ const OP_CODES: Record<number, Opcode | undefined> = {
   0x9d: makeOpSWAP(14),
   0x9e: makeOpSWAP(15),
   0x9f: makeOpSWAP(16),
+  0xf0: opCREATE,
   0xf3: opRETURN,
   0xfd: opREVERT,
 }

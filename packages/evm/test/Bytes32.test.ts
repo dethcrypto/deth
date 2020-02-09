@@ -3,6 +3,7 @@ import { Bytes32 } from '../src/Bytes32'
 import { TestCases } from './opcodes/bytes32/cases'
 import { TestCase } from './opcodes/bytes32/cases/helpers'
 import { Byte } from '../src/Byte'
+import { Address } from '../src/Address'
 
 describe('Bytes32', () => {
   runTestCases('add', TestCases.ADD)
@@ -28,6 +29,21 @@ describe('Bytes32', () => {
   runTestCases('shl', invert(TestCases.SHL))
   runTestCases('shr', invert(TestCases.SHR))
   runTestCases('sar', invert(TestCases.SAR))
+
+  describe('to and from Address', () => {
+    it('toAddress ignores first bytes', () => {
+      const hex = 'ab'.repeat(16) + 'cd'.repeat(16)
+      const value = Bytes32.fromHex(hex)
+      expect(value.toAddress()).to.equal('ab'.repeat(4) + 'cd'.repeat(16))
+    })
+
+    it('fromAddress works like from hex', () => {
+      const address = 'ab'.repeat(20) as Address
+      const a = Bytes32.fromAddress(address)
+      const b = Bytes32.fromHex(address)
+      expect(a.eq(b)).to.equal(true)
+    })
+  })
 
   describe('to and from number', () => {
     it('fromNumber works for positive numbers', () => {

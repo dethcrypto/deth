@@ -30,7 +30,10 @@ export function executeAssembly (
 }
 
 export function assemblyToBytecode (code: string): Byte[] {
-  const instructions = code.trim().split(/\s+/)
+  const instructions = code
+    .replace(/\/\/.*/g, ' ') // remove comments
+    .trim()
+    .split(/\s+/)
   const result: Byte[] = []
   for (const instruction of instructions) {
     const opcode = OPCODES[instruction] as Byte
