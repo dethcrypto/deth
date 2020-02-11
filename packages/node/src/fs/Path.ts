@@ -1,4 +1,4 @@
-import { join, isAbsolute, basename } from 'path'
+import { join, isAbsolute, basename, dirname } from 'path'
 
 import { Opaque } from 'ts-essentials'
 
@@ -24,4 +24,8 @@ export function relativePathToPath (relativePath: string, basePath: string) {
 
 export function getBaseName (path: Path): string {
   return basename(path)
+}
+
+export function getDirName (path: Path): Path {
+  return makePath(dirname(path))
 }

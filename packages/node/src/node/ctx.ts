@@ -9,12 +9,12 @@ export interface NodeCtx {
 }
 
 export async function makeDefaultCtx (options: TestChainOptions = getOptionsWithDefaults()): Promise<NodeCtx> {
-  const chain = new TestChain()
+  const chain = new TestChain(options)
   await chain.init()
 
   return {
     chain,
-    walletManager: new WalletManager(chain.options.privateKeys),
+    walletManager: new WalletManager(chain.options.value.privateKeys),
     options,
   }
 }

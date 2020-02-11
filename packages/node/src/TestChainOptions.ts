@@ -1,5 +1,6 @@
 import { Hardfork } from './model'
 import BN from 'bn.js'
+import { Path, makePath } from './fs/Path'
 
 export interface TestChainOptions {
   hardfork: Hardfork,
@@ -10,6 +11,10 @@ export interface TestChainOptions {
   coinbaseAddress: string,
   chainId: number,
   chainName: string,
+  abiFilesGlob?: string,
+  cwd: Path, // config's directory if it was provided
+  clockSkew: number,
+  autoMining: boolean,
 }
 
 export const DEFAULTS: TestChainOptions = {
@@ -33,6 +38,10 @@ export const DEFAULTS: TestChainOptions = {
   coinbaseAddress: '0xdEadBeEf00000000DeADBeef00000000dEAdBeeF',
   chainId: 1337,
   chainName: 'test-chain',
+  abiFilesGlob: undefined,
+  cwd: makePath(process.cwd()),
+  autoMining: true,
+  clockSkew: 0,
 }
 
 export function getOptionsWithDefaults (options: Partial<TestChainOptions> = {}): TestChainOptions {

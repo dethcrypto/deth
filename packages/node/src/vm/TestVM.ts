@@ -11,11 +11,11 @@ import { putBlock } from './putBlock'
 import { runIsolatedTransaction } from './runIsolatedTransaction'
 import { DethStateManger } from './storage/DethStateManger'
 import { DethBlockchain } from './storage/DethBlockchain'
-import { assert } from 'ts-essentials'
 // eslint-disable-next-line
 import PStateManager from 'ethereumjs-vm/dist/state/promisified'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
+import { SnapshotObject } from './storage/SnapshotObject'
 
 interface VMSnapshot {
   blockchain: DethBlockchain,
@@ -28,20 +28,25 @@ interface VMSnapshot {
  */
 export class TestVM {
   private vm!: VM
-  private stateManger!: DethStateManger
-  private blockchain!: DethBlockchain
+  private state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
 
   pendingTransactions: Transaction[] = []
   transactions: Map<Hash, RpcTransactionResponse> = new Map()
   receipts: Map<Hash, RpcTransactionReceipt> = new Map()
   snapshots: VMSnapshot[] = []
 
-  constructor (private options: TestChainOptions) {}
+  constructor (private options: TestChainOptions) {
+    this.state = new SnapshotObject({
+      stateManger: new DethStateManger(),
+      blockchain: new DethBlockchain(),
+    }, (t) => ({
+      blockchain: t.blockchain.copy(),
+      stateManger: t.stateManger.copy(),
+    }))
+  }
 
   async init () {
-    this.stateManger = new DethStateManger()
-    this.blockchain = new DethBlockchain()
-    this.vm = await initializeVM(this.options, this.stateManger, this.blockchain)
+    this.vm = await initializeVM(this.options, this.state.value.stateManger, this.state.value.blockchain)
   }
 
   // @todo this requires better typings (whole step hooks mechanism)
@@ -50,33 +55,20 @@ export class TestVM {
   }
 
   makeSnapshot (): number {
-    const snapshotId = this.snapshots.length
-
-    const snapshot = {
-      blockchain: this.blockchain.copy(),
-      stateManager: this.stateManger.copy(),
-    }
-
-    this.snapshots.push(snapshot)
-
-    return snapshotId
+    return this.state.makeSnapshot()
   }
 
   revertToSnapshot (id: number) {
-    const snapshot = this.snapshots[id]
-    assert(snapshot, `Snapshot ${id} doesn't exist`)
-
-    this.blockchain = snapshot.blockchain
-    this.stateManger = snapshot.stateManager
+    this.state.revert(id)
     this.hotswapStateStorageForVm()
   }
 
   // change internals of VM to point to new blockchain and state machine
   private hotswapStateStorageForVm () {
-    const blockchainAdapter = new BlockchainAdapter(this.blockchain)
+    const blockchainAdapter = new BlockchainAdapter(this.state.value.blockchain)
     ;(this.vm as any).blockchain = blockchainAdapter
 
-    const stateManagerAdapter = new StateManagerAdapter(this.stateManger)
+    const stateManagerAdapter = new StateManagerAdapter(this.state.value.stateManger)
     ;(this.vm as any).stateManager = stateManagerAdapter
     ;(this.vm as any).pStateManager = new PStateManager(stateManagerAdapter as any)
   }
@@ -97,11 +89,11 @@ export class TestVM {
     return bufferToHash(transaction.hash())
   }
 
-  async mineBlock () {
+  async mineBlock (clockSkew: number) {
     const transactions = this.pendingTransactions
     this.pendingTransactions = []
 
-    const { receipts, responses } = await putBlock(this.vm, transactions, this.options)
+    const { receipts, responses } = await putBlock(this.vm, transactions, this.options, clockSkew)
 
     for (const receipt of receipts) {
       this.receipts.set(receipt.transactionHash, receipt)
@@ -130,16 +122,16 @@ export class TestVM {
   }
 
   private async getAccount (address: Address) {
-    return this.stateManger.getAccount(address)
+    return this.state.value.stateManger.getAccount(address)
   }
 
   async getCode (address: Address) {
-    const code = this.stateManger.getContractCode(address)
+    const code = this.state.value.stateManger.getContractCode(address)
     return bufferToHexData(code)
   }
 
-  async runIsolatedTransaction (transaction: Transaction) {
-    return runIsolatedTransaction(this.vm, transaction, this.options)
+  async runIsolatedTransaction (transaction: Transaction, clockSkew: number) {
+    return runIsolatedTransaction(this.vm, transaction, this.options, clockSkew)
   }
 
   async getBlock (hashOrNumber: string): Promise<RpcBlockResponse> {

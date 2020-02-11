@@ -17,7 +17,7 @@ export class TestProvider extends providers.BaseProvider {
       this.walletManager = new WalletManager(undefined, this)
     } else {
       this.chain = new TestChain(toTestChainOptions(chainOrOptions))
-      this.walletManager = new WalletManager(this.chain.options.privateKeys, this)
+      this.walletManager = new WalletManager(this.chain.options.value.privateKeys, this)
     }
   }
 
