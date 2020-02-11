@@ -26,7 +26,7 @@ export async function runRpcHarness () {
   const options = getOptionsWithDefaults()
   const ctx = {
     chain,
-    walletManager: new WalletManager(chain.options.privateKeys),
+    walletManager: new WalletManager(chain.options.value.privateKeys),
     options,
   }
 

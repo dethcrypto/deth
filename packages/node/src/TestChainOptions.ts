@@ -13,6 +13,8 @@ export interface TestChainOptions {
   chainName: string,
   abiFilesGlob?: string,
   cwd: Path, // config's directory if it was provided
+  clockSkew: number,
+  autoMining: boolean,
 }
 
 export const DEFAULTS: TestChainOptions = {
@@ -38,6 +40,8 @@ export const DEFAULTS: TestChainOptions = {
   chainName: 'test-chain',
   abiFilesGlob: undefined,
   cwd: makePath(process.cwd()),
+  autoMining: true,
+  clockSkew: 0,
 }
 
 export function getOptionsWithDefaults (options: Partial<TestChainOptions> = {}): TestChainOptions {

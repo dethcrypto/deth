@@ -14,7 +14,7 @@ export async function makeDefaultCtx (options: TestChainOptions = getOptionsWith
 
   return {
     chain,
-    walletManager: new WalletManager(chain.options.privateKeys),
+    walletManager: new WalletManager(chain.options.value.privateKeys),
     options,
   }
 }

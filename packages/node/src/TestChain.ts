@@ -16,6 +16,7 @@ import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from '
 import { eventLogger, revertLogger } from './debugger/stepsLoggers'
 import { AbiDecoder } from './debugger/AbiDecoder'
 import { RealFileSystem } from './fs/RealFileSystem'
+import { SnapshotObject } from './vm/storage/SnapshotObject'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -24,21 +25,19 @@ import { RealFileSystem } from './fs/RealFileSystem'
  */
 export class TestChain {
   private tvm: TestVM
-  private autoMining = true
-  clockSkew = 0;
-  options: TestChainOptions
+  options: SnapshotObject<TestChainOptions>
 
   constructor (options?: Partial<TestChainOptions>) {
-    this.options = getOptionsWithDefaults(options)
-    this.tvm = new TestVM(this.options)
+    this.options = new SnapshotObject(getOptionsWithDefaults(options))
+    this.tvm = new TestVM(this.options.value)
   }
 
   async init () {
     await this.tvm.init()
     // @TODO: initialization of deps should be moved out from here
     const abiDecoder = new AbiDecoder(new RealFileSystem())
-    if (this.options.abiFilesGlob) {
-      abiDecoder.loadAbis(this.options.abiFilesGlob, this.options.cwd)
+    if (this.options.value.abiFilesGlob) {
+      abiDecoder.loadAbis(this.options.value.abiFilesGlob, this.options.value.cwd)
     }
 
     this.tvm.installStepHook(eventLogger(abiDecoder))
@@ -46,23 +45,29 @@ export class TestChain {
   }
 
   makeSnapshot (): number {
+    this.options.makeSnapshot()
     return this.tvm.makeSnapshot()
   }
 
   revertToSnapshot (id: number) {
+    this.options.revert(id)
     return this.tvm.revertToSnapshot(id)
   }
 
+  skewClock (delta: number) {
+    this.options.value.clockSkew += delta
+  }
+
   startAutoMining () {
-    this.autoMining = true
+    this.options.value.autoMining = true
   }
 
   stopAutoMining () {
-    this.autoMining = false
+    this.options.value.autoMining = false
   }
 
   async mineBlock () {
-    return this.tvm.mineBlock(this.clockSkew)
+    return this.tvm.mineBlock(this.options.value.clockSkew)
   }
 
   async getBlockNumber (): Promise<Quantity> {
@@ -70,7 +75,7 @@ export class TestChain {
   }
 
   getGasPrice (): Quantity {
-    return bnToQuantity(this.options.defaultGasPrice)
+    return bnToQuantity(this.options.value.defaultGasPrice)
   }
 
   async getBalance (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
@@ -101,8 +106,8 @@ export class TestChain {
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
-    if (this.autoMining) {
-      await this.tvm.mineBlock(this.clockSkew)
+    if (this.options.value.autoMining) {
+      await this.tvm.mineBlock(this.options.value.clockSkew)
     }
     return hash
   }
@@ -113,9 +118,9 @@ export class TestChain {
     }
     const tx = toFakeTransaction({
       ...transactionRequest,
-      gas: bnToQuantity(this.options.blockGasLimit),
+      gas: bnToQuantity(this.options.value.blockGasLimit),
     })
-    const result = await this.tvm.runIsolatedTransaction(tx, this.clockSkew)
+    const result = await this.tvm.runIsolatedTransaction(tx, this.options.value.clockSkew)
     // TODO: handle errors
     return bufferToHexData(result.execResult.returnValue)
   }
@@ -123,10 +128,10 @@ export class TestChain {
   // @NOTE: this is very simplified implementation
   async estimateGas (transactionRequest: RpcTransactionRequest): Promise<Quantity> {
     if (!transactionRequest.gas) {
-      transactionRequest.gas = bnToQuantity(this.options.blockGasLimit)
+      transactionRequest.gas = bnToQuantity(this.options.value.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
-    const result = await this.tvm.runIsolatedTransaction(tx, this.clockSkew)
+    const result = await this.tvm.runIsolatedTransaction(tx, this.options.value.clockSkew)
     // TODO: handle errors
     return bnToQuantity(result.gasUsed)
   }
