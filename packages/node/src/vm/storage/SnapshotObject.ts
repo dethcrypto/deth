@@ -1,13 +1,13 @@
-import { Dictionary } from 'ts-essentials'
-import { cloneDeep } from 'lodash'
+/**
+ * Object that can be snapshotted ("saved") any time and then reverted to a given state.
+ */
+export class SnapshotObject<T> {
+  private snapshots: T[] = []
 
-export class SnapshotObject<T extends Dictionary<any> | { copy(): any }> {
-  private snapshots: T[] = [];
-
-  constructor (public value: T) {}
+  constructor (public value: T, private copyFn: (t: T) => T) {}
 
   makeSnapshot () {
-    const copy = this.value.copy ? this.value.copy() : cloneDeep(this.value)
+    const copy = this.copyFn(this.value)
     const id = this.makeSnapshot.length
     this.snapshots.push(copy)
     return id

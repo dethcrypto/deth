@@ -17,6 +17,7 @@ import { eventLogger, revertLogger } from './debugger/stepsLoggers'
 import { AbiDecoder } from './debugger/AbiDecoder'
 import { RealFileSystem } from './fs/RealFileSystem'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
+import { cloneDeep } from 'lodash'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -28,7 +29,7 @@ export class TestChain {
   options: SnapshotObject<TestChainOptions>
 
   constructor (options?: Partial<TestChainOptions>) {
-    this.options = new SnapshotObject(getOptionsWithDefaults(options))
+    this.options = new SnapshotObject(getOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
 
