@@ -26,6 +26,7 @@ describe('TestProvider.getStorageAt', () => {
     const contract = await factory.deploy(0)
 
     const notExistingValue = await provider.getStorageAt(contract.address, 1)
-    expect(notExistingValue).to.equal('0x00')
+    // @TODO: should be 0x00? this needs verification against geth or parity
+    expect(notExistingValue).to.equal('0x')
   })
 })
