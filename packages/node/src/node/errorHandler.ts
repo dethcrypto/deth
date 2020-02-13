@@ -66,7 +66,7 @@ export class BadRequestHttpError extends HttpError {
 }
 
 export class NotFoundHttpError extends HttpError {
-  constructor () {
+  constructor (public readonly details: string[] = []) {
     super(404, 'NotFound')
   }
 }
