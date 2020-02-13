@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToQuantity } from './primitives'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData } from './primitives'
 import {
   Tag,
   RpcTransactionRequest,
