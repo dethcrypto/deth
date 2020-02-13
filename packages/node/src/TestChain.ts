@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData } from './primitives'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToQuantity } from './primitives'
 import {
   Tag,
   RpcTransactionRequest,
@@ -102,7 +102,9 @@ export class TestChain {
   }
 
   async getStorageAt (address: Address, position: Quantity, blockTag: Quantity | Tag): Promise<HexData> {
-    throw unsupportedOperation('getStorageAt')
+    // @TODO: always assumes blockTag === latest
+
+    return bufferToHexData(this.tvm.state.value.stateManger.getContractStorage(address, position))
   }
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {

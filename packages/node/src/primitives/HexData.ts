@@ -15,5 +15,8 @@ export function makeHexData (value: string): HexData {
 }
 
 export function bufferToHexData (buffer: Buffer): HexData {
+  if (buffer.length === 0) {
+    return makeHexData('0x00')
+  }
   return makeHexData(bufferToHex(buffer))
 }

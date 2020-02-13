@@ -3,7 +3,7 @@ import { TestChain } from './TestChain'
 import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
-import { makeAddress } from './primitives'
+import { makeAddress, makeQuantity } from './primitives'
 import { DEFAULTS } from './TestChainOptions'
 
 export class TestProvider extends providers.BaseProvider {
@@ -43,7 +43,7 @@ export class TestProvider extends providers.BaseProvider {
       case 'getCode':
         return this.chain.getCode(makeAddress(params.address), params.blockTag)
       case 'getStorageAt':
-        return this.chain.getStorageAt(makeAddress(params.address), params.position, params.blockTag)
+        return this.chain.getStorageAt(makeAddress(params.address), makeQuantity(params.position), params.blockTag)
       case 'sendTransaction':
         return this.chain.sendTransaction(params.signedTransaction)
       case 'call':

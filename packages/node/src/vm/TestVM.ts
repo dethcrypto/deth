@@ -28,8 +28,8 @@ interface VMSnapshot {
  */
 export class TestVM {
   private vm!: VM
-  private state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
 
+  state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
   transactions: Map<Hash, RpcTransactionResponse> = new Map()
   receipts: Map<Hash, RpcTransactionReceipt> = new Map()

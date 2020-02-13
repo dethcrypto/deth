@@ -44,6 +44,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     },
     eth_call: ([tx, _blockTag]) => ctx.chain.call(tx, 'latest'),
     eth_estimateGas: ([tx]) => ctx.chain.estimateGas(tx),
+    eth_getStorageAt: ([address, pos, block]) => ctx.chain.getStorageAt(address, pos, block),
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {

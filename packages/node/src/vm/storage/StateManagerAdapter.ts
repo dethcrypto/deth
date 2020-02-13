@@ -2,7 +2,7 @@ import { callbackify } from 'util'
 import { DethStateManger } from './DethStateManger'
 import { bufferToAddress } from '../../primitives/Address'
 import Account from 'ethereumjs-account'
-import { bufferToHash, hashToBuffer } from '../../primitives'
+import { bufferToHash, hashToBuffer, bufferToQuantity } from '../../primitives'
 import { callbackifySync } from './adapter-utils'
 
 export class StateManagerAdapter {
@@ -27,11 +27,11 @@ export class StateManagerAdapter {
   )
 
   getContractStorage = callbackify(async (address: Buffer, key: Buffer) => {
-    return this.dethStateManager.getContractStorage(bufferToAddress(address), bufferToHash(key))
+    return this.dethStateManager.getContractStorage(bufferToAddress(address), bufferToQuantity(key))
   })
 
   putContractStorage = callbackify(async (address: Buffer, key: Buffer, value: Buffer) => {
-    return this.dethStateManager.putContractStorage(bufferToAddress(address), bufferToHash(key), value)
+    return this.dethStateManager.putContractStorage(bufferToAddress(address), bufferToQuantity(key), value)
   })
 
   clearContractStorage = callbackify(async (address: Buffer) => {
