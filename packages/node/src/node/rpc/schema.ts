@@ -121,6 +121,10 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([callTtx]),
     returns: quantity,
   },
+  eth_getStorageAt: {
+    parameters: t.tuple([address, quantity, quantityOrTag]),
+    returns: hexData,
+  },
 
   // ganache compatibility
   // docs: https://github.com/trufflesuite/ganache-cli#custom-methods

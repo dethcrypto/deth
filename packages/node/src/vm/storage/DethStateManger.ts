@@ -3,7 +3,7 @@ import { Dictionary, assert } from 'ts-essentials'
 import { keccak256 } from 'ethereumjs-util'
 import { CheckpointMap } from './CheckpointMap'
 import { Address } from '../../primitives/Address'
-import { bufferToHash, Hash } from '../../primitives'
+import { bufferToHash, Hash, Quantity } from '../../primitives'
 
 const EMPTY_BUFFER = Buffer.from('')
 
@@ -59,12 +59,12 @@ export class DethStateManger {
     return this.codeState.get(bufferToHash(account.codeHash)) || EMPTY_BUFFER
   }
 
-  getContractStorage (address: Address, key: Hash) {
+  getContractStorage (address: Address, key: Quantity): Buffer {
     const s = this.storageState.get(address) ?? {}
     return s[key] ?? EMPTY_BUFFER
   }
 
-  putContractStorage (address: Address, key: Hash, value: Buffer) {
+  putContractStorage (address: Address, key: Quantity, value: Buffer) {
     const s = this.storageState.get(address) ?? {}
     const newState = { ...s, [key]: value }
     this.storageState.set(address, newState)
