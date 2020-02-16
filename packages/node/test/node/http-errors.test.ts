@@ -13,11 +13,6 @@ describe('HTTP/errors', () => {
       .send({})
 
     expect(res).to.have.status(404)
-    expect(res.body).to.be.deep.eq({
-      error: {
-        status: 404,
-        message: 'NotFound',
-      },
-    })
+    expect(res.body.error.status).to.be.deep.eq(404)
   })
 })

@@ -3,6 +3,9 @@ import { ethers, utils } from 'ethers'
 import { Path } from '../fs/Path'
 import { FileSystem } from '../fs/FileSystem'
 
+// silence ethers warnings: https://github.com/ethers-io/ethers.js/issues/407
+ethers.errors.setLogLevel('error')
+
 import debug from 'debug'
 const d = debug('deth:AbiDecoder')
 
@@ -38,10 +41,13 @@ export class AbiDecoder {
     for (const a of abi) {
       this.ABIs.add(a)
     }
-    console.log(this.ABIs.size)
   }
 
   decodeLog (log: SimpleLog): utils.LogDescription | undefined {
     return this.iface.parseLog(log) ?? undefined // note: ethers returns null by default
+  }
+
+  decodeCalldata (data: string): utils.TransactionDescription | undefined {
+    return this.iface.parseTransaction({ data }) ?? undefined // note: ethers returns null by default
   }
 }

@@ -4,7 +4,7 @@ import { makeRpcCall, runRpcHarness } from './common'
 describe('RPC/errors', () => {
   let app: Express.Application
   beforeEach(async () => {
-    ({ app } = await runRpcHarness())
+    ;({ app } = await runRpcHarness())
   })
 
   it('throws error on not existing method calls', async () => {
@@ -13,7 +13,11 @@ describe('RPC/errors', () => {
     expect(res).to.have.status(404)
     expect(res.body).to.be.deep.eq({
       jsonrpc: '2.0',
-      error: { code: -32601, message: 'NotFound' },
+      error: {
+        code: -32601,
+        message: 'NotFound',
+        details: ['RPC method: not_existing_method called with [] not found'],
+      },
       id: 1,
     })
   })

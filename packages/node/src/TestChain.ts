@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData } from './primitives'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress } from './primitives'
 import {
   Tag,
   RpcTransactionRequest,
@@ -18,6 +18,8 @@ import { AbiDecoder } from './debugger/AbiDecoder'
 import { RealFileSystem } from './fs/RealFileSystem'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
 import { cloneDeep } from 'lodash'
+import { CliLogger } from './debugger/CliLogger'
+import { Transaction } from 'ethereumjs-tx'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -26,6 +28,7 @@ import { cloneDeep } from 'lodash'
  */
 export class TestChain {
   private tvm: TestVM
+  private logger!: CliLogger
   options: SnapshotObject<TestChainOptions>
 
   constructor (options?: Partial<TestChainOptions>) {
@@ -40,9 +43,10 @@ export class TestChain {
     if (this.options.value.abiFilesGlob) {
       abiDecoder.loadAbis(this.options.value.abiFilesGlob, this.options.value.cwd)
     }
+    this.logger = new CliLogger(abiDecoder)
 
-    this.tvm.installStepHook(eventLogger(abiDecoder))
-    this.tvm.installStepHook(revertLogger)
+    this.tvm.installStepHook(eventLogger(this.logger))
+    this.tvm.installStepHook(revertLogger(this.logger))
   }
 
   makeSnapshot (): number {
@@ -108,6 +112,7 @@ export class TestChain {
   }
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
+    this.logger.logTransaction(this.parseTx(signedTransaction))
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
     if (this.options.value.autoMining) {
       await this.tvm.mineBlock(this.options.value.clockSkew)
@@ -171,5 +176,15 @@ export class TestChain {
 
   async getLogs (filter: FilterRequest): Promise<RpcLogObject[]> {
     throw unsupportedOperation('getLogs')
+  }
+
+  private parseTx (signedTransaction: HexData) {
+    const tx = new Transaction(signedTransaction, { common: this.tvm.vm._common })
+
+    return {
+      to: tx.to?.length > 0 ? bufferToAddress(tx.to) : undefined,
+      from: bufferToAddress((tx as any).from),
+      data: tx.data?.length > 0 ? bufferToHexData(tx.data) : undefined,
+    }
   }
 }

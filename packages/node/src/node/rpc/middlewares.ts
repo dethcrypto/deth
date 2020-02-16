@@ -38,7 +38,7 @@ export function sanitizeRPC<T extends t.Any> (schema: RPCSchema): (data: unknown
     d(`--> RPC call ${m}`)
     d(`--> RPC call data ${JSON.stringify(req.body.params)}`)
     if (!rpcDescription) {
-      throw new NotFoundHttpError()
+      throw new NotFoundHttpError([`RPC method: ${m} called with ${JSON.stringify(req.body.params)} not found`])
     }
     const params = req.body.params
     // we need to normalize empty arrays to undefineds
