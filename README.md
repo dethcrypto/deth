@@ -12,8 +12,8 @@
 ## Features
 
 - RPC support
-- state snapshots, time manipulation, miner control
-- printout decoded logs and calldata for all transactions (even reverted ones!)
+- state snapshots, time manipulation, mining control
+- print out decoded logs and calldata for all transactions (even reverted ones!)
 - display revert reasons
 - accept incorrect nonces
 
