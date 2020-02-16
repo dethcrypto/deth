@@ -14,7 +14,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
     net_version: () => ctx.options.chainId.toString(),
 
     // eth
-    eth_chainId:() => numberToQuantity(ctx.options.chainId),
+    eth_chainId: () => numberToQuantity(ctx.options.chainId),
     eth_gasPrice: () => ctx.chain.getGasPrice(),
     eth_getBalance: ([address, blockTag]) => {
       return ctx.chain.getBalance(address, 'latest')
@@ -50,6 +50,7 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
       if (result === '0x') {
         return '0x00' as any
       }
+      return result
     },
 
     // ganache compatibility

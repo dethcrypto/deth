@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { runNode } from './node'
 import { Path, relativePathToPath } from '../fs/Path'
 

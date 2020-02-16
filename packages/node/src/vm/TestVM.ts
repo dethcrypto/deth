@@ -27,8 +27,7 @@ interface VMSnapshot {
  * interface and abstracts away weird ethereumjs specific details
  */
 export class TestVM {
-  private vm!: VM
-
+  vm!: VM
   state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
   transactions: Map<Hash, RpcTransactionResponse> = new Map()
