@@ -77,6 +77,10 @@ export const rpcCommandsDescription = {
   },
 
   // eth related
+  eth_chainId: {
+    parameters: t.undefined,
+    returns: quantity,
+  },
   eth_gasPrice: {
     parameters: t.undefined,
     returns: quantity,
