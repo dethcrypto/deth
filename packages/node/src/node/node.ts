@@ -49,7 +49,11 @@ export async function runNode (port: number, configPath: Path | undefined) {
     console.log(`Using ${configPath}...`)
   }
 
-  const app = getApp(await makeDefaultCtx(configPath && loadConfig(fs, configPath)))
+  const ctx = await makeDefaultCtx(configPath && loadConfig(fs, configPath))
+
+  ctx.logger.logNodeInfo(ctx.walletManager)
+
+  const app = getApp(ctx)
 
   return app.listen(port)
 }
