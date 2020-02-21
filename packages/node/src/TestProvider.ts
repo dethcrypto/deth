@@ -5,18 +5,19 @@ import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
 import { makeAddress, makeQuantity } from './primitives'
 import { DEFAULTS } from './TestChainOptions'
+import { DethLogger } from './debugger/Logger/DethLogger'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
   readonly walletManager: WalletManager
 
-  constructor (chainOrOptions?: TestChain | TestProviderOptions) {
+  constructor (logger: DethLogger, chainOrOptions?: TestChain | TestProviderOptions) {
     super({ name: DEFAULTS.chainName, chainId: DEFAULTS.chainId })
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
       this.walletManager = new WalletManager(undefined, this)
     } else {
-      this.chain = new TestChain(toTestChainOptions(chainOrOptions))
+      this.chain = new TestChain(logger, toTestChainOptions(chainOrOptions))
       this.walletManager = new WalletManager(this.chain.options.value.privateKeys, this)
     }
   }

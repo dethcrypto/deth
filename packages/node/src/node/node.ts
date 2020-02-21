@@ -46,7 +46,7 @@ export function getApp (ctx: NodeCtx) {
 export async function runNode (port: number, configPath: Path | undefined) {
   const fs = new RealFileSystem()
   if (configPath) {
-    console.log(`Using ${configPath}`)
+    console.log(`Using ${configPath}...`)
   }
 
   const app = getApp(await makeDefaultCtx(configPath && loadConfig(fs, configPath)))

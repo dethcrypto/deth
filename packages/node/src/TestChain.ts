@@ -14,12 +14,10 @@ import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
 import { eventLogger, revertLogger } from './debugger/stepsLoggers'
-import { AbiDecoder } from './debugger/AbiDecoder'
-import { RealFileSystem } from './fs/RealFileSystem'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
 import { cloneDeep } from 'lodash'
-import { CliLogger } from './debugger/CliLogger'
 import { Transaction } from 'ethereumjs-tx'
+import { DethLogger } from './debugger/Logger/DethLogger'
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -28,22 +26,15 @@ import { Transaction } from 'ethereumjs-tx'
  */
 export class TestChain {
   private tvm: TestVM
-  private logger!: CliLogger
   options: SnapshotObject<TestChainOptions>
 
-  constructor (options?: Partial<TestChainOptions>) {
+  constructor (private logger: DethLogger, options?: Partial<TestChainOptions>) {
     this.options = new SnapshotObject(getOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
 
   async init () {
     await this.tvm.init()
-    // @TODO: initialization of deps should be moved out from here
-    const abiDecoder = new AbiDecoder(new RealFileSystem())
-    if (this.options.value.abiFilesGlob) {
-      abiDecoder.loadAbis(this.options.value.abiFilesGlob, this.options.value.cwd)
-    }
-    this.logger = new CliLogger(abiDecoder)
 
     this.tvm.installStepHook(eventLogger(this.logger))
     this.tvm.installStepHook(revertLogger(this.logger))

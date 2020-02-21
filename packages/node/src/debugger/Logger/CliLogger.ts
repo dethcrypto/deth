@@ -1,9 +1,10 @@
 import { gray, yellow, red, blue } from 'chalk'
 
-import { HexData, Address } from '../primitives'
-import { AbiDecoder } from './AbiDecoder'
+import { HexData, Address } from '../../primitives'
+import { AbiDecoder } from '../AbiDecoder'
+import { DethLogger } from './DethLogger'
 
-export class CliLogger {
+export class CliLogger implements DethLogger {
   constructor (private readonly abiDecoder: AbiDecoder) {}
 
   logTransaction (tx: { to?: Address, from: Address, data?: HexData }) {
