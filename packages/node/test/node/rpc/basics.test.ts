@@ -1,7 +1,7 @@
 import { expect, request } from 'chai'
 
 import { makeRpcCall, runRpcHarness } from '../common'
-import { DEFAULTS } from '../../../src/TestChainOptions'
+import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
 
 describe('rpc -> basics', () => {
   let app: Express.Application
@@ -29,6 +29,6 @@ describe('rpc -> basics', () => {
     const res = await makeRpcCall(app, 'net_version', [])
 
     expect(res).to.have.status(200)
-    expect(res.body.result).to.be.eq(DEFAULTS.chainId.toString())
+    expect(res.body.result).to.be.eq(DEFAULT_NODE_CONFIG.blockchain.chainId.toString())
   })
 })

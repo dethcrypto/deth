@@ -1,20 +1,38 @@
 import { TestChain } from '../TestChain'
 import { WalletManager } from '../WalletManager'
-import { getOptionsWithDefaults, TestChainOptions } from '../TestChainOptions'
+import { RealFileSystem } from '../fs/RealFileSystem'
+import { AbiDecoder } from '../debugger/AbiDecoder'
+import { CliLogger } from '../debugger/Logger/CliLogger'
+import { DethLogger } from '../debugger/Logger/DethLogger'
+import { NodeConfig, getConfigWithDefaults } from '../config/config'
+import { getTestChainOptionsFromConfig } from '../TestChainOptions'
 
 export interface NodeCtx {
   chain: TestChain,
   walletManager: WalletManager,
-  options: TestChainOptions,
+  cfg: NodeConfig,
+  abiDecoder: AbiDecoder,
+  logger: DethLogger,
 }
 
-export async function makeDefaultCtx (options: TestChainOptions = getOptionsWithDefaults()): Promise<NodeCtx> {
-  const chain = new TestChain(options)
+export async function makeDefaultCtx (_config: NodeConfig = getConfigWithDefaults()): Promise<NodeCtx> {
+  const config = getConfigWithDefaults(_config)
+  const abiDecoder = new AbiDecoder(new RealFileSystem())
+  if (config.debugger.abiFilesGlob) {
+    abiDecoder.loadAbis(config.debugger.abiFilesGlob, config.cwd)
+  }
+
+  const logger = new CliLogger(abiDecoder)
+
+  const chain = new TestChain(logger, getTestChainOptionsFromConfig(config))
+
   await chain.init()
 
   return {
     chain,
-    walletManager: new WalletManager(chain.options.value.privateKeys),
-    options,
+    walletManager: new WalletManager(config.accounts.privateKeys),
+    abiDecoder,
+    logger,
+    cfg: config,
   }
 }

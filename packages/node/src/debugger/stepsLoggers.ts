@@ -2,9 +2,9 @@
 import { InterpreterStep } from 'ethereumjs-vm/dist/evm/interpreter'
 import { bufferToHex } from 'ethereumjs-util'
 import { bufferToAddress } from '../primitives'
-import { CliLogger } from './CliLogger'
+import { DethLogger } from './Logger/DethLogger'
 
-export const eventLogger = (cliLogger: CliLogger) => (runState: InterpreterStep) => {
+export const eventLogger = (logger: DethLogger) => (runState: InterpreterStep) => {
   const opcodeName = runState.opcode.name
   if (!opcodeName.startsWith('LOG')) {
     return
@@ -25,10 +25,10 @@ export const eventLogger = (cliLogger: CliLogger) => (runState: InterpreterStep)
       : getMemoryAsBuffer(runState.memory, memOffset.toNumber(), memLength.toNumber()),
   )
 
-  cliLogger.logEvent(data, topics)
+  logger.logEvent(data, topics)
 }
 
-export const revertLogger = (cliLogger: CliLogger) => (runState: InterpreterStep) => {
+export const revertLogger = (logger: DethLogger) => (runState: InterpreterStep) => {
   const opcodeName = runState.opcode.name
   if (opcodeName !== 'REVERT') {
     return
@@ -39,7 +39,7 @@ export const revertLogger = (cliLogger: CliLogger) => (runState: InterpreterStep
   // dunno why there is a garbage printed out apart from revert string
   const reason = rawDataBuffer.toString('utf8') || '(unknown)'
 
-  cliLogger.logRevert(reason, bufferToAddress(runState.address))
+  logger.logRevert(reason, bufferToAddress(runState.address))
 }
 
 function getLastN<T> (arr: T[], n: number): T[] {

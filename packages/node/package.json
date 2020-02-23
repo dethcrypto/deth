@@ -1,17 +1,23 @@
 {
-  "name": "@deth/node",
-  "description": "An express server that exposes deth jsonrpc",
-  "version": "0.1.0",
+  "name": "deth",
+  "description": "Ethereum node focused on Developer Experience",
+  "keywords": ["ethereum", "node", "deth", "geth", "developer", "experience", "dx"],
+  "version": "0.0.3",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "engines": {
-    "node": "^11.15.0",
-    "yarn": ">=1.15.2"
+    "node": ">=10.0.0"
   },
   "bin": "./dist/cjs/node/runner.js",
+  "files": [
+    "**/dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "prepublishOnly": "yarn lint && yarn test && yarn build",
     "start": "ts-node ./src/node/runner.ts",
     "lint": "eslint --ext .ts src test",
     "lint:fix": "eslint --ext .ts --fix src test",
@@ -30,6 +36,7 @@
     "@types/lodash": "^4.14.149",
     "@types/lru-cache": "^5.1.0",
     "abi-decoder": "^2.2.2",
+    "async-mutex": "^0.1.4",
     "chalk": "^3.0.0",
     "debug": "^4.1.1",
     "ethereumjs-account": "^3.0.0",
@@ -45,7 +52,7 @@
     "glob": "^7.1.6",
     "io-ts": "^2.0.2",
     "lodash": "^4.17.15",
-    "ts-essentials": "^4.0.0"
+    "ts-essentials": "^6.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
@@ -58,7 +65,6 @@
     "@types/sinon-chai": "^3.2.3",
     "@typescript-eslint/eslint-plugin": "^2.12.0",
     "@typescript-eslint/parser": "^2.12.0",
-    "async-mutex": "^0.1.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",

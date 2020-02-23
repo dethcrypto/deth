@@ -1,10 +1,12 @@
 import { expect } from 'chai'
 import { utils } from 'ethers'
-import { getOptionsWithDefaults } from '../../src/TestChainOptions'
 import { WalletManager } from '../../src/WalletManager'
 import { createTestProvider } from '../testutils'
+import { DEFAULT_NODE_CONFIG } from '../../src/config/config'
 
-const { privateKeys } = getOptionsWithDefaults()
+const {
+  accounts: { privateKeys },
+} = DEFAULT_NODE_CONFIG
 
 describe('WalletManager.getWallets', () => {
   it('returns ten wallets', async () => {

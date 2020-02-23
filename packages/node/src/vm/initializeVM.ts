@@ -39,8 +39,8 @@ export async function initializeVM (
 // @TODO extract this. VM should not be aware of any private keys etc. TestChain should provide data for genesis block
 async function initAccounts (vm: VM, options: TestChainOptions) {
   const psm = vm.pStateManager
-  const balance = new BN(options.initialBalance.toString()).toBuffer()
-  for (const privateKey of options.privateKeys) {
+  const balance = new BN(options.accounts.initialBalance.toString()).toBuffer()
+  for (const privateKey of options.accounts.privateKeys) {
     const { address } = new Wallet(privateKey)
     await psm.putAccount(toBuffer(address), new Account({ balance }))
   }

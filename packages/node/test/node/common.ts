@@ -1,8 +1,13 @@
 import { request, expect } from 'chai'
+
 import { TestChain } from '../../src/TestChain'
-import { getOptionsWithDefaults } from '../../src/TestChainOptions'
 import { WalletManager } from '../../src/WalletManager'
 import { getApp } from '../../src/node/node'
+import { NoopLogger } from '../debugger/Logger/NoopLogger'
+import { NodeCtx } from '../../src/node/ctx'
+import { AbiDecoder } from '../../src/debugger/AbiDecoder'
+import { mockFs } from '../fs/fs.mock'
+import { getConfigWithDefaults } from '../../src/config/config'
 
 export function makeRpcCall (
   app: Express.Application,
@@ -21,13 +26,17 @@ export function unwrapRpcResponse (response: ChaiHttp.Response): any {
 }
 
 export async function runRpcHarness () {
-  const chain = new TestChain()
+  const logger = new NoopLogger()
+  const abiDecoder = new AbiDecoder(mockFs())
+  const chain = new TestChain(logger)
   await chain.init()
-  const options = getOptionsWithDefaults()
-  const ctx = {
+  const cfg = getConfigWithDefaults()
+  const ctx: NodeCtx = {
+    abiDecoder,
     chain,
-    walletManager: new WalletManager(chain.options.value.privateKeys),
-    options,
+    walletManager: new WalletManager(cfg.accounts.privateKeys),
+    logger,
+    cfg: cfg,
   }
 
   const app = getApp(ctx)

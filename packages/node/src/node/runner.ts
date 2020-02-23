@@ -10,7 +10,7 @@ const configPath = getConfigPathFromArgs(args)
 runNode(PORT, configPath)
   .then(app => {
     app.on('listening', () => {
-      console.log(`🚀 Deth node launched on port: ${PORT}`)
+      console.log(`🚀 Deth node listening on port: ${PORT}`)
     })
   })
   .catch(e => {

@@ -1,9 +1,11 @@
-import { gray, yellow, red, blue } from 'chalk'
+import { gray, yellow, red, blue, green } from 'chalk'
 
-import { HexData, Address } from '../primitives'
-import { AbiDecoder } from './AbiDecoder'
+import { HexData, Address, makeAddress } from '../../primitives'
+import { AbiDecoder } from '../AbiDecoder'
+import { DethLogger } from './DethLogger'
+import { WalletManager } from '../../WalletManager'
 
-export class CliLogger {
+export class CliLogger implements DethLogger {
   constructor (private readonly abiDecoder: AbiDecoder) {}
 
   logTransaction (tx: { to?: Address, from: Address, data?: HexData }) {
@@ -35,6 +37,18 @@ export class CliLogger {
 
   logRevert (reason: string, address: Address) {
     console.log(header('REVERT'), red(`Reason ${reason} on ${formatAddress(address)}`))
+  }
+
+  logNodeInfo (walletManager: WalletManager): void {
+    const wallets = walletManager.getWallets()
+
+    console.log(`Unlocked wallets: ${green(wallets.length)}`)
+
+    console.log('No:\t Address:\t Private key:')
+    for (const [i, wallet] of wallets.entries()) {
+      console.log(`${i}\t ${yellow(makeAddress(wallet.address))}\t ${wallet.privateKey}`)
+    }
+    console.log('')
   }
 }
 

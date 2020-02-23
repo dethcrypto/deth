@@ -11,7 +11,7 @@ const d = debug('deth:WalletManager')
 export class WalletManager {
   protected readonly wallets: Map<Address, Wallet> = new Map()
 
-  constructor (privateKeys?: string[], readonly defaultProvider?: providers.Provider) {
+  constructor (privateKeys?: ReadonlyArray<string>, readonly defaultProvider?: providers.Provider) {
     if (privateKeys) {
       privateKeys.forEach(pk => this.addFromPrivateKey(pk))
     }
