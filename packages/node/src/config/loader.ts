@@ -1,6 +1,6 @@
 import { FileSystem } from '../fs/FileSystem'
 import { Path, getDirName } from '../fs/Path'
-import { getOptionsWithDefaults } from '../TestChainOptions'
+import { getConfigWithDefaults } from './config'
 
 /**
  * Loads config from a directory
@@ -21,5 +21,5 @@ export function loadConfig (fs: FileSystem, path: Path) {
   const config = fs.requireFile(path)
   config.cwd = getDirName(path) // set cwd to config path
 
-  return getOptionsWithDefaults(config)
+  return getConfigWithDefaults(config)
 }

@@ -39,16 +39,16 @@ export class CliLogger implements DethLogger {
     console.log(header('REVERT'), red(`Reason ${reason} on ${formatAddress(address)}`))
   }
 
-  logNodeInfo(walletManager: WalletManager):void {
-    const wallets = walletManager.getWallets();
+  logNodeInfo (walletManager: WalletManager): void {
+    const wallets = walletManager.getWallets()
 
     console.log(`Unlocked wallets: ${green(wallets.length)}`)
 
-    console.log("No:\t Address:\t Private key:")
+    console.log('No:\t Address:\t Private key:')
     for (const [i, wallet] of wallets.entries()) {
       console.log(`${i}\t ${yellow(makeAddress(wallet.address))}\t ${wallet.privateKey}`)
     }
-    console.log("")
+    console.log('')
   }
 }
 

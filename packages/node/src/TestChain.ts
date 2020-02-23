@@ -11,7 +11,7 @@ import {
   RpcRichBlockResponse,
 } from './model'
 import { TestVM } from './vm/TestVM'
-import { TestChainOptions, getOptionsWithDefaults } from './TestChainOptions'
+import { TestChainOptions, getTestChainOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
 import { eventLogger, revertLogger } from './debugger/stepsLoggers'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
@@ -29,7 +29,7 @@ export class TestChain {
   options: SnapshotObject<TestChainOptions>
 
   constructor (private logger: DethLogger, options?: Partial<TestChainOptions>) {
-    this.options = new SnapshotObject(getOptionsWithDefaults(options), cloneDeep)
+    this.options = new SnapshotObject(getTestChainOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
 

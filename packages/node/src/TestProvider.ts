@@ -4,21 +4,23 @@ import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
 import { makeAddress, makeQuantity } from './primitives'
-import { DEFAULTS } from './TestChainOptions'
 import { DethLogger } from './debugger/Logger/DethLogger'
+import { DEFAULT_NODE_CONFIG } from './config/config'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
   readonly walletManager: WalletManager
 
   constructor (logger: DethLogger, chainOrOptions?: TestChain | TestProviderOptions) {
-    super({ name: DEFAULTS.chainName, chainId: DEFAULTS.chainId })
+    // note this file should not rely on NODE/config
+    super({ name: DEFAULT_NODE_CONFIG.blockchain.chainName, chainId: DEFAULT_NODE_CONFIG.blockchain.chainId })
+
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
       this.walletManager = new WalletManager(undefined, this)
     } else {
       this.chain = new TestChain(logger, toTestChainOptions(chainOrOptions))
-      this.walletManager = new WalletManager(this.chain.options.value.privateKeys, this)
+      this.walletManager = new WalletManager(this.chain.options.value.accounts.privateKeys, this)
     }
   }
 

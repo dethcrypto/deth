@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { randomHash, createTestProvider } from '../testutils'
-import { DEFAULTS } from '../../src/TestChainOptions'
+import { DEFAULT_NODE_CONFIG } from '../../src/config/config'
 
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
@@ -37,7 +37,7 @@ describe('TestProvider.getTransaction', () => {
       v: response.v,
       raw: tx.raw,
       creates: null,
-      networkId: DEFAULTS.chainId,
+      networkId: DEFAULT_NODE_CONFIG.blockchain.chainId,
       wait: tx.wait,
     })
   })

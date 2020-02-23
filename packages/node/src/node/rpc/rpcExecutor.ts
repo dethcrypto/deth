@@ -10,11 +10,11 @@ type SafeBlock = NoNullProperties<RpcBlockResponse>
 // NOTE: we don't pass real blockOrTag value here but rather always use latest b/c it's not yet properly implemented
 export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
   return {
-    web3_clientVersion: () => `${ctx.options.chainName}/0.0.1`, // @todo real version here
-    net_version: () => ctx.options.chainId.toString(),
+    web3_clientVersion: () => ctx.cfg.blockchain.chainName,
+    net_version: () => ctx.cfg.blockchain.chainId.toString(),
 
     // eth
-    eth_chainId: () => numberToQuantity(ctx.options.chainId),
+    eth_chainId: () => numberToQuantity(ctx.cfg.blockchain.chainId),
     eth_gasPrice: () => ctx.chain.getGasPrice(),
     eth_getBalance: ([address, blockTag]) => {
       return ctx.chain.getBalance(address, 'latest')
