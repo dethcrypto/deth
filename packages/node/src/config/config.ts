@@ -18,6 +18,8 @@ export type NodeConfig = {
     chainName: string,
     clockSkew: number,
     autoMining: boolean,
+    skipNonceCheck: boolean,
+    skipBalanceCheck: boolean,
   },
   debugger: {
     abiFilesGlob?: string,
@@ -51,6 +53,8 @@ export const DEFAULT_NODE_CONFIG: NodeConfig = {
     chainName: 'deth/0.0.1', // todo real version here
     autoMining: true,
     clockSkew: 0,
+    skipNonceCheck: true,
+    skipBalanceCheck: false,
   },
   debugger: {
     abiFilesGlob: undefined,

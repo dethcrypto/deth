@@ -1,7 +1,7 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import { Transaction } from 'ethereumjs-tx'
 // eslint-disable-next-line no-restricted-imports
-import { RunTxResult } from 'ethereumjs-vm/dist/runTx'
+import { RunTxResult } from 'ethereumts-vm/dist/runTx'
 import { getNextBlock } from './getNextBlock'
 import { TestChainOptions } from '../TestChainOptions'
 
@@ -19,8 +19,8 @@ export async function runIsolatedTransaction (
     const result = await vm.runTx({
       block,
       tx: transaction,
-      skipNonce: true,
-      skipBalance: true,
+      skipNonce: options.skipNonceCheck,
+      skipBalance: options.skipBalanceCheck,
     })
     return result
   } finally {

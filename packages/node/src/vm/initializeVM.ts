@@ -1,4 +1,4 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import Common from 'ethereumjs-common'
 import Account from 'ethereumjs-account'
 import { toBuffer } from 'ethereumjs-util'

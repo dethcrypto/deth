@@ -1,4 +1,4 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import Block from 'ethereumjs-block'
 import { TestChainOptions } from '../TestChainOptions'
 

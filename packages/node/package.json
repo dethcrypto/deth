@@ -1,7 +1,15 @@
 {
   "name": "deth",
   "description": "Ethereum node focused on Developer Experience",
-  "keywords": ["ethereum", "node", "deth", "geth", "developer", "experience", "dx"],
+  "keywords": [
+    "ethereum",
+    "node",
+    "deth",
+    "geth",
+    "developer",
+    "experience",
+    "dx"
+  ],
   "version": "0.0.4",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
@@ -45,7 +53,7 @@
     "ethereumjs-common": "^1.4.0",
     "ethereumjs-tx": "^2.1.1",
     "ethereumjs-util": "^6.2.0",
-    "ethereumjs-vm": "^4.1.1",
+    "ethereumts-vm": "^4.1.3",
     "ethers": "^4.0.0",
     "express": "^4.17.1",
     "fp-ts": "^2.3.1",
