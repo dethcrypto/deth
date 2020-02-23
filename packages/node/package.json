@@ -2,7 +2,7 @@
   "name": "deth",
   "description": "Ethereum node focused on Developer Experience",
   "keywords": ["ethereum", "node", "deth", "geth", "developer", "experience", "dx"],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -11,7 +11,11 @@
     "node": ">=10.0.0"
   },
   "bin": "./dist/cjs/node/runner.js",
+  "files": [
+    "**/dist"
+  ],
   "scripts": {
+    "prepublishOnly": "yarn lint && yarn test && yarn build",
     "start": "ts-node ./src/node/runner.ts",
     "lint": "eslint --ext .ts src test",
     "lint:fix": "eslint --ext .ts --fix src test",
