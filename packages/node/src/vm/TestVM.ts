@@ -1,4 +1,4 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import Block from 'ethereumjs-block'
 import { BN, toBuffer } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
@@ -12,7 +12,7 @@ import { runIsolatedTransaction } from './runIsolatedTransaction'
 import { DethStateManger } from './storage/DethStateManger'
 import { DethBlockchain } from './storage/DethBlockchain'
 // eslint-disable-next-line
-import PStateManager from 'ethereumjs-vm/dist/state/promisified'
+import PStateManager from 'ethereumts-vm/dist/state/promisified'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
 import { SnapshotObject } from './storage/SnapshotObject'
@@ -23,7 +23,7 @@ interface VMSnapshot {
 }
 
 /**
- * TestVM is a wrapper around ethereumjs-vm. It provides a promise-based
+ * TestVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
  * interface and abstracts away weird ethereumjs specific details
  */
 export class TestVM {

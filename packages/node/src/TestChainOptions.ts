@@ -13,6 +13,8 @@ export interface TestChainOptions {
   chainName: string,
   clockSkew: number,
   autoMining: boolean,
+  skipNonceCheck: boolean,
+  skipBalanceCheck: boolean,
 
   accounts: {
     privateKeys: string[],

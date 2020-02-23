@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import { InterpreterStep } from 'ethereumjs-vm/dist/evm/interpreter'
+import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 import { bufferToHex } from 'ethereumjs-util'
 import { bufferToAddress } from '../primitives'
 import { DethLogger } from './Logger/DethLogger'

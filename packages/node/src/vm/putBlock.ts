@@ -1,4 +1,4 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import Block from 'ethereumjs-block'
 import { Transaction } from 'ethereumjs-tx'
 import { TestChainOptions } from '../TestChainOptions'
@@ -12,6 +12,8 @@ export async function putBlock (vm: VM, transactions: Transaction[], options: Te
     block,
     generate: true,
     skipBlockValidation: true,
+    skipNonce: options.skipNonceCheck,
+    skipBalance: options.skipBalanceCheck,
   })
   await new Promise((resolve, reject) => {
     vm.blockchain.putBlock(block, (err: unknown, block: Block) =>

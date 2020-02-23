@@ -15,9 +15,10 @@
 - state snapshots (`evm_snapshot`), time manipulation (`evm_increaseTime`), mining control (`evm_mine`)
 - print out decoded logs and calldata for all transactions (even reverted ones!)
 - display revert reasons
-- much faster (60%) than ganache
+- ignore nonce errors (perfect while working with Metamask 🦊)
+- much faster (60%) than Ganache
 
-**Note**: current features represent just a gist of what we want to accomplish.
+**Note**: current features represent just a gist of what we want to accomplish
 
 ![Demo](https://media.giphy.com/media/fADezF7gMqKszWXaSH/giphy.gif)
 
@@ -72,3 +73,7 @@ You can find defaults [here](https://github.com/ethereum-ts/deth/blob/master/pac
 - original source code (sol) awareness (source maps, memory layouts etc.)
 - Web interface (simple block explorer)
 - real debugger (via webinterface or directly in the IDE)
+
+## Architecture
+
+Currently it uses forked `ethereumjs-vm` as a virtual machine but we evaluate other designs (like writing our own VM). Our state manager and blockchain is entirely in memory, without usage of merkle patricia trees. Snapshots are implemented simply as deep copy which makes our snapshot mechanism much more reliable than one used in `Ganache`.

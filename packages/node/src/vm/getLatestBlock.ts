@@ -1,4 +1,4 @@
-import VM from 'ethereumjs-vm'
+import VM from 'ethereumts-vm'
 import Block from 'ethereumjs-block'
 
 export function getLatestBlock (vm: VM): Promise<Block> {
