@@ -12,7 +12,9 @@
   },
   "bin": "./dist/cjs/node/runner.js",
   "files": [
-    "**/dist"
+    "**/dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "prepublishOnly": "yarn lint && yarn test && yarn build",
