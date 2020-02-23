@@ -19,3 +19,9 @@
 
 __Note__: current features represent just a gist of what we want to accomplish.
 
+
+## Installation
+
+```
+npm install --save-dev deth
+```
