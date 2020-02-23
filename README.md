@@ -12,11 +12,14 @@
 ## Features
 
 - RPC support
-- state snapshots, time manipulation, mining control
+- state snapshots (`evm_snapshot`), time manipulation (`evm_increaseTime`), mining control (`evm_mine`)
 - print out decoded logs and calldata for all transactions (even reverted ones!)
 - display revert reasons
+- much faster (60%) than ganache
 
 **Note**: current features represent just a gist of what we want to accomplish.
+
+![Demo](https://media.giphy.com/media/fADezF7gMqKszWXaSH/giphy.gif)
 
 ## Installation
 
