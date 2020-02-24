@@ -2,7 +2,7 @@ import { RPCExecutorType } from './schema'
 import { NodeCtx } from '../ctx'
 import { RpcBlockResponse, toEthersTransaction } from '../../model'
 import { BadRequestHttpError } from '../errorHandler'
-import { makeHexData, numberToQuantity, quantityToNumber } from '../../primitives'
+import { makeHexData, numberToQuantity, quantityToNumber, makeAddress } from '../../primitives'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }
 type SafeBlock = NoNullProperties<RpcBlockResponse>
@@ -51,6 +51,9 @@ export const rpcExecutorFromCtx = (ctx: NodeCtx): RPCExecutorType => {
         return '0x00' as any
       }
       return result
+    },
+    eth_accounts: () => {
+      return ctx.walletManager.getWallets().map(w => makeAddress(w.address))
     },
 
     // ganache compatibility
