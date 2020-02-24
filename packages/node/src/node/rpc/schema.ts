@@ -129,6 +129,10 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([address, quantity, quantityOrTag]),
     returns: hexData,
   },
+  eth_accounts: {
+    parameters: t.undefined,
+    returns: t.array(address),
+  },
 
   // ganache compatibility
   // docs: https://github.com/trufflesuite/ganache-cli#custom-methods
