@@ -29,6 +29,20 @@ const blockInfo = t.type({
   uncles: t.array(hash),
 })
 
+// https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getfilterchanges
+const log = t.type({
+  address: address,
+  blockHash: hash,
+  blockNumber: quantity,
+  data: hexData,
+  logIndex: quantity,
+  removed: t.literal(false),
+  topics: t.array(hash),
+  transactionHash: hash,
+  transactionIndex: quantity,
+  // type: t.literal('mined'),
+})
+
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-31
 const txReceipt = t.type({
   transactionHash: hash,
@@ -40,7 +54,7 @@ const txReceipt = t.type({
   cumulativeGasUsed: quantity,
   gasUsed: quantity,
   contractAddress: undefinable(address),
-  logs: t.array(hexData), // @TODO types
+  logs: t.array(log),
   logsBloom: hexData,
   status: quantity,
 })

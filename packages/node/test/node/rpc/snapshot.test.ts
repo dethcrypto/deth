@@ -1,9 +1,7 @@
 import { expect } from 'chai'
-import { ContractFactory, Contract } from 'ethers'
 
-import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { NodeCtx } from '../../../src/node/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
+import { makeRpcCall, unwrapRpcResponse, runRpcHarness, deployCounterContract } from '../common'
 import { numberToQuantity } from '../../../src/primitives'
 
 describe('rpc -> snapshot', () => {
@@ -18,36 +16,14 @@ describe('rpc -> snapshot', () => {
 
     const snapshotId = unwrapRpcResponse(await makeRpcCall(app, 'evm_snapshot'))
 
-    const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
-    const { data } = await factory.getDeployTransaction(0)
-
-    const {
-      body: { result: txHash },
-    } = await makeRpcCall(app, 'eth_sendTransaction', [
-      {
-        data,
-        from: sender.address,
-        gas: numberToQuantity(5_000_000),
-        gasPrice: numberToQuantity(1_000_000_000),
-      },
-      'latest',
-    ])
-    const {
-      body: {
-        result: { contractAddress },
-      },
-    } = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
-
-    expect(contractAddress).to.be.a('string')
-
-    const contract = new Contract(contractAddress, COUNTER_ABI, sender)
+    const contract = await deployCounterContract(app, sender)
 
     const incrementCallData = contract.interface.functions.increment.encode([1])
     const incrementRequest = await makeRpcCall(app, 'eth_sendTransaction', [
       {
         data: incrementCallData,
         from: sender.address,
-        to: contractAddress,
+        to: contract.address,
         gas: numberToQuantity(5_000_000),
         gasPrice: numberToQuantity(1_000_000_000),
       },
@@ -61,7 +37,7 @@ describe('rpc -> snapshot', () => {
       {
         data: valueCallData,
         from: sender.address,
-        to: contractAddress,
+        to: contract.address,
         gas: numberToQuantity(5_000_000),
         gasPrice: numberToQuantity(1_000_000_000),
       },
