@@ -8,6 +8,9 @@ import { NodeCtx } from '../../src/node/ctx'
 import { AbiDecoder } from '../../src/debugger/AbiDecoder'
 import { mockFs } from '../fs/fs.mock'
 import { getConfigWithDefaults } from '../../src/config/config'
+import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { ContractFactory, Wallet, Contract } from 'ethers'
+import { numberToQuantity } from '../../src/primitives'
 
 export function makeRpcCall (
   app: Express.Application,
@@ -46,4 +49,30 @@ export async function runRpcHarness () {
     ctx,
     chain,
   }
+}
+
+export async function deployCounterContract (app: Express.Application, sender: Wallet): Promise<Contract> {
+  const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
+  const { data } = await factory.getDeployTransaction(0)
+
+  const {
+    body: { result: txHash },
+  } = await makeRpcCall(app, 'eth_sendTransaction', [
+    {
+      data,
+      from: sender.address,
+      gas: numberToQuantity(5_000_000),
+      gasPrice: numberToQuantity(1_000_000_000),
+    },
+    'latest',
+  ])
+  const {
+    body: {
+      result: { contractAddress },
+    },
+  } = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+
+  expect(contractAddress).to.be.a('string')
+
+  return new Contract(contractAddress, COUNTER_ABI, sender)
 }

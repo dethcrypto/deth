@@ -10,17 +10,11 @@ import {
   bufferToHexData,
 } from '../primitives'
 import BN from 'bn.js'
-import {
-  RpcTransactionResponse,
-  RpcLogObject,
-  RpcTransactionReceipt,
-} from '../model'
+import { RpcTransactionResponse, RpcLogObject, RpcTransactionReceipt } from '../model'
+// eslint-disable-next-line
+import { RunTxResult } from 'ethereumts-vm/dist/runTx'
 
-export function getReceiptsAndResponses (
-  block: Block,
-  transactions: Transaction[],
-  results: any[], // eslint-disable-line @typescript-eslint/no-explicit-any
-) {
+export function getReceiptsAndResponses (block: Block, transactions: Transaction[], results: RunTxResult[]) {
   const blockHash = bufferToHash(block.hash())
   const blockNumber = bufferToQuantity(block.header.number)
 
@@ -60,8 +54,21 @@ export function getReceiptsAndResponses (
       v: bufferToQuantity(tx.v),
     })
 
-    // result.execResult.logs // TODO: correct format
-    const logs: RpcLogObject[] = []
+    const logs: RpcLogObject[] = (result.execResult.logs || []).map((rawData, index: number) => {
+      const [_address, _topics, _data] = rawData
+
+      return {
+        removed: false,
+        logIndex: numberToQuantity(index),
+        blockNumber,
+        transactionIndex,
+        transactionHash: hash,
+        blockHash,
+        data: bufferToHexData(_data),
+        address: bufferToAddress(_address),
+        topics: _topics.map(bufferToHash),
+      }
+    })
 
     receipts.push({
       blockHash,

@@ -1,14 +1,14 @@
 import { expect } from 'chai'
-import { utils } from 'ethers'
 
 import { NodeCtx } from '../../../src/node/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
+import { makeRpcCall, unwrapRpcResponse, runRpcHarness, deployCounterContract } from '../common'
+import { numberToQuantity } from '../../../src/primitives'
 
 describe('rpc -> getTransactionReceipt', () => {
   let app: Express.Application
   let ctx: NodeCtx
   beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
+    ;({ app, ctx } = await runRpcHarness())
   })
 
   it('supports eth_getTransactionReceipt for not existing txs', async () => {
@@ -22,33 +22,44 @@ describe('rpc -> getTransactionReceipt', () => {
 
   it('supports eth_getTransactionReceipt for existing txs', async () => {
     const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
 
-    const value = utils.parseEther('3.1415')
-    const signedTx = await sender.sign({
-      to: recipient.address,
-      gasLimit: 1000000,
-      gasPrice: 1,
-      nonce: 0,
-      value,
-    })
+    const contract = await deployCounterContract(app, sender)
 
-    const txHashResponse = unwrapRpcResponse(await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]))
+    const incrementCallData = contract.interface.functions.increment.encode([1])
+    const txReceipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_sendTransaction', [
+        {
+          data: incrementCallData,
+          from: sender.address,
+          to: contract.address,
+          gas: numberToQuantity(5_000_000),
+          gasPrice: numberToQuantity(1_000_000_000),
+        },
+        'latest',
+      ]),
+    )
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHashResponse])
+    const res = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txReceipt]))
 
-    expect(res).to.have.status(200)
-    expect(res.body.result).to.containSubset({
-      blockNumber: '0x1',
+    expect(res).to.containSubset({
+      blockNumber: '0x2',
       contractAddress: null,
-      cumulativeGasUsed: '0x5208',
+      cumulativeGasUsed: '0xa7f0',
       from: sender.address.toLowerCase(),
-      gasUsed: '0x5208',
-      logs: [],
+      gasUsed: '0xa7f0',
+      logs: [
+        {
+          blockNumber: '0x2',
+          logIndex: '0x0',
+          transactionIndex: '0x0',
+          data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+          topics: ['0x51af157c2eee40f68107a47a49c32fbbeb0a3c9e5cd37aa56e88e6be92368a81'],
+        },
+      ],
       logsBloom:
-        '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+        '0x00000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000200000000000000000000000000000000',
       status: '0x1',
-      to: recipient.address.toLowerCase(),
+      to: contract.address.toLowerCase(),
       transactionIndex: '0x0',
     })
   })
