@@ -10,13 +10,13 @@ import {
   toFakeTransaction,
   RpcRichBlockResponse,
 } from './model'
-import { TestVM } from './vm/TestVM'
-import { TestChainOptions, getTestChainOptionsWithDefaults } from './TestChainOptions'
+import { SaneVM } from './vm/SaneVM'
+import { ChainOptions, getChainOptionsWithDefaults } from './ChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
-import { SnapshotObject } from './vm/storage/SnapshotObject'
+import { Snapshot } from './utils/Snapshot'
 import { cloneDeep } from 'lodash'
 import { Transaction } from 'ethereumjs-tx'
-import { EventEmitter } from 'fbemitter'
+import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 
@@ -31,40 +31,39 @@ export interface TransactionEvent {
  * It is separate from the provider so that there can be many provider instances
  * using the same TestChain instance.
  */
-export class TestChain {
-  private tvm: TestVM
-  private events = new EventEmitter()
-  options: SnapshotObject<TestChainOptions>
+export class Chain {
+  private vm: SaneVM
+  private vmStepEvents = new EventEmitter<InterpreterStep>()
+  private transactionEvents = new EventEmitter<TransactionEvent>()
+  options: Snapshot<ChainOptions>
 
-  constructor (options?: Partial<TestChainOptions>) {
-    this.options = new SnapshotObject(getTestChainOptionsWithDefaults(options), cloneDeep)
-    this.tvm = new TestVM(this.options.value)
+  constructor (options?: Partial<ChainOptions>) {
+    this.options = new Snapshot(getChainOptionsWithDefaults(options), cloneDeep)
+    this.vm = new SaneVM(this.options.value)
   }
 
   async init () {
-    await this.tvm.init()
+    await this.vm.init()
 
-    this.tvm.installStepHook(runState => this.events.emit('vmstep', runState))
+    this.vm.installStepHook(runState => this.vmStepEvents.emit(runState))
   }
 
   onVmStep (listener: (runState: InterpreterStep) => void) {
-    const subscription = this.events.addListener('vmstep', listener)
-    return () => subscription.remove()
+    return this.vmStepEvents.addListener(listener)
   }
 
   onTransaction (listener: (event: TransactionEvent) => void) {
-    const subscription = this.events.addListener('transaction', listener)
-    return () => subscription.remove()
+    return this.transactionEvents.addListener(listener)
   }
 
   makeSnapshot (): number {
-    this.options.makeSnapshot()
-    return this.tvm.makeSnapshot()
+    this.options.save()
+    return this.vm.makeSnapshot()
   }
 
   revertToSnapshot (id: number) {
     this.options.revert(id)
-    return this.tvm.revertToSnapshot(id)
+    return this.vm.revertToSnapshot(id)
   }
 
   skewClock (delta: number) {
@@ -80,11 +79,11 @@ export class TestChain {
   }
 
   async mineBlock () {
-    return this.tvm.mineBlock(this.options.value.clockSkew)
+    return this.vm.mineBlock(this.options.value.clockSkew)
   }
 
   async getBlockNumber (): Promise<Quantity> {
-    return this.tvm.getBlockNumber()
+    return this.vm.getBlockNumber()
   }
 
   getGasPrice (): Quantity {
@@ -95,7 +94,7 @@ export class TestChain {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getBalance', blockTag, ['latest'])
     }
-    return this.tvm.getBalance(address)
+    return this.vm.getBalance(address)
   }
 
   async getTransactionCount (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
@@ -103,27 +102,27 @@ export class TestChain {
       throw unsupportedBlockTag('getTransactionCount', blockTag, ['latest', 'pending'])
     }
     // TODO: handle pending better
-    return this.tvm.getNonce(address)
+    return this.vm.getNonce(address)
   }
 
   async getCode (address: Address, blockTag: Quantity | Tag): Promise<HexData> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
-    return this.tvm.getCode(address)
+    return this.vm.getCode(address)
   }
 
   async getStorageAt (address: Address, position: Quantity, blockTag: Quantity | Tag): Promise<HexData> {
     // @TODO: always assumes blockTag === latest
 
-    return bufferToHexData(this.tvm.state.value.stateManger.getContractStorage(address, position))
+    return bufferToHexData(this.vm.state.value.stateManger.getContractStorage(address, position))
   }
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
-    this.events.emit('transaction', this.parseTx(signedTransaction))
-    const hash = await this.tvm.addPendingTransaction(signedTransaction)
+    this.transactionEvents.emit(this.parseTx(signedTransaction))
+    const hash = await this.vm.addPendingTransaction(signedTransaction)
     if (this.options.value.autoMining) {
-      await this.tvm.mineBlock(this.options.value.clockSkew)
+      await this.vm.mineBlock(this.options.value.clockSkew)
     }
     return hash
   }
@@ -136,7 +135,7 @@ export class TestChain {
       ...transactionRequest,
       gas: bnToQuantity(this.options.value.blockGasLimit),
     })
-    const result = await this.tvm.runIsolatedTransaction(tx, this.options.value.clockSkew)
+    const result = await this.vm.runIsolatedTransaction(tx, this.options.value.clockSkew)
     // TODO: handle errors
     return bufferToHexData(result.execResult.returnValue)
   }
@@ -147,7 +146,7 @@ export class TestChain {
       transactionRequest.gas = bnToQuantity(this.options.value.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
-    const result = await this.tvm.runIsolatedTransaction(tx, this.options.value.clockSkew)
+    const result = await this.vm.runIsolatedTransaction(tx, this.options.value.clockSkew)
     // TODO: handle errors
     return bnToQuantity(result.gasUsed)
   }
@@ -161,7 +160,7 @@ export class TestChain {
     }
 
     const block =
-      blockTagOrHash === 'latest' ? await this.tvm.getLatestBlock() : await this.tvm.getBlock(blockTagOrHash)
+      blockTagOrHash === 'latest' ? await this.vm.getLatestBlock() : await this.vm.getBlock(blockTagOrHash)
 
     if (!includeTransactions) {
       return block
@@ -171,7 +170,7 @@ export class TestChain {
   }
 
   getTransaction (transactionHash: Hash): RpcTransactionResponse {
-    const transaction = this.tvm.getTransaction(transactionHash)
+    const transaction = this.vm.getTransaction(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
     }
@@ -179,7 +178,7 @@ export class TestChain {
   }
 
   getTransactionReceipt (transactionHash: Hash): RpcTransactionReceipt | undefined {
-    return this.tvm.getTransactionReceipt(transactionHash)
+    return this.vm.getTransactionReceipt(transactionHash)
   }
 
   async getLogs (filter: FilterRequest): Promise<RpcLogObject[]> {
@@ -187,7 +186,7 @@ export class TestChain {
   }
 
   private parseTx (signedTransaction: HexData): TransactionEvent {
-    const tx = new Transaction(signedTransaction, { common: this.tvm.vm._common })
+    const tx = new Transaction(signedTransaction, { common: this.vm.vm._common })
 
     return {
       to: tx.to?.length > 0 ? bufferToAddress(tx.to) : undefined,

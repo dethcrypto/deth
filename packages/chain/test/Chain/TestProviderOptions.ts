@@ -1,6 +1,6 @@
 import { Hardfork } from '../../src/model'
 import { utils } from 'ethers'
-import { TestChainOptions, getTestChainOptionsWithDefaults } from '../../src/TestChainOptions'
+import { ChainOptions, getChainOptionsWithDefaults } from '../../src/ChainOptions'
 import BN from 'bn.js'
 import { DeepPartial } from 'ts-essentials'
 
@@ -13,8 +13,8 @@ export interface TestProviderOptions {
   coinbaseAddress?: string,
 }
 
-export function toTestChainOptions (options: TestProviderOptions = {}): TestChainOptions {
-  const result: DeepPartial<TestChainOptions> = {}
+export function toTestChainOptions (options: TestProviderOptions = {}): ChainOptions {
+  const result: DeepPartial<ChainOptions> = {}
 
   if (options.hardfork) {
     result.hardfork = options.hardfork
@@ -37,7 +37,7 @@ export function toTestChainOptions (options: TestProviderOptions = {}): TestChai
     result.coinbaseAddress = options.coinbaseAddress
   }
 
-  return getTestChainOptionsWithDefaults(result)
+  return getChainOptionsWithDefaults(result)
 }
 
 function toBN (bigNumber: utils.BigNumber) {

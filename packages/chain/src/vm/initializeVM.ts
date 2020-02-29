@@ -4,7 +4,7 @@ import Account from 'ethereumjs-account'
 import { toBuffer } from 'ethereumjs-util'
 import { Wallet } from 'ethers'
 import BN from 'bn.js'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 import { putGenesisBlock } from './putGenesisBlock'
 import { DethBlockchain } from './storage/DethBlockchain'
 import { DethStateManger } from './storage/DethStateManger'
@@ -13,7 +13,7 @@ import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
 
 export async function initializeVM (
-  options: TestChainOptions,
+  options: ChainOptions,
   stateManager?: DethStateManger,
   blockchain?: DethBlockchain,
 ) {
@@ -37,7 +37,7 @@ export async function initializeVM (
 }
 
 // @TODO extract this. VM should not be aware of any private keys etc. TestChain should provide data for genesis block
-async function initAccounts (vm: VM, options: TestChainOptions) {
+async function initAccounts (vm: VM, options: ChainOptions) {
   const psm = vm.pStateManager
   const balance = new BN(options.accounts.initialBalance.toString()).toBuffer()
   for (const privateKey of options.accounts.privateKeys) {

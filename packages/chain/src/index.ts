@@ -1,3 +1,3 @@
 export * from './model'
-export * from './TestChain'
-export * from './TestChainOptions'
+export * from './Chain'
+export * from './ChainOptions'

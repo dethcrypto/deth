@@ -3,7 +3,7 @@ import Block from 'ethereumjs-block'
 import { BN, toBuffer } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
 import { RpcTransactionReceipt, RpcTransactionResponse, RpcBlockResponse, toBlockResponse } from '../model'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData, bufferToHexData } from '../model'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
@@ -17,7 +17,7 @@ import PStateManager from 'ethereumts-vm/dist/state/promisified'
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
-import { SnapshotObject } from './storage/SnapshotObject'
+import { Snapshot } from '../utils/Snapshot'
 
 interface VMSnapshot {
   blockchain: DethBlockchain,
@@ -25,19 +25,19 @@ interface VMSnapshot {
 }
 
 /**
- * TestVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
+ * SaneVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
  * interface and abstracts away weird ethereumjs specific details
  */
-export class TestVM {
+export class SaneVM {
   vm!: VM
-  state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
+  state: Snapshot<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
   transactions: Map<Hash, RpcTransactionResponse> = new Map()
   receipts: Map<Hash, RpcTransactionReceipt> = new Map()
   snapshots: VMSnapshot[] = []
 
-  constructor (private options: TestChainOptions) {
-    this.state = new SnapshotObject({
+  constructor (private options: ChainOptions) {
+    this.state = new Snapshot({
       stateManger: new DethStateManger(),
       blockchain: new DethBlockchain(),
     }, (t) => ({
@@ -55,7 +55,7 @@ export class TestVM {
   }
 
   makeSnapshot (): number {
-    return this.state.makeSnapshot()
+    return this.state.save()
   }
 
   revertToSnapshot (id: number) {

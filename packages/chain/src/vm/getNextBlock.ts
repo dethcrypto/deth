@@ -3,13 +3,13 @@ import VM from 'ethereumts-vm'
 import { Transaction } from 'ethereumjs-tx'
 import BN from 'bn.js'
 import { toBuffer } from 'ethereumjs-util'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 import { getLatestBlock } from './getLatestBlock'
 
 export async function getNextBlock (
   vm: VM,
   transactions: Transaction[],
-  options: TestChainOptions,
+  options: ChainOptions,
   clockSkew: number,
 ): Promise<Block> {
   const block = await getEmptyNextBlock(vm, options, clockSkew)
@@ -17,7 +17,7 @@ export async function getNextBlock (
   return block
 }
 
-async function getEmptyNextBlock (vm: VM, options: TestChainOptions, clockSkew: number) {
+async function getEmptyNextBlock (vm: VM, options: ChainOptions, clockSkew: number) {
   const latestBlock = await getLatestBlock(vm)
 
   const header: BlockHeaderData = {
