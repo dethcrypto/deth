@@ -2,9 +2,7 @@ import { assert, Dictionary } from 'ts-essentials'
 import { Mutex } from 'async-mutex'
 import * as t from 'io-ts'
 import { isRight, isLeft } from 'fp-ts/lib/Either'
-import { responseOf } from '@restless/restless'
-import { IOTSError, NotFoundHttpError } from '../errorHandler'
-import { Request } from 'express'
+import { IOTSError, NotFoundHttpError } from '../middleware/errorHandler'
 import debug from 'debug'
 
 const d = debug('deth:rpc')
@@ -21,66 +19,66 @@ const jsonRpcEnvelope = t.type({
   params: t.any,
 })
 
-export function sanitizeRPCEnvelope () {
-  return (_data: any, req: Request) => {
-    const result = jsonRpcEnvelope.decode(req.body)
+type RpcEnvelope = t.TypeOf<typeof jsonRpcEnvelope>
 
-    if (isLeft(result)) {
-      throw new IOTSError(result)
-    }
+export async function sanitizeRPCEnvelope (body: unknown) {
+  const result = jsonRpcEnvelope.decode(body)
+  if (isLeft(result)) {
+    throw new IOTSError(result)
   }
+  return result.right
 }
 
-export function sanitizeRPC<T extends t.Any> (schema: RPCSchema): (data: unknown, req: Request) => t.OutputOf<T> {
-  return (_data, req) => {
-    const m = req.body.method
-    const rpcDescription = schema[m]
-    d(`--> RPC call ${m}`)
-    d(`--> RPC call data ${JSON.stringify(req.body.params)}`)
-    if (!rpcDescription) {
-      throw new NotFoundHttpError([`RPC method: ${m} called with ${JSON.stringify(req.body.params)} not found`])
-    }
-    const params = req.body.params
-    // we need to normalize empty arrays to undefineds
-    const normalizedParams = Array.isArray(params) && params.length === 0 ? undefined : params
-
-    const res = rpcDescription.parameters.decode(normalizedParams)
-
-    if (isRight(res)) {
-      return res.right
-    }
-
-    throw new IOTSError(res)
+export function sanitizeRPC<T extends t.Any> (
+  schema: RPCSchema,
+  { method, params }: RpcEnvelope,
+): t.OutputOf<T> {
+  const rpcDescription = schema[method]
+  d(`--> RPC call ${method}`)
+  d(`--> RPC call data ${JSON.stringify(params)}`)
+  if (!rpcDescription) {
+    throw new NotFoundHttpError([
+      `RPC method: ${method} called with ${JSON.stringify(params)} not found`,
+    ])
   }
+  // we need to normalize empty arrays to undefineds
+  const normalizedParams = Array.isArray(params) && params.length === 0 ? undefined : params
+
+  const res = rpcDescription.parameters.decode(normalizedParams)
+
+  if (isRight(res)) {
+    return res.right
+  }
+
+  throw new IOTSError(res)
 }
 
-export function executeRPC (executors: RPCExecutors) {
-  return async (data: unknown, req: Request) => {
-    const method = req.body.method
+export function executeRPC (
+  executors: RPCExecutors,
+  method: string,
+  params: unknown,
+) {
+  const executor = executors[method]
+  assert(executor, `Couldn't find executor for ${method}`)
 
-    const executor = executors[method]
-    assert(executor, `Couldn't find executor for ${method}`)
-
-    // @todo: NOTE currently we run RPC calls sequentially. This limits performance but solves concurrency issues.
-    return executionMutex.runExclusive(async () => {
-      return executor(data)
-    })
-  }
+  // @todo: NOTE currently we run RPC calls sequentially. This limits performance but solves concurrency issues.
+  return executionMutex.runExclusive(async () => {
+    return executor(params)
+  })
 }
 
-export function respondRPC (schema: RPCSchema) {
-  return (data: unknown, req: Request) => {
-    const method = req.body.method
-    const rpcDescription = schema[method]
-    d(`<-- RES: ${JSON.stringify(data)}`)
-    assert(rpcDescription, `Couldn't find rpc description for ${method}`)
+export function respondRPC (
+  schema: RPCSchema,
+  { method, id }: RpcEnvelope,
+  result: unknown,
+) {
+  const rpcDescription = schema[method]
+  d(`<-- RES: ${JSON.stringify(result)}`)
+  assert(rpcDescription, `Couldn't find rpc description for ${method}`)
 
-    const result = rpcDescription.returns.encode(data)
-
-    return responseOf({
-      jsonrpc: '2.0',
-      id: req.body.id,
-      result: result,
-    })
+  return {
+    jsonrpc: '2.0',
+    id,
+    result: rpcDescription.returns.encode(result),
   }
 }

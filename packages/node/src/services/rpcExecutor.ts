@@ -9,7 +9,7 @@ import {
   ChainOptions,
   Chain,
 } from '@deth/chain'
-import { BadRequestHttpError } from '../errorHandler'
+import { BadRequestHttpError } from '../middleware/errorHandler'
 import { WalletManager } from './WalletManager'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }

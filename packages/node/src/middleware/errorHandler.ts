@@ -1,31 +1,35 @@
-import { Request, ErrorRequestHandler } from 'express'
+import { Context, Next } from 'koa'
 import * as t from 'io-ts'
 import { PathReporter } from 'io-ts/lib/PathReporter'
 import { Left } from 'fp-ts/lib/Either'
 
-export const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
-  let httpError: HttpError
-  if (err instanceof IOTSError) {
-    httpError = new BadRequestHttpError(err.details)
-  } else if (err instanceof HttpError) {
-    httpError = err
-  } else {
-    httpError = new InternalHttpError()
-  }
+export async function errorHandler (ctx: Context, next: Next) {
+  try {
+    await next()
+  } catch (error) {
+    let httpError: HttpError
+    if (error instanceof IOTSError) {
+      httpError = new BadRequestHttpError(error.details)
+    } else if (error instanceof HttpError) {
+      httpError = error
+    } else {
+      httpError = new InternalHttpError()
+    }
 
-  if (httpError instanceof InternalHttpError) {
-    console.error('Internal error occured: ', err)
-  }
+    if (httpError instanceof InternalHttpError) {
+      console.error('Internal error occured: ', error)
+    }
 
-  console.error(`<-- ERROR: ${httpError.code} - ${httpError.message} (${httpError.details})`)
+    console.error(`<-- ERROR: ${httpError.code} - ${httpError.message} (${httpError.details})`)
 
-  const isRPC = req.method === 'POST' && req.url === '/'
-  if (isRPC) {
-    res.status(httpError.code)
-    res.json(httpErrorToRpcErrorPayload(req, httpError))
-  } else {
-    res.status(httpError.code)
-    res.json(httpError.toBody())
+    const isRPC = ctx.method === 'POST' && ctx.url === '/'
+    if (isRPC) {
+      ctx.status = httpError.code
+      ctx.body = httpErrorToRpcErrorPayload(ctx, httpError)
+    } else {
+      ctx.status = httpError.code
+      ctx.body = httpError.toBody()
+    }
   }
 }
 
@@ -88,10 +92,10 @@ function httpErrorToRpcStatus (err: HttpError): number {
   }
 }
 
-function httpErrorToRpcErrorPayload (req: Request, err: HttpError): object {
+function httpErrorToRpcErrorPayload (ctx: Context, err: HttpError): object {
   return {
     jsonrpc: '2.0',
-    id: req.body.id ?? null,
+    id: ctx.request.body.id ?? null,
     error: {
       code: httpErrorToRpcStatus(err),
       message: err.message,

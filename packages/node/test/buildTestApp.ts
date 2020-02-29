@@ -3,9 +3,9 @@ import { createServices, initServices, Services } from '../src/services'
 import { mockFs } from './services/fs/fs.mock'
 import { NoopLogger } from './services/Logger/NoopLogger'
 import { getConfigWithDefaults, Config } from '../src/config/config'
-import { Application } from 'express'
+import Koa from 'koa'
 
-export interface TestApp extends Application {
+export interface TestApp extends Koa {
   services: Services,
   config: Config,
 }

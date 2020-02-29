@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 
-import { makeRpcCall, unwrapRpcResponse } from '../common'
-import { buildTestApp } from '../buildTestApp'
+import { makeRpcCall, unwrapRpcResponse } from '../../common'
+import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity, quantityToNumber } from '@deth/chain'
 import sinon from 'sinon'
 

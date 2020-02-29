@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { ContractFactory, Contract } from 'ethers'
 
-import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
-import { makeRpcCall } from '../common'
-import { buildTestApp } from '../buildTestApp'
+import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
+import { makeRpcCall } from '../../common'
+import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> call', () => {

@@ -1,40 +1,23 @@
+import Koa from 'koa'
+import koaBody from 'koa-body'
+
 import { Services } from './services'
 import { Config } from './config'
-import express from 'express'
-import bodyParser from 'body-parser'
-import { asyncHandler } from '@restless/restless'
-import { NotFoundHttpError, errorHandler } from './errorHandler'
 
-// TODO: move rpc stuff elsewhere
-import { sanitizeRPCEnvelope, sanitizeRPC, executeRPC, respondRPC } from './rpc/middlewares'
-import { rpcCommandsDescription } from './rpc/schema'
+import { errorHandler } from './middleware/errorHandler'
+import { rpcRouter } from './middleware/rpcRouter'
+import { healthRouter } from './middleware/healthRouter'
+import { notFoundRouter } from './middleware/notFoundRouter'
 
 export function buildApp (services: Services, config: Config) {
-  const app = express()
+  const app = new Koa()
 
-  app.use(bodyParser.json({ type: '*/*' }))
-
-  app.post(
-    '/',
-    asyncHandler(
-      sanitizeRPCEnvelope(),
-      sanitizeRPC(rpcCommandsDescription),
-      executeRPC(services.rpcExecutor),
-      respondRPC(rpcCommandsDescription),
-    ),
-  )
-
-  app.use('/health', (req, res) => {
-    res.status(200).json({
-      status: 'OK',
-    })
-  })
-
-  app.use('*', (_req, _res) => {
-    throw new NotFoundHttpError()
-  })
+  app.use(koaBody())
 
   app.use(errorHandler)
+  app.use(rpcRouter(services.rpcExecutor).routes())
+  app.use(healthRouter().routes())
+  app.use(notFoundRouter().routes())
 
   return app
 }

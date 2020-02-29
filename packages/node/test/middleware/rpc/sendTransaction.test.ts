@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 
-import { makeRpcCall } from '../common'
-import { buildTestApp } from '../buildTestApp'
+import { makeRpcCall } from '../../common'
+import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> sendTransaction', () => {
