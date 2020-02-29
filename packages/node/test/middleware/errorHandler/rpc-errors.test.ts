@@ -1,6 +1,6 @@
 import { request, expect } from 'chai'
-import { makeRpcCall } from './common'
-import { buildTestApp } from './buildTestApp'
+import { makeRpcCall } from '../rpc/common'
+import { buildTestApp } from '../../buildTestApp'
 
 describe('RPC/errors', () => {
   it('throws error on not existing method calls', async () => {

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 
-import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from '../common'
-import { buildTestApp } from '../buildTestApp'
+import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from './common'
+import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> snapshot', () => {

@@ -10,7 +10,7 @@ export interface TestApp extends Application {
   config: Config,
 }
 
-export async function buildTestApp () {
+export async function buildTestApp (): Promise<TestApp> {
   const config = getConfigWithDefaults()
   const services = createServices(config, {
     fileSystem: mockFs(),
@@ -19,9 +19,6 @@ export async function buildTestApp () {
 
   await initServices(services, config)
 
-  const app = buildApp(services, config) as unknown as TestApp
-  app.services = services
-  app.config = config
-
-  return app
+  const app = buildApp(services, config)
+  return Object.assign(app, { services, config })
 }

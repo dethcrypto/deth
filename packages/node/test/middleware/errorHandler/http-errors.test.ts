@@ -1,5 +1,5 @@
 import { request, expect } from 'chai'
-import { buildTestApp } from './buildTestApp'
+import { buildTestApp } from '../../buildTestApp'
 
 describe('HTTP/errors', () => {
   it('throws error when calling non existing endpoints', async () => {

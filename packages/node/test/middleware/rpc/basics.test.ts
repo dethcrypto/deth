@@ -1,8 +1,8 @@
 import { expect, request } from 'chai'
 
-import { makeRpcCall } from '../common'
-import { buildTestApp } from '../buildTestApp'
-import { DEFAULT_CONFIG } from '../../src/config/config'
+import { makeRpcCall } from './common'
+import { buildTestApp } from '../../buildTestApp'
+import { DEFAULT_CONFIG } from '../../../src/config/config'
 
 describe('rpc -> basics', () => {
   it('supports json envelope with ids as numbers', async () => {
