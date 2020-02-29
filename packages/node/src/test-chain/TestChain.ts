@@ -13,11 +13,18 @@ import {
 import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getTestChainOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
-import { eventLogger, revertLogger } from '../debugger/stepsLoggers'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
 import { cloneDeep } from 'lodash'
 import { Transaction } from 'ethereumjs-tx'
-import { DethLogger } from '../debugger/Logger/DethLogger'
+import { EventEmitter } from 'fbemitter'
+// eslint-disable-next-line no-restricted-imports
+import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
+
+export interface TransactionEvent {
+  to?: Address,
+  from: Address,
+  data?: HexData,
+}
 
 /**
  * TestChain wraps TestVM and provides an API suitable for use by a provider.
@@ -26,9 +33,10 @@ import { DethLogger } from '../debugger/Logger/DethLogger'
  */
 export class TestChain {
   private tvm: TestVM
+  private events = new EventEmitter()
   options: SnapshotObject<TestChainOptions>
 
-  constructor (private logger: DethLogger, options?: Partial<TestChainOptions>) {
+  constructor (options?: Partial<TestChainOptions>) {
     this.options = new SnapshotObject(getTestChainOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
@@ -36,8 +44,17 @@ export class TestChain {
   async init () {
     await this.tvm.init()
 
-    this.tvm.installStepHook(eventLogger(this.logger))
-    this.tvm.installStepHook(revertLogger(this.logger))
+    this.tvm.installStepHook(runState => this.events.emit('vmstep', runState))
+  }
+
+  onVmStep (listener: (runState: InterpreterStep) => void) {
+    const subscription = this.events.addListener('vmstep', listener)
+    return () => subscription.remove()
+  }
+
+  onTransaction (listener: (event: TransactionEvent) => void) {
+    const subscription = this.events.addListener('transaction', listener)
+    return () => subscription.remove()
   }
 
   makeSnapshot (): number {
@@ -103,7 +120,7 @@ export class TestChain {
   }
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
-    this.logger.logTransaction(this.parseTx(signedTransaction))
+    this.events.emit('transaction', this.parseTx(signedTransaction))
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
     if (this.options.value.autoMining) {
       await this.tvm.mineBlock(this.options.value.clockSkew)
@@ -169,7 +186,7 @@ export class TestChain {
     throw unsupportedOperation('getLogs')
   }
 
-  private parseTx (signedTransaction: HexData) {
+  private parseTx (signedTransaction: HexData): TransactionEvent {
     const tx = new Transaction(signedTransaction, { common: this.tvm.vm._common })
 
     return {

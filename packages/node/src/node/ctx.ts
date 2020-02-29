@@ -6,6 +6,7 @@ import { CliLogger } from '../debugger/Logger/CliLogger'
 import { DethLogger } from '../debugger/Logger/DethLogger'
 import { NodeConfig, getConfigWithDefaults } from '../config/config'
 import { getTestChainOptionsFromConfig } from '../test-chain/TestChainOptions'
+import { eventLogger, revertLogger } from '../debugger/stepsLoggers'
 
 export interface NodeCtx {
   chain: TestChain,
@@ -24,9 +25,11 @@ export async function makeDefaultCtx (_config: NodeConfig = getConfigWithDefault
 
   const logger = new CliLogger(abiDecoder)
 
-  const chain = new TestChain(logger, getTestChainOptionsFromConfig(config))
-
+  const chain = new TestChain(getTestChainOptionsFromConfig(config))
   await chain.init()
+  chain.onVmStep(eventLogger(logger))
+  chain.onVmStep(revertLogger(logger))
+  chain.onTransaction(tx => logger.logTransaction(tx))
 
   return {
     chain,

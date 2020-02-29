@@ -11,8 +11,10 @@ import { putBlock } from './putBlock'
 import { runIsolatedTransaction } from './runIsolatedTransaction'
 import { DethStateManger } from './storage/DethStateManger'
 import { DethBlockchain } from './storage/DethBlockchain'
-// eslint-disable-next-line
+// eslint-disable-next-line no-restricted-imports
 import PStateManager from 'ethereumts-vm/dist/state/promisified'
+// eslint-disable-next-line no-restricted-imports
+import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
 import { SnapshotObject } from './storage/SnapshotObject'
@@ -48,9 +50,8 @@ export class TestVM {
     this.vm = await initializeVM(this.options, this.state.value.stateManger, this.state.value.blockchain)
   }
 
-  // @todo this requires better typings (whole step hooks mechanism)
-  installStepHook (hook: Function) {
-    this.vm.on('step', hook)
+  installStepHook (listener: (runState: InterpreterStep) => void) {
+    this.vm.on('step', listener)
   }
 
   makeSnapshot (): number {
