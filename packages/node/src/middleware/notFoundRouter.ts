@@ -5,7 +5,7 @@ export function notFoundRouter () {
   const router = new Router()
 
   router.get('*', async () => {
-    new NotFoundHttpError()
+    throw new NotFoundHttpError()
   })
 
   return router
