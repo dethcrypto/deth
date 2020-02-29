@@ -6,7 +6,7 @@ import { createTestProvider } from '../../testutils'
 describe('TestProvider.sendTransaction', () => {
   it('can send a simple transfer', async () => {
     const provider = await createTestProvider()
-    const [sender, recipient] = provider.walletManager.getWallets()
+    const [sender, recipient] = provider.getWallets()
 
     const response = await sender.sendTransaction({
       to: recipient.address,
@@ -18,7 +18,7 @@ describe('TestProvider.sendTransaction', () => {
 
   it('can deploy a contract', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const tx = factory.getDeployTransaction(0)
@@ -31,7 +31,7 @@ describe('TestProvider.sendTransaction', () => {
 
   it('can call a contract method', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -47,7 +47,7 @@ describe('TestProvider.sendTransaction', () => {
 
   it('can call a contract method that reverts', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)

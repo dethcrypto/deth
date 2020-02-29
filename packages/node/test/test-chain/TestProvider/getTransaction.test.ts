@@ -7,7 +7,7 @@ import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
     const provider = await createTestProvider()
-    const [sender, recipient] = provider.walletManager.getWallets()
+    const [sender, recipient] = provider.getWallets()
 
     const value = utils.parseEther('3.1415')
     const response = await sender.sendTransaction({
@@ -44,7 +44,7 @@ describe('TestProvider.getTransaction', () => {
 
   it('can return a contract creation', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -59,7 +59,7 @@ describe('TestProvider.getTransaction', () => {
 
   it('can return an old transaction', async () => {
     const provider = await createTestProvider()
-    const [sender, recipient] = provider.walletManager.getWallets()
+    const [sender, recipient] = provider.getWallets()
 
     const value = utils.parseEther('3.1415')
     const response = await sender.sendTransaction({

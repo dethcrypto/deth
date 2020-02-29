@@ -1,5 +1,5 @@
 import { TestChain } from '../test-chain/TestChain'
-import { WalletManager } from '../test-chain/WalletManager'
+import { WalletManager } from '../WalletManager'
 import { RealFileSystem } from '../fs/RealFileSystem'
 import { AbiDecoder } from '../debugger/AbiDecoder'
 import { CliLogger } from '../debugger/Logger/CliLogger'

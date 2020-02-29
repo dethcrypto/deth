@@ -1,7 +1,7 @@
 import { request, expect } from 'chai'
 
 import { TestChain } from '../../src/test-chain/TestChain'
-import { WalletManager } from '../../src/test-chain/WalletManager'
+import { WalletManager } from '../../src/WalletManager'
 import { getApp } from '../../src/node/node'
 import { NoopLogger } from '../debugger/Logger/NoopLogger'
 import { NodeCtx } from '../../src/node/ctx'

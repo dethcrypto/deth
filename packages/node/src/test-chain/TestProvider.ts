@@ -1,15 +1,14 @@
-import { providers } from 'ethers'
+import { providers, Wallet } from 'ethers'
 import { TestChain } from './TestChain'
 import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
-import { WalletManager } from './WalletManager'
 import { makeAddress, makeQuantity } from './model'
 import { DethLogger } from '../debugger/Logger/DethLogger'
 import { DEFAULT_NODE_CONFIG } from '../config/config'
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
-  readonly walletManager: WalletManager
+  private wallets: Wallet[]
 
   constructor (logger: DethLogger, chainOrOptions?: TestChain | TestProviderOptions) {
     // note this file should not rely on NODE/config
@@ -17,11 +16,19 @@ export class TestProvider extends providers.BaseProvider {
 
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
-      this.walletManager = new WalletManager(undefined, this)
     } else {
       this.chain = new TestChain(logger, toTestChainOptions(chainOrOptions))
-      this.walletManager = new WalletManager(this.chain.options.value.accounts.privateKeys, this)
     }
+    this.wallets = this.chain.options.value.accounts.privateKeys
+      .map(pk => new Wallet(pk, this))
+  }
+
+  getWallets () {
+    return this.wallets
+  }
+
+  createEmptyWallet () {
+    return Wallet.createRandom().connect(this)
   }
 
   async init () {

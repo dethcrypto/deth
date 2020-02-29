@@ -5,7 +5,7 @@ import { createTestProvider } from '../../testutils'
 describe('TestProvider.getTransactionCount', () => {
   it('can return a zero transaction count', async () => {
     const provider = await createTestProvider()
-    const wallet = provider.walletManager.createEmptyWallet()
+    const wallet = provider.createEmptyWallet()
 
     const transactionCount = await provider.getTransactionCount(wallet.address)
     expect(transactionCount).to.equal(0)
@@ -13,7 +13,7 @@ describe('TestProvider.getTransactionCount', () => {
 
   it('can return a non-zero transaction count', async () => {
     const provider = await createTestProvider()
-    const [sender, recipient] = provider.walletManager.getWallets()
+    const [sender, recipient] = provider.getWallets()
 
     await sender.sendTransaction({
       to: recipient.address,
@@ -33,7 +33,7 @@ describe('TestProvider.getTransactionCount', () => {
 
   it('throws for blockTag !== latest or pending', async () => {
     const provider = await createTestProvider()
-    const wallet = provider.walletManager.createEmptyWallet()
+    const wallet = provider.createEmptyWallet()
 
     await expect(
       provider.getTransactionCount(wallet.address, '0x1'),

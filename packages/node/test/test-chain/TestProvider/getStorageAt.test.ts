@@ -6,7 +6,7 @@ import { createTestProvider } from '../../testutils'
 describe('TestProvider.getStorageAt', () => {
   it('works with existing data', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
@@ -20,7 +20,7 @@ describe('TestProvider.getStorageAt', () => {
 
   it('works with not-existing data', async () => {
     const provider = await createTestProvider()
-    const [wallet] = provider.walletManager.getWallets()
+    const [wallet] = provider.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)

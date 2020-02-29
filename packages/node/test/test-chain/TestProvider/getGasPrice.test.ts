@@ -1,8 +1,6 @@
 import { expect } from 'chai'
-import { TestProvider } from '../../../src/test-chain/TestProvider'
 import { utils } from 'ethers'
 import { createTestProvider } from '../../testutils'
-import { NoopLogger } from '../../debugger/Logger/NoopLogger'
 
 describe('TestProvider.getGasPrice', () => {
   it('defaults to one gwei', async () => {
@@ -12,7 +10,7 @@ describe('TestProvider.getGasPrice', () => {
   })
 
   it('can be overwritten', async () => {
-    const provider = new TestProvider(new NoopLogger(), { defaultGasPrice: utils.bigNumberify(1_000) })
+    const provider = await createTestProvider({ defaultGasPrice: utils.bigNumberify(1_000) })
     const gasPrice = await provider.getGasPrice()
     expect(gasPrice.toNumber()).to.equal(1_000)
   })

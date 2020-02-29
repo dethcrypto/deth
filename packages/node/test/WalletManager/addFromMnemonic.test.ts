@@ -1,6 +1,6 @@
-import { WalletManager } from '../../../src/test-chain/WalletManager'
+import { WalletManager } from '../../src/WalletManager'
 import { expect } from 'chai'
-import { createTestProvider } from '../../testutils'
+import { getDefaultProvider } from 'ethers'
 
 describe('WalletManager.addFromMnemonic', () => {
   it('adds not connected wallets from mnemonic', () => {
@@ -26,7 +26,7 @@ describe('WalletManager.addFromMnemonic', () => {
   })
 
   it('adds connected wallet from mnemonic', async () => {
-    const provider = await createTestProvider()
+    const provider = getDefaultProvider()
 
     const walletManager = new WalletManager(undefined, provider)
 
