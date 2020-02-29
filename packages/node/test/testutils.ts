@@ -1,6 +1,6 @@
-import { TestProvider } from '../src/TestProvider'
-import { TestChain } from '../src/TestChain'
-import { TestProviderOptions } from '../src/TestProviderOptions'
+import { TestProvider } from '../src/test-chain/TestProvider'
+import { TestChain } from '../src/test-chain/TestChain'
+import { TestProviderOptions } from '../src/test-chain/TestProviderOptions'
 import { NoopLogger } from './debugger/Logger/NoopLogger'
 
 const hexDigits = '0123456789abcdef'

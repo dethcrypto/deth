@@ -4,7 +4,7 @@ import { ContractFactory, Contract } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { NodeCtx } from '../../../src/node/ctx'
 import { makeRpcCall, runRpcHarness } from '../common'
-import { numberToQuantity } from '../../../src/primitives'
+import { numberToQuantity } from '../../../src/test-chain/model'
 
 describe('rpc -> call', () => {
   let app: Express.Application

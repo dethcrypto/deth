@@ -1,4 +1,4 @@
-import { Address, HexData } from '../../primitives'
+import { Address, HexData } from '../../test-chain/model'
 import { WalletManager } from '../../WalletManager'
 
 export interface DethLogger {

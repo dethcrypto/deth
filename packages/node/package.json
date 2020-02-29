@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "prepublishOnly": "yarn lint && yarn test && yarn build",
-    "start": "ts-node ./src/node/runner.ts",
+    "start": "ts-node -T ./src/node/runner.ts",
     "lint": "eslint --ext .ts src test",
     "lint:fix": "eslint --ext .ts --fix src test",
     "typecheck": "tsc --noEmit",

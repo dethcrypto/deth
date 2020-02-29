@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { NodeCtx } from '../../../src/node/ctx'
 import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
-import { numberToQuantity, quantityToNumber } from '../../../src/primitives'
+import { numberToQuantity, quantityToNumber } from '../../../src/test-chain/model'
 import sinon from 'sinon'
 
 describe('rpc -> time control', () => {

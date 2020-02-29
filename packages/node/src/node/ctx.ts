@@ -1,11 +1,11 @@
-import { TestChain } from '../TestChain'
+import { TestChain } from '../test-chain/TestChain'
 import { WalletManager } from '../WalletManager'
 import { RealFileSystem } from '../fs/RealFileSystem'
 import { AbiDecoder } from '../debugger/AbiDecoder'
 import { CliLogger } from '../debugger/Logger/CliLogger'
 import { DethLogger } from '../debugger/Logger/DethLogger'
 import { NodeConfig, getConfigWithDefaults } from '../config/config'
-import { getTestChainOptionsFromConfig } from '../TestChainOptions'
+import { getTestChainOptionsFromConfig } from '../test-chain/TestChainOptions'
 
 export interface NodeCtx {
   chain: TestChain,

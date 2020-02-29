@@ -1,6 +1,6 @@
 import { request, expect } from 'chai'
 
-import { TestChain } from '../../src/TestChain'
+import { TestChain } from '../../src/test-chain/TestChain'
 import { WalletManager } from '../../src/WalletManager'
 import { getApp } from '../../src/node/node'
 import { NoopLogger } from '../debugger/Logger/NoopLogger'
@@ -10,7 +10,7 @@ import { mockFs } from '../fs/fs.mock'
 import { getConfigWithDefaults } from '../../src/config/config'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
 import { ContractFactory, Wallet, Contract } from 'ethers'
-import { numberToQuantity } from '../../src/primitives'
+import { numberToQuantity } from '../../src/test-chain/model'
 
 export function makeRpcCall (
   app: Express.Application,

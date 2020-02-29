@@ -1,8 +1,8 @@
 import { RPCExecutorType } from './schema'
 import { NodeCtx } from '../ctx'
-import { RpcBlockResponse, toEthersTransaction } from '../../model'
+import { RpcBlockResponse, toEthersTransaction } from '../../test-chain/model'
 import { BadRequestHttpError } from '../errorHandler'
-import { makeHexData, numberToQuantity, quantityToNumber, makeAddress } from '../../primitives'
+import { makeHexData, numberToQuantity, quantityToNumber, makeAddress } from '../../test-chain/model'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }
 type SafeBlock = NoNullProperties<RpcBlockResponse>
