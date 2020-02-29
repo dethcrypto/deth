@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../../src/node/ctx'
+import { NodeCtx } from '../../src/ctx'
 import { makeRpcCall, runRpcHarness, unwrapRpcResponse } from '../common'
 import { numberToQuantity } from '@deth/chain'
 

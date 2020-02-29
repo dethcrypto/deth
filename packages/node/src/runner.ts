@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { runNode } from './node'
-import { Path, relativePathToPath } from '../fs/Path'
+import { Path, relativePathToPath } from './fs/Path'
 
 const PORT = 8545
 const args = process.argv.slice(2)

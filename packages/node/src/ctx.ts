@@ -1,11 +1,11 @@
 import { Chain } from '@deth/chain'
-import { WalletManager } from '../WalletManager'
-import { RealFileSystem } from '../fs/RealFileSystem'
-import { AbiDecoder } from '../debugger/AbiDecoder'
-import { CliLogger } from '../debugger/Logger/CliLogger'
-import { DethLogger } from '../debugger/Logger/DethLogger'
-import { NodeConfig, getConfigWithDefaults } from '../config/config'
-import { eventLogger, revertLogger } from '../debugger/stepsLoggers'
+import { WalletManager } from './WalletManager'
+import { RealFileSystem } from './fs/RealFileSystem'
+import { AbiDecoder } from './debugger/AbiDecoder'
+import { CliLogger } from './debugger/Logger/CliLogger'
+import { DethLogger } from './debugger/Logger/DethLogger'
+import { NodeConfig, getConfigWithDefaults } from './config/config'
+import { eventLogger, revertLogger } from './debugger/stepsLoggers'
 
 export interface NodeCtx {
   chain: Chain,

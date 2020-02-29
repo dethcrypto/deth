@@ -7,9 +7,9 @@ import { errorHandler, NotFoundHttpError } from './errorHandler'
 import { rpcCommandsDescription } from './rpc/schema'
 import { rpcExecutorFromCtx } from './rpc/rpcExecutor'
 import { NodeCtx, makeDefaultCtx } from './ctx'
-import { Path } from '../fs/Path'
-import { loadConfig } from '../config/loader'
-import { RealFileSystem } from '../fs/RealFileSystem'
+import { Path } from './fs/Path'
+import { loadConfig } from './config/loader'
+import { RealFileSystem } from './fs/RealFileSystem'
 
 export function getApp (ctx: NodeCtx) {
   const rpcExecutor = rpcExecutorFromCtx(ctx)

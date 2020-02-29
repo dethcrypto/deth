@@ -1,7 +1,7 @@
 import { expect, request } from 'chai'
 
 import { makeRpcCall, runRpcHarness } from '../common'
-import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
+import { DEFAULT_NODE_CONFIG } from '../../src/config/config'
 
 describe('rpc -> basics', () => {
   let app: Express.Application
