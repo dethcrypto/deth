@@ -25,10 +25,10 @@ interface VMSnapshot {
 }
 
 /**
- * TestVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
+ * SaneVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
  * interface and abstracts away weird ethereumjs specific details
  */
-export class TestVM {
+export class SaneVM {
   vm!: VM
   state: Snapshot<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
