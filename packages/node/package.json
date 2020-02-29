@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@deth/chain": "^0.1.0",
-    "@restless/restless": "^0.4.2",
     "@types/debug": "^4.1.5",
     "@types/glob": "^7.1.1",
     "@types/koa": "^2.11.2",
