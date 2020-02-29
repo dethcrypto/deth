@@ -13,10 +13,10 @@ import {
 import { TestVM } from './vm/TestVM'
 import { ChainOptions, getChainOptionsWithDefaults } from './ChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
-import { SnapshotObject } from './vm/storage/SnapshotObject'
+import { Snapshot } from './utils/Snapshot'
 import { cloneDeep } from 'lodash'
 import { Transaction } from 'ethereumjs-tx'
-import { EventEmitter } from './EventEmitter'
+import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 
@@ -35,10 +35,10 @@ export class Chain {
   private tvm: TestVM
   private vmStepEvents = new EventEmitter<InterpreterStep>()
   private transactionEvents = new EventEmitter<TransactionEvent>()
-  options: SnapshotObject<ChainOptions>
+  options: Snapshot<ChainOptions>
 
   constructor (options?: Partial<ChainOptions>) {
-    this.options = new SnapshotObject(getChainOptionsWithDefaults(options), cloneDeep)
+    this.options = new Snapshot(getChainOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
 
@@ -57,7 +57,7 @@ export class Chain {
   }
 
   makeSnapshot (): number {
-    this.options.makeSnapshot()
+    this.options.save()
     return this.tvm.makeSnapshot()
   }
 

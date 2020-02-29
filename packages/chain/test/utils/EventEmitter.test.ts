@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
-import { EventEmitter } from '../src/EventEmitter'
+import { EventEmitter } from '../../src/utils/EventEmitter'
 
 describe('EventEmitter', () => {
   it('can emit a single event', () => {

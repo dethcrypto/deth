@@ -17,7 +17,7 @@ import PStateManager from 'ethereumts-vm/dist/state/promisified'
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
-import { SnapshotObject } from './storage/SnapshotObject'
+import { Snapshot } from '../utils/Snapshot'
 
 interface VMSnapshot {
   blockchain: DethBlockchain,
@@ -30,14 +30,14 @@ interface VMSnapshot {
  */
 export class TestVM {
   vm!: VM
-  state: SnapshotObject<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
+  state: Snapshot<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
   transactions: Map<Hash, RpcTransactionResponse> = new Map()
   receipts: Map<Hash, RpcTransactionReceipt> = new Map()
   snapshots: VMSnapshot[] = []
 
   constructor (private options: ChainOptions) {
-    this.state = new SnapshotObject({
+    this.state = new Snapshot({
       stateManger: new DethStateManger(),
       blockchain: new DethBlockchain(),
     }, (t) => ({
@@ -55,7 +55,7 @@ export class TestVM {
   }
 
   makeSnapshot (): number {
-    return this.state.makeSnapshot()
+    return this.state.save()
   }
 
   revertToSnapshot (id: number) {
