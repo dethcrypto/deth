@@ -3,7 +3,7 @@ import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { randomHash } from '../../testutils'
 import { createTestProvider } from './TestProvider'
-import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
+import { DEFAULT_OPTIONS } from '../../../src/test-chain'
 
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {
@@ -38,7 +38,7 @@ describe('TestProvider.getTransaction', () => {
       v: response.v,
       raw: tx.raw,
       creates: null,
-      networkId: DEFAULT_NODE_CONFIG.blockchain.chainId,
+      networkId: DEFAULT_OPTIONS.chainId,
       wait: tx.wait,
     })
   })
