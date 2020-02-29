@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true
-  },
-  "exclude": ["dist"]
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+  }
 }
