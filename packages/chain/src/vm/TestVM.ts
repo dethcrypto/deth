@@ -3,7 +3,7 @@ import Block from 'ethereumjs-block'
 import { BN, toBuffer } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
 import { RpcTransactionReceipt, RpcTransactionResponse, RpcBlockResponse, toBlockResponse } from '../model'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData, bufferToHexData } from '../model'
 import { initializeVM } from './initializeVM'
 import { getLatestBlock } from './getLatestBlock'
@@ -36,7 +36,7 @@ export class TestVM {
   receipts: Map<Hash, RpcTransactionReceipt> = new Map()
   snapshots: VMSnapshot[] = []
 
-  constructor (private options: TestChainOptions) {
+  constructor (private options: ChainOptions) {
     this.state = new SnapshotObject({
       stateManger: new DethStateManger(),
       blockchain: new DethBlockchain(),

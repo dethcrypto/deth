@@ -1,10 +1,10 @@
-import { TestChainOptions, DEFAULT_OPTIONS } from '@deth/chain'
+import { ChainOptions, DEFAULT_CHAIN_OPTIONS } from '@deth/chain'
 import { Path, makePath } from '../fs/Path'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
 
 export type NodeConfig = {
-  blockchain: TestChainOptions,
+  blockchain: ChainOptions,
   debugger: {
     abiFilesGlob?: string,
   },
@@ -12,7 +12,7 @@ export type NodeConfig = {
 }
 
 export const DEFAULT_NODE_CONFIG: NodeConfig = {
-  blockchain: DEFAULT_OPTIONS,
+  blockchain: DEFAULT_CHAIN_OPTIONS,
   debugger: {
     abiFilesGlob: undefined,
   },

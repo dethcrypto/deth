@@ -11,7 +11,7 @@ import {
   RpcRichBlockResponse,
 } from './model'
 import { TestVM } from './vm/TestVM'
-import { TestChainOptions, getTestChainOptionsWithDefaults } from './TestChainOptions'
+import { ChainOptions, getChainOptionsWithDefaults } from './ChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
 import { SnapshotObject } from './vm/storage/SnapshotObject'
 import { cloneDeep } from 'lodash'
@@ -31,14 +31,14 @@ export interface TransactionEvent {
  * It is separate from the provider so that there can be many provider instances
  * using the same TestChain instance.
  */
-export class TestChain {
+export class Chain {
   private tvm: TestVM
   private vmStepEvents = new EventEmitter<InterpreterStep>()
   private transactionEvents = new EventEmitter<TransactionEvent>()
-  options: SnapshotObject<TestChainOptions>
+  options: SnapshotObject<ChainOptions>
 
-  constructor (options?: Partial<TestChainOptions>) {
-    this.options = new SnapshotObject(getTestChainOptionsWithDefaults(options), cloneDeep)
+  constructor (options?: Partial<ChainOptions>) {
+    this.options = new SnapshotObject(getChainOptionsWithDefaults(options), cloneDeep)
     this.tvm = new TestVM(this.options.value)
   }
 

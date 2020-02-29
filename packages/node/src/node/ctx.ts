@@ -1,4 +1,4 @@
-import { TestChain } from '@deth/chain'
+import { Chain } from '@deth/chain'
 import { WalletManager } from '../WalletManager'
 import { RealFileSystem } from '../fs/RealFileSystem'
 import { AbiDecoder } from '../debugger/AbiDecoder'
@@ -8,7 +8,7 @@ import { NodeConfig, getConfigWithDefaults } from '../config/config'
 import { eventLogger, revertLogger } from '../debugger/stepsLoggers'
 
 export interface NodeCtx {
-  chain: TestChain,
+  chain: Chain,
   walletManager: WalletManager,
   cfg: NodeConfig,
   abiDecoder: AbiDecoder,
@@ -24,7 +24,7 @@ export async function makeDefaultCtx (_config: NodeConfig = getConfigWithDefault
 
   const logger = new CliLogger(abiDecoder)
 
-  const chain = new TestChain(config.blockchain)
+  const chain = new Chain(config.blockchain)
   await chain.init()
   chain.onVmStep(eventLogger(logger))
   chain.onVmStep(revertLogger(logger))

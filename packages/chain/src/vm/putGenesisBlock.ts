@@ -1,8 +1,8 @@
 import VM from 'ethereumts-vm'
 import Block from 'ethereumjs-block'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 
-export async function putGenesisBlock (vm: VM, options: TestChainOptions) {
+export async function putGenesisBlock (vm: VM, options: ChainOptions) {
   const genesisBlock = new Block({
     header: {
       bloom: '0x' + '0'.repeat(512),

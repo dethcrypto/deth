@@ -1,6 +1,6 @@
 import { request, expect } from 'chai'
 
-import { TestChain } from '@deth/chain'
+import { Chain } from '@deth/chain'
 import { WalletManager } from '../../src/WalletManager'
 import { getApp } from '../../src/node/node'
 import { NoopLogger } from '../debugger/Logger/NoopLogger'
@@ -30,7 +30,7 @@ export function unwrapRpcResponse (response: ChaiHttp.Response): any {
 
 export async function runRpcHarness () {
   const abiDecoder = new AbiDecoder(mockFs())
-  const chain = new TestChain()
+  const chain = new Chain()
   await chain.init()
   const cfg = getConfigWithDefaults()
   const ctx: NodeCtx = {

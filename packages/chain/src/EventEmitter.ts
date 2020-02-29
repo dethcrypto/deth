@@ -1,5 +1,5 @@
 export interface Listener<T> {
-  (event: T): void
+  (event: T): void,
 }
 
 export class EventEmitter<T> {

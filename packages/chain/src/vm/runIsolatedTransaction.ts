@@ -3,12 +3,12 @@ import { Transaction } from 'ethereumjs-tx'
 // eslint-disable-next-line no-restricted-imports
 import { RunTxResult } from 'ethereumts-vm/dist/runTx'
 import { getNextBlock } from './getNextBlock'
-import { TestChainOptions } from '../TestChainOptions'
+import { ChainOptions } from '../ChainOptions'
 
 export async function runIsolatedTransaction (
   vm: VM,
   transaction: Transaction,
-  options: TestChainOptions,
+  options: ChainOptions,
   clockSkew: number,
 ): Promise<RunTxResult> {
   const psm = vm.pStateManager

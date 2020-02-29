@@ -1,25 +1,25 @@
 import { providers, Wallet } from 'ethers'
-import { TestChain } from '../../src/TestChain'
+import { Chain } from '../../src/Chain'
 import { toRpcTransactionRequest, makeAddress, makeQuantity } from '../../src/model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 
-export async function createTestProvider (chainOrOptions?: TestChain | TestProviderOptions) {
+export async function createTestProvider (chainOrOptions?: Chain | TestProviderOptions) {
   const provider = new TestProvider(chainOrOptions)
   await provider.init()
   return provider
 }
 
 export class TestProvider extends providers.BaseProvider {
-  private chain: TestChain
+  private chain: Chain
   private wallets: Wallet[]
 
-  constructor (chainOrOptions?: TestChain | TestProviderOptions) {
+  constructor (chainOrOptions?: Chain | TestProviderOptions) {
     super({ name: 'deth', chainId: 1337 })
 
-    if (chainOrOptions instanceof TestChain) {
+    if (chainOrOptions instanceof Chain) {
       this.chain = chainOrOptions
     } else {
-      this.chain = new TestChain(toTestChainOptions(chainOrOptions))
+      this.chain = new Chain(toTestChainOptions(chainOrOptions))
     }
     this.wallets = this.chain.options.value.accounts.privateKeys
       .map(pk => new Wallet(pk, this))

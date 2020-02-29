@@ -3,7 +3,7 @@ import BN from 'bn.js'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
 
-export interface TestChainOptions {
+export interface ChainOptions {
   hardfork: Hardfork,
   blockGasLimit: BN,
   defaultGasPrice: BN,
@@ -20,7 +20,7 @@ export interface TestChainOptions {
   },
 }
 
-export const DEFAULT_OPTIONS: TestChainOptions = {
+export const DEFAULT_CHAIN_OPTIONS: ChainOptions = {
   accounts: {
     privateKeys: [
       // mnemonic: sunset setup guard source about taste volume clown method shield height butter
@@ -49,6 +49,6 @@ export const DEFAULT_OPTIONS: TestChainOptions = {
   skipBalanceCheck: false,
 }
 
-export function getTestChainOptionsWithDefaults (options: DeepPartial<TestChainOptions> = {}): TestChainOptions {
-  return merge({}, DEFAULT_OPTIONS, options)
+export function getChainOptionsWithDefaults (options: DeepPartial<ChainOptions> = {}): ChainOptions {
+  return merge({}, DEFAULT_CHAIN_OPTIONS, options)
 }
