@@ -1,7 +1,7 @@
 import { DethBlockchain } from '../../../../src/test-chain/vm/storage/DethBlockchain'
 import { dummyBlock } from './utils'
 import { expect } from 'chai'
-import { bufferToHash, numberToQuantity } from '../../../../src/primitives'
+import { bufferToHash, numberToQuantity } from '../../../../src/test-chain/model'
 
 describe('DethBlockchain', () => {
   it('puts blocks', () => {

@@ -5,7 +5,7 @@ import { BN } from 'ethereumjs-util'
 import Block from 'ethereumjs-block'
 
 import { DethBlockchain } from './DethBlockchain'
-import { bnToQuantity, numberToQuantity, bufferToHash } from '../../../primitives'
+import { bnToQuantity, numberToQuantity, bufferToHash } from '../../model'
 import { callbackifySync } from './adapter-utils'
 
 /**

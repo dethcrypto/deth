@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, HexData } from '../primitives'
+import { Address, Hash, Quantity, HexData } from './primitives'
 import { RpcLogObject } from './RpcLogObject'
 
 export interface RpcTransactionReceipt {

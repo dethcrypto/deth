@@ -1,4 +1,4 @@
-import { Hardfork } from '../model'
+import { Hardfork } from './model'
 import BN from 'bn.js'
 import { NodeConfig, DEFAULT_NODE_CONFIG } from '../config/config'
 import { merge } from 'lodash'

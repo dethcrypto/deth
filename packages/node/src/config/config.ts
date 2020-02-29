@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { Hardfork } from '../model'
+import { Hardfork } from '../test-chain/model'
 import { Path, makePath } from '../fs/Path'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'

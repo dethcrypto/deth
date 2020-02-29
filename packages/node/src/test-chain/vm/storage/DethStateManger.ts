@@ -2,8 +2,7 @@ import Account from 'ethereumjs-account'
 import { Dictionary, assert } from 'ts-essentials'
 import { keccak256 } from 'ethereumjs-util'
 import { CheckpointMap } from './CheckpointMap'
-import { Address } from '../../../primitives/Address'
-import { bufferToHash, Hash, Quantity } from '../../../primitives'
+import { bufferToHash, Hash, Address, Quantity } from '../../model'
 
 const EMPTY_BUFFER = Buffer.from('')
 

@@ -1,5 +1,5 @@
 import { Wallet, providers } from 'ethers'
-import { Address, makeAddress } from '../primitives'
+import { Address, makeAddress } from './model'
 import debug from 'debug'
 const d = debug('deth:WalletManager')
 

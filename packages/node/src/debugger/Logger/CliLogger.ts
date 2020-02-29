@@ -1,6 +1,6 @@
 import { gray, yellow, red, blue, green } from 'chalk'
 
-import { HexData, Address, makeAddress } from '../../primitives'
+import { HexData, Address, makeAddress } from '../../test-chain/model'
 import { AbiDecoder } from '../AbiDecoder'
 import { DethLogger } from './DethLogger'
 import { WalletManager } from '../../test-chain/WalletManager'

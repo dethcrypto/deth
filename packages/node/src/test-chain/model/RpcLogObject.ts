@@ -1,4 +1,4 @@
-import { Quantity, Hash, Address, HexData } from '../primitives'
+import { Quantity, Hash, Address, HexData } from './primitives'
 
 export interface RpcLogObject {
   removed: boolean,

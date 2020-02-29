@@ -8,7 +8,7 @@ import {
   numberToQuantity,
   bufferToHexData,
   bufferToAddress,
-} from '../primitives'
+} from './primitives'
 import { RpcTransactionResponse } from './RpcTransactionResponse'
 import Block from 'ethereumjs-block'
 

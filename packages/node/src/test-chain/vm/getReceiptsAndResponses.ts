@@ -8,9 +8,9 @@ import {
   bnToQuantity,
   numberToQuantity,
   bufferToHexData,
-} from '../../primitives'
+} from '../model'
 import BN from 'bn.js'
-import { RpcTransactionResponse, RpcLogObject, RpcTransactionReceipt } from '../../model'
+import { RpcTransactionResponse, RpcLogObject, RpcTransactionReceipt } from '../model'
 // eslint-disable-next-line
 import { RunTxResult } from 'ethereumts-vm/dist/runTx'
 

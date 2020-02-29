@@ -1,4 +1,4 @@
-import { Address, Quantity, HexData, makeQuantity, makeAddress, makeHexData } from '../primitives'
+import { Address, Quantity, HexData, makeQuantity, makeAddress, makeHexData } from './primitives'
 import { FakeTransaction } from 'ethereumjs-tx'
 import { providers, utils } from 'ethers'
 

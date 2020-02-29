@@ -1,5 +1,5 @@
 import Block from 'ethereumjs-block'
-import { Quantity, Hash, bufferToHash, quantityToNumber } from '../../../primitives'
+import { Quantity, Hash, bufferToHash, quantityToNumber } from '../../model'
 
 /**
  * Simple, in memory, copyable blockchain

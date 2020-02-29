@@ -1,9 +1,9 @@
 import { providers } from 'ethers'
 import { TestChain } from './TestChain'
-import { toRpcTransactionRequest } from '../model'
+import { toRpcTransactionRequest } from './model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 import { WalletManager } from './WalletManager'
-import { makeAddress, makeQuantity } from '../primitives'
+import { makeAddress, makeQuantity } from './model'
 import { DethLogger } from '../debugger/Logger/DethLogger'
 import { DEFAULT_NODE_CONFIG } from '../config/config'
 

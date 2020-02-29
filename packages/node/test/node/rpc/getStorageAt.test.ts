@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { NodeCtx } from '../../../src/node/ctx'
 import { makeRpcCall, runRpcHarness, unwrapRpcResponse } from '../common'
-import { numberToQuantity } from '../../../src/primitives'
+import { numberToQuantity } from '../../../src/test-chain/model'
 
 describe('rpc -> getStorageAt', () => {
   let app: Express.Application

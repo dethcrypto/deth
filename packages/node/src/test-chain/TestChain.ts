@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress } from '../primitives'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress } from './model'
 import {
   Tag,
   RpcTransactionRequest,
@@ -9,7 +9,7 @@ import {
   RpcTransactionReceipt,
   toFakeTransaction,
   RpcRichBlockResponse,
-} from '../model'
+} from './model'
 import { TestVM } from './vm/TestVM'
 import { TestChainOptions, getTestChainOptionsWithDefaults } from './TestChainOptions'
 import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'

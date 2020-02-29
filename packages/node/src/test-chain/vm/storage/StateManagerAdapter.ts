@@ -1,8 +1,7 @@
 import { callbackify } from 'util'
 import { DethStateManger } from './DethStateManger'
-import { bufferToAddress } from '../../../primitives/Address'
 import Account from 'ethereumjs-account'
-import { bufferToHash, hashToBuffer, bufferToQuantity } from '../../../primitives'
+import { bufferToHash, hashToBuffer, bufferToQuantity, bufferToAddress } from '../../model'
 import { callbackifySync } from './adapter-utils'
 
 export class StateManagerAdapter {
