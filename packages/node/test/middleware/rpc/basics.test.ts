@@ -1,6 +1,6 @@
 import { expect, request } from 'chai'
 
-import { makeRpcCall } from '../../common'
+import { makeRpcCall } from './common'
 import { buildTestApp } from '../../buildTestApp'
 import { DEFAULT_CONFIG } from '../../../src/config/config'
 

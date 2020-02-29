@@ -1,5 +1,5 @@
 import { request, expect } from 'chai'
-import { makeRpcCall } from '../../common'
+import { makeRpcCall } from '../rpc/common'
 import { buildTestApp } from '../../buildTestApp'
 
 describe('RPC/errors', () => {

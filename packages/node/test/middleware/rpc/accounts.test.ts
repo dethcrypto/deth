@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { makeRpcCall, unwrapRpcResponse } from '../../common'
+import { makeRpcCall, unwrapRpcResponse } from './common'
 import { buildTestApp } from '../../buildTestApp'
 
 describe('rpc -> eth_accounts', () => {

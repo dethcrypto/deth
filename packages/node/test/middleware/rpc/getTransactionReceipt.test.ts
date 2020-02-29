@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from '../../common'
+import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from './common'
 import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 

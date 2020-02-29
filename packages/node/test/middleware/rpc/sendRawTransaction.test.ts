@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { ContractFactory } from 'ethers'
 
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
-import { makeRpcCall, unwrapRpcResponse } from '../../common'
+import { makeRpcCall, unwrapRpcResponse } from './common'
 import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 

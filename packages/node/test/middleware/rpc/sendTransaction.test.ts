@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { makeRpcCall } from '../../common'
+import { makeRpcCall } from './common'
 import { buildTestApp } from '../../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
