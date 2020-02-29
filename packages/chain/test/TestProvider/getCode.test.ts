@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { ContractFactory } from 'ethers'
-import { COUNTER_ABI, COUNTER_BYTECODE, COUNTER_RUNTIME } from '../../contracts/Counter'
+import { COUNTER_ABI, COUNTER_BYTECODE, COUNTER_RUNTIME } from '../contracts/Counter'
 import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.getCode', () => {

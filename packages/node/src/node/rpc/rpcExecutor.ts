@@ -7,7 +7,7 @@ import {
   numberToQuantity,
   quantityToNumber,
   makeAddress,
-} from '../../test-chain'
+} from '@deth/chain'
 import { BadRequestHttpError } from '../errorHandler'
 
 type NoNullProperties<T> = { [K in keyof T]: Exclude<T[K], null> }

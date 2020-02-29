@@ -1,7 +1,7 @@
 import { Dictionary } from 'ts-essentials'
 import { cloneDeep } from 'lodash'
 
-import { SnapshotObject } from '../../../../src/test-chain/vm/storage/SnapshotObject'
+import { SnapshotObject } from '../../../src/vm/storage/SnapshotObject'
 import { expect } from 'chai'
 
 describe('SnapshotObject', () => {

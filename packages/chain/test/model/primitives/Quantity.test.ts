@@ -5,7 +5,7 @@ import {
   bufferToQuantity,
   bnToQuantity,
   numberToQuantity,
-} from '../../../../src/test-chain/model'
+} from '../../../src/model'
 
 describe('makeQuantity', () => {
   it('accepts non-zero prefixed hex string and turns it into lowercase', () => {

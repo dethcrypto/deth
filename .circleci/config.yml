@@ -24,7 +24,6 @@ jobs:
       - checkout
       - install_dependencies
       - run: yarn lint
-      - run: yarn typecheck
 
   build_and_test:
     docker:
@@ -33,6 +32,7 @@ jobs:
       - checkout
       - install_dependencies
       - run: yarn build
+      - run: yarn typecheck
       - run: yarn test
 
 workflows:

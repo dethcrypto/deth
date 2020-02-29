@@ -3,7 +3,7 @@ import { utils } from 'ethers'
 
 import { NodeCtx } from '../../../src/node/ctx'
 import { makeRpcCall, runRpcHarness } from '../common'
-import { numberToQuantity } from '../../../src/test-chain/model'
+import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> getBalance', () => {
   let app: Express.Application

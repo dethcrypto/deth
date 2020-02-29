@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
-import { bufferToHex } from 'ethereumjs-util'
-import { bufferToAddress } from '../test-chain'
+import { bufferToAddress, bufferToHexData } from '@deth/chain'
 import { DethLogger } from './Logger/DethLogger'
 
 export const eventLogger = (logger: DethLogger) => (runState: InterpreterStep) => {
@@ -18,8 +17,8 @@ export const eventLogger = (logger: DethLogger) => (runState: InterpreterStep) =
     .map(function (a) {
       return a.toArrayLike(Buffer, 'be', 32)
     })
-    .map(bufferToHex)
-  const data = bufferToHex(
+    .map(bufferToHexData)
+  const data = bufferToHexData(
     memLength.isZero()
       ? Buffer.alloc(32)
       : getMemoryAsBuffer(runState.memory, memOffset.toNumber(), memLength.toNumber()),

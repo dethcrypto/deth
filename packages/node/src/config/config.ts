@@ -1,4 +1,4 @@
-import { TestChainOptions, DEFAULT_OPTIONS } from '../test-chain'
+import { TestChainOptions, DEFAULT_OPTIONS } from '@deth/chain'
 import { Path, makePath } from '../fs/Path'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
