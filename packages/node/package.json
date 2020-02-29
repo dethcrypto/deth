@@ -18,7 +18,7 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "bin": "./dist/cjs/node/runner.js",
+  "bin": "./dist/cjs/runner.js",
   "files": [
     "**/dist",
     "README.md",
@@ -26,14 +26,15 @@
   ],
   "scripts": {
     "prepublishOnly": "yarn lint && yarn test && yarn build",
-    "start": "ts-node -T ./src/node/runner.ts",
+    "start": "ts-node -T ./src/runner.ts",
     "lint": "eslint --ext .ts src test",
     "lint:fix": "yarn lint --fix",
     "typecheck": "tsc --noEmit",
     "prebuild": "rm -rf dist",
     "build": "yarn build:esm && yarn build:cjs",
     "build:esm": "tsc -p tsconfig.build.json --outDir dist/esm --module ES6",
-    "build:cjs": "tsc -p tsconfig.build.json --outDir dist/cjs --declaration false && chmod +x ./dist/cjs/node/runner.js",
+    "build:cjs": "tsc -p tsconfig.build.json --outDir dist/cjs --declaration false",
+    "postbuild": "chmod +x ./dist/cjs/runner.js",
     "test": "mocha",
     "test:fix": "yarn lint:fix && yarn test && yarn typecheck"
   },
