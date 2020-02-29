@@ -1,5 +1,5 @@
-import { FileSystem } from '../fs/FileSystem'
-import { Path, getDirName } from '../fs/Path'
+import { FileSystem } from '../services/fs/FileSystem'
+import { Path, getDirName } from '../services/fs/Path'
 import { getConfigWithDefaults } from './config'
 
 /**

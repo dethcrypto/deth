@@ -1,13 +1,9 @@
 import { request, expect } from 'chai'
-import { runRpcHarness } from './common'
+import { buildTestApp } from './buildTestApp'
 
 describe('HTTP/errors', () => {
-  let app: Express.Application
-  beforeEach(async () => {
-    ({ app } = await runRpcHarness())
-  })
-
   it('throws error when calling non existing endpoints', async () => {
+    const app = await buildTestApp()
     const res = await request(app)
       .get('/not-existing')
       .send({})

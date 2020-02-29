@@ -1,4 +1,4 @@
-import { DethLogger } from '../../../src/debugger/Logger/DethLogger'
+import { DethLogger } from '../../../src/services/logger/DethLogger'
 
 /* eslint @typescript-eslint/no-empty-function: 0 */
 

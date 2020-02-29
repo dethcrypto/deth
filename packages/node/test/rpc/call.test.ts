@@ -2,24 +2,19 @@ import { expect } from 'chai'
 import { ContractFactory, Contract } from 'ethers'
 
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, runRpcHarness } from '../common'
+import { makeRpcCall } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> call', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   xit('supports eth_call calling smartcontracts')
 
   it('supports eth_call', async () => {
-    const [sender] = ctx.walletManager.getWallets()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
-    const { data } = await factory.getDeployTransaction(0)
+    const { data } = factory.getDeployTransaction(0)
 
     const {
       body: { result: txHash },

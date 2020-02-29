@@ -1,17 +1,12 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness, deployCounterContract } from '../common'
+import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> getTransactionReceipt', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ;({ app, ctx } = await runRpcHarness())
-  })
-
   it('supports eth_getTransactionReceipt for not existing txs', async () => {
+    const app = await buildTestApp()
     const notExistingTx = '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
 
     const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [notExistingTx])
@@ -21,7 +16,8 @@ describe('rpc -> getTransactionReceipt', () => {
   })
 
   it('supports eth_getTransactionReceipt for existing txs', async () => {
-    const [sender] = ctx.walletManager.getWallets()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
 
     const contract = await deployCounterContract(app, sender)
 

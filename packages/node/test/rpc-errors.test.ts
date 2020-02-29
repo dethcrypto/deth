@@ -1,13 +1,10 @@
 import { request, expect } from 'chai'
-import { makeRpcCall, runRpcHarness } from './common'
+import { makeRpcCall } from './common'
+import { buildTestApp } from './buildTestApp'
 
 describe('RPC/errors', () => {
-  let app: Express.Application
-  beforeEach(async () => {
-    ;({ app } = await runRpcHarness())
-  })
-
   it('throws error on not existing method calls', async () => {
+    const app = await buildTestApp()
     const res = await makeRpcCall(app, 'not_existing_method', [])
 
     expect(res).to.have.status(404)
@@ -23,6 +20,7 @@ describe('RPC/errors', () => {
   })
 
   it('throws error on malformed envelope', async () => {
+    const app = await buildTestApp()
     const res = await request(app)
       .post('/')
       .send({ jsonrpc: '2.0', method: 'net_version', params: [] })

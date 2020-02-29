@@ -1,18 +1,13 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, runRpcHarness, unwrapRpcResponse } from '../common'
+import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> getStorageAt', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   it('works with not-existing data', async () => {
-    const emptyAcc = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const emptyAcc = app.services.walletManager.createEmptyWallet()
 
     const response = unwrapRpcResponse(await makeRpcCall(app, 'eth_getStorageAt', [
       emptyAcc.address, numberToQuantity(0), 'latest',

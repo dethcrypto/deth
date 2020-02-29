@@ -1,18 +1,13 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness, deployCounterContract } from '../common'
+import { makeRpcCall, unwrapRpcResponse, deployCounterContract } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> snapshot', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   it('support evm_snapshots', async () => {
-    const [sender] = ctx.walletManager.getWallets()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
 
     const snapshotId = unwrapRpcResponse(await makeRpcCall(app, 'evm_snapshot'))
 

@@ -2,19 +2,14 @@ import { expect } from 'chai'
 import { ContractFactory } from 'ethers'
 
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
+import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> sendRawTransaction', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   it('supports contract deploys via eth_sendRawTransaction', async () => {
-    const [sender] = ctx.walletManager.getWallets()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
 
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
     const { data: deployData } = factory.getDeployTransaction(0)
@@ -36,8 +31,9 @@ describe('rpc -> sendRawTransaction', () => {
 
   it('multiple eth_sendRawTransaction should not throw an error', async () => {
     // NOTE: current impl runs rpc calls sequentially
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const sendTx = () =>
       makeRpcCall(app, 'eth_sendTransaction', [
@@ -57,7 +53,7 @@ describe('rpc -> sendRawTransaction', () => {
     )
 
     for (const request of requests) {
-      await expect(request).to.have.status(200)
+      expect(request).to.have.status(200)
       expect(request.body.result).to.a('string')
     }
   })

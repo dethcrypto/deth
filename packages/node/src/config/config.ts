@@ -1,9 +1,10 @@
 import { ChainOptions, DEFAULT_CHAIN_OPTIONS } from '@deth/chain'
-import { Path, makePath } from '../fs/Path'
+import { Path, makePath } from '../services/fs/Path'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
 
-export type NodeConfig = {
+export type Config = {
+  port: number,
   blockchain: ChainOptions,
   debugger: {
     abiFilesGlob?: string,
@@ -11,7 +12,8 @@ export type NodeConfig = {
   cwd: Path, // config's directory if it was provided
 }
 
-export const DEFAULT_NODE_CONFIG: NodeConfig = {
+export const DEFAULT_CONFIG: Config = {
+  port: 8545,
   blockchain: DEFAULT_CHAIN_OPTIONS,
   debugger: {
     abiFilesGlob: undefined,
@@ -19,6 +21,6 @@ export const DEFAULT_NODE_CONFIG: NodeConfig = {
   cwd: makePath(process.cwd()),
 }
 
-export function getConfigWithDefaults (options: DeepPartial<NodeConfig> = {}): NodeConfig {
-  return merge({}, DEFAULT_NODE_CONFIG, options)
+export function getConfigWithDefaults (options: DeepPartial<Config> = {}): Config {
+  return merge({}, DEFAULT_CONFIG, options)
 }

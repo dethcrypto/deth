@@ -1,5 +1,5 @@
 import { Address, HexData } from '@deth/chain'
-import { WalletManager } from '../../WalletManager'
+import { WalletManager } from '../WalletManager'
 
 export interface DethLogger {
   logTransaction(tx: { to?: Address, from: Address, data?: HexData }): void,

@@ -1,16 +1,13 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
+import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity, quantityToNumber } from '@deth/chain'
 import sinon from 'sinon'
 
 describe('rpc -> time control', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
   let clock: sinon.SinonFakeTimers
   beforeEach(async () => {
-    ;({ app, ctx } = await runRpcHarness())
     clock = sinon.useFakeTimers(0)
   })
 
@@ -19,8 +16,9 @@ describe('rpc -> time control', () => {
   })
 
   it('changes time', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
     const clockSkew = 1000
 
     unwrapRpcResponse(await makeRpcCall(app, 'evm_increaseTime', [clockSkew]))
@@ -44,8 +42,9 @@ describe('rpc -> time control', () => {
   })
 
   it('respects snapshots', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
     const clockSkew = 1000
 
     unwrapRpcResponse(await makeRpcCall(app, 'evm_increaseTime', [clockSkew]))

@@ -1,4 +1,4 @@
-import { FileSystem } from '../../src/fs/FileSystem'
+import { FileSystem } from '../../../src/services/fs/FileSystem'
 import { spy, SinonSpy } from 'sinon'
 
 type Spied<T> = {

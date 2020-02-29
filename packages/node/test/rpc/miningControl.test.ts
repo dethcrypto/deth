@@ -1,19 +1,14 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, unwrapRpcResponse, runRpcHarness } from '../common'
+import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> miningControl', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ;({ app, ctx } = await runRpcHarness())
-  })
-
   it('stops mining', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     unwrapRpcResponse(await makeRpcCall(app, 'miner_stop'))
 
@@ -35,8 +30,9 @@ describe('rpc -> miningControl', () => {
   })
 
   it('allows to mine manually', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     unwrapRpcResponse(await makeRpcCall(app, 'miner_stop'))
 
@@ -62,8 +58,9 @@ describe('rpc -> miningControl', () => {
   })
 
   it('re-starts mining', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     unwrapRpcResponse(await makeRpcCall(app, 'miner_stop'))
     unwrapRpcResponse(await makeRpcCall(app, 'miner_start'))
@@ -85,8 +82,9 @@ describe('rpc -> miningControl', () => {
   })
 
   it('respects snapshots', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     unwrapRpcResponse(await makeRpcCall(app, 'miner_stop'))
     const snapshotId = unwrapRpcResponse(await makeRpcCall(app, 'evm_snapshot'))

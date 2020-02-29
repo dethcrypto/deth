@@ -1,7 +1,7 @@
 import { ethers, utils } from 'ethers'
 
-import { Path } from '../fs/Path'
-import { FileSystem } from '../fs/FileSystem'
+import { Path } from './fs/Path'
+import { FileSystem } from './fs/FileSystem'
 
 // silence ethers warnings: https://github.com/ethers-io/ethers.js/issues/407
 ethers.errors.setLogLevel('error')

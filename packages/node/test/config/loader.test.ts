@@ -1,15 +1,15 @@
-import { makePath } from '../../src/fs/Path'
+import { makePath } from '../../src/services/fs/Path'
 import { spy } from 'sinon'
 import { expect } from 'chai'
 import { loadConfig } from '../../src/config/loader'
-import { mockFs } from '../fs/fs.mock'
-import { getConfigWithDefaults, NodeConfig } from '../../src/config/config'
+import { mockFs } from '../services/fs/fs.mock'
+import { getConfigWithDefaults, Config } from '../../src/config/config'
 import { DeepPartial } from 'ts-essentials'
 
 describe('config loader', () => {
   it('loads JSON config', () => {
     const dir = makePath('/deth/deth.json')
-    const customConfig: DeepPartial<NodeConfig> = { blockchain: { chainId: 420 } }
+    const customConfig: DeepPartial<Config> = { blockchain: { chainId: 420 } }
     const testFileSystem = mockFs({
       fileExists: spy(() => true),
       requireFile: spy(() => customConfig),
@@ -23,7 +23,7 @@ describe('config loader', () => {
 
   it('throws on missing config', () => {
     const path = makePath('/deth/deth.json')
-    const customConfig: DeepPartial<NodeConfig> = { blockchain: { chainId: 420 } }
+    const customConfig: DeepPartial<Config> = { blockchain: { chainId: 420 } }
     const testFileSystem = mockFs({
       requireFile: spy(() => customConfig),
     })

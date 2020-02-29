@@ -1,6 +1,6 @@
-import { mockFs } from '../fs/fs.mock'
-import { AbiDecoder } from '../../src/debugger/AbiDecoder'
-import { makePath } from '../../src/fs/Path'
+import { mockFs } from './fs/fs.mock'
+import { AbiDecoder } from '../../src/services/AbiDecoder'
+import { makePath } from '../../src/services/fs/Path'
 import { expect } from 'chai'
 import { spy } from 'sinon'
 

@@ -1,9 +1,9 @@
 import { expect } from 'chai'
-import { WalletManager } from '../../src/WalletManager'
+import { WalletManager } from '../../../src/services/WalletManager'
 import { getDefaultProvider } from 'ethers'
-import { DEFAULT_NODE_CONFIG } from '../../src/config/config'
+import { DEFAULT_CONFIG } from '../../../src/config/config'
 
-const privateKeys = DEFAULT_NODE_CONFIG.blockchain.accounts.privateKeys
+const privateKeys = DEFAULT_CONFIG.blockchain.accounts.privateKeys
 
 describe('WalletManager.getWallets', () => {
   it('returns ten wallets', async () => {

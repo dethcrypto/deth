@@ -1,14 +1,11 @@
 import { expect } from 'chai'
 
-import { makeRpcCall, runRpcHarness, unwrapRpcResponse } from '../common'
+import { makeRpcCall, unwrapRpcResponse } from '../common'
+import { buildTestApp } from '../buildTestApp'
 
 describe('rpc -> eth_accounts', () => {
-  let app: Express.Application
-  beforeEach(async () => {
-    ({ app } = await runRpcHarness())
-  })
-
   it('supports eth_accounts', async () => {
+    const app = await buildTestApp()
     const accounts = unwrapRpcResponse(await makeRpcCall(app, 'eth_accounts'))
 
     expect(accounts.length).to.be.eq(10)

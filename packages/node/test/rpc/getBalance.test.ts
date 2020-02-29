@@ -1,20 +1,15 @@
 import { expect } from 'chai'
 import { utils } from 'ethers'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, runRpcHarness } from '../common'
+import { makeRpcCall } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> getBalance', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   it('supports eth_getBalance call for account with non-zero balance', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const value = utils.parseEther('3.1415')
     await makeRpcCall(app, 'eth_sendTransaction', [
@@ -33,7 +28,8 @@ describe('rpc -> getBalance', () => {
   })
 
   it('supports eth_getBalance call for account with zero balance', async () => {
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
 

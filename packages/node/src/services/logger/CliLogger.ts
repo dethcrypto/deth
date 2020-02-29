@@ -3,7 +3,7 @@ import { gray, yellow, red, blue, green } from 'chalk'
 import { HexData, Address, makeAddress } from '@deth/chain'
 import { AbiDecoder } from '../AbiDecoder'
 import { DethLogger } from './DethLogger'
-import { WalletManager } from '../../WalletManager'
+import { WalletManager } from '../WalletManager'
 
 export class CliLogger implements DethLogger {
   constructor (private readonly abiDecoder: AbiDecoder) {}

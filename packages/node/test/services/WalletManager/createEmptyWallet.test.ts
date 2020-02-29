@@ -1,19 +1,19 @@
 import { expect } from 'chai'
 import { getDefaultProvider } from 'ethers'
-import { WalletManager } from '../../src/WalletManager'
+import { WalletManager } from '../../../src/services/WalletManager'
 
-describe('WalletManager.createEmptyUntrackedWallet', () => {
+describe('WalletManager.createEmptyWallet', () => {
   it('returns a connected wallet', async () => {
     const provider = getDefaultProvider()
     const walletManager = new WalletManager(undefined, provider)
-    const wallet = walletManager.createEmptyUntrackedWallet()
+    const wallet = walletManager.createEmptyWallet()
     expect(wallet.provider).to.equal(provider)
   })
 
   it('returns a wallet with empty balance', async () => {
     const provider = getDefaultProvider()
     const walletManager = new WalletManager(undefined, provider)
-    const wallet = walletManager.createEmptyUntrackedWallet()
+    const wallet = walletManager.createEmptyWallet()
     const balance = await wallet.getBalance()
     expect(balance.eq(0)).to.equal(true)
   })
@@ -21,18 +21,18 @@ describe('WalletManager.createEmptyUntrackedWallet', () => {
   it('returns a unique wallet', async () => {
     const provider = getDefaultProvider()
     const walletManager = new WalletManager(undefined, provider)
-    const first = walletManager.createEmptyUntrackedWallet()
-    const second = walletManager.createEmptyUntrackedWallet()
+    const first = walletManager.createEmptyWallet()
+    const second = walletManager.createEmptyWallet()
     expect(first.address).not.to.equal(second.address)
   })
 
-  it('returns a wallet not present in getWallets', async () => {
+  it('returns a wallet present in getWallets', async () => {
     const provider = getDefaultProvider()
     const walletManager = new WalletManager(undefined, provider)
-    const wallet = walletManager.createEmptyUntrackedWallet()
+    const wallet = walletManager.createEmptyWallet()
     const other = walletManager.getWallets()
 
     const unique = other.every(x => x.address !== wallet.address)
-    expect(unique).to.equal(true)
+    expect(unique).to.equal(false)
   })
 })

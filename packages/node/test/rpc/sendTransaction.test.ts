@@ -1,19 +1,14 @@
 import { expect } from 'chai'
 
-import { NodeCtx } from '../../src/ctx'
-import { makeRpcCall, runRpcHarness } from '../common'
+import { makeRpcCall } from '../common'
+import { buildTestApp } from '../buildTestApp'
 import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> sendTransaction', () => {
-  let app: Express.Application
-  let ctx: NodeCtx
-  beforeEach(async () => {
-    ({ app, ctx } = await runRpcHarness())
-  })
-
   it('supports eth_sendTransaction', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const request = await makeRpcCall(app, 'eth_sendTransaction', [
       {
@@ -30,8 +25,9 @@ describe('rpc -> sendTransaction', () => {
   })
 
   it('supports eth_sendTransaction with optional values', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const request = await makeRpcCall(app, 'eth_sendTransaction', [
       {
@@ -49,8 +45,9 @@ describe('rpc -> sendTransaction', () => {
   })
 
   it('supports eth_sendTransaction with missing nonce', async () => {
-    const [sender] = ctx.walletManager.getWallets()
-    const recipient = ctx.walletManager.createEmptyWallet()
+    const app = await buildTestApp()
+    const [sender] = app.services.walletManager.getWallets()
+    const recipient = app.services.walletManager.createEmptyWallet()
 
     const request1 = await makeRpcCall(app, 'eth_sendTransaction', [
       {
