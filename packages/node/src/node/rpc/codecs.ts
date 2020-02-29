@@ -1,6 +1,6 @@
 import * as t from 'io-ts'
 import { Either, map } from 'fp-ts/lib/Either'
-import { makeQuantity, makeHexData, makeHash, makeAddress } from '../../test-chain/model'
+import { makeQuantity, makeHexData, makeHash, makeAddress } from '../../test-chain'
 
 const mapCodec = <A, O, I, P, X>(
   type: t.Type<A, O, I>,
