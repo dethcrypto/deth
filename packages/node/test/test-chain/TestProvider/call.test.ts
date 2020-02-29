@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { ContractFactory, utils } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
-import { createTestProvider } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.call', () => {
   xit('can call a simple transfer')

@@ -29,16 +29,15 @@ export function unwrapRpcResponse (response: ChaiHttp.Response): any {
 }
 
 export async function runRpcHarness () {
-  const logger = new NoopLogger()
   const abiDecoder = new AbiDecoder(mockFs())
-  const chain = new TestChain(logger)
+  const chain = new TestChain()
   await chain.init()
   const cfg = getConfigWithDefaults()
   const ctx: NodeCtx = {
     abiDecoder,
     chain,
-    walletManager: new WalletManager(cfg.accounts.privateKeys),
-    logger,
+    walletManager: new WalletManager(cfg.blockchain.accounts.privateKeys),
+    logger: new NoopLogger(),
     cfg: cfg,
   }
 
@@ -53,7 +52,7 @@ export async function runRpcHarness () {
 
 export async function deployCounterContract (app: Express.Application, sender: Wallet): Promise<Contract> {
   const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
-  const { data } = await factory.getDeployTransaction(0)
+  const { data } = factory.getDeployTransaction(0)
 
   const {
     body: { result: txHash },

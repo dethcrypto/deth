@@ -1,23 +1,25 @@
 import { providers, Wallet } from 'ethers'
-import { TestChain } from './TestChain'
-import { toRpcTransactionRequest } from './model'
+import { TestChain } from '../../../src/test-chain/TestChain'
+import { toRpcTransactionRequest, makeAddress, makeQuantity } from '../../../src/test-chain/model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
-import { makeAddress, makeQuantity } from './model'
-import { DethLogger } from '../debugger/Logger/DethLogger'
-import { DEFAULT_NODE_CONFIG } from '../config/config'
+
+export async function createTestProvider (chainOrOptions?: TestChain | TestProviderOptions) {
+  const provider = new TestProvider(chainOrOptions)
+  await provider.init()
+  return provider
+}
 
 export class TestProvider extends providers.BaseProvider {
   private chain: TestChain
   private wallets: Wallet[]
 
-  constructor (logger: DethLogger, chainOrOptions?: TestChain | TestProviderOptions) {
-    // note this file should not rely on NODE/config
-    super({ name: DEFAULT_NODE_CONFIG.blockchain.chainName, chainId: DEFAULT_NODE_CONFIG.blockchain.chainId })
+  constructor (chainOrOptions?: TestChain | TestProviderOptions) {
+    super({ name: 'deth', chainId: 1337 })
 
     if (chainOrOptions instanceof TestChain) {
       this.chain = chainOrOptions
     } else {
-      this.chain = new TestChain(logger, toTestChainOptions(chainOrOptions))
+      this.chain = new TestChain(toTestChainOptions(chainOrOptions))
     }
     this.wallets = this.chain.options.value.accounts.privateKeys
       .map(pk => new Wallet(pk, this))

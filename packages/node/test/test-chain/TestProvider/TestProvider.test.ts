@@ -1,14 +1,13 @@
 import { expect } from 'chai'
 import { utils, Wallet } from 'ethers'
-import { createTestProvider } from '../../testutils'
-import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider', () => {
   it('sets the network correctly', async () => {
     const provider = await createTestProvider()
     expect(await provider.getNetwork()).to.deep.equal({
-      name: DEFAULT_NODE_CONFIG.blockchain.chainName,
-      chainId: DEFAULT_NODE_CONFIG.blockchain.chainId,
+      name: 'deth',
+      chainId: 1337,
     })
   })
 

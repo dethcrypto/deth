@@ -1,2 +1,3 @@
-export { TestProvider } from './TestProvider'
-export { TestChain } from './TestChain'
+export * from './model'
+export * from './TestChain'
+export * from './TestChainOptions'
