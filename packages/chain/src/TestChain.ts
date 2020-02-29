@@ -16,7 +16,7 @@ import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from '
 import { SnapshotObject } from './vm/storage/SnapshotObject'
 import { cloneDeep } from 'lodash'
 import { Transaction } from 'ethereumjs-tx'
-import { EventEmitter } from 'fbemitter'
+import { EventEmitter } from './EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 
@@ -33,7 +33,8 @@ export interface TransactionEvent {
  */
 export class TestChain {
   private tvm: TestVM
-  private events = new EventEmitter()
+  private vmStepEvents = new EventEmitter<InterpreterStep>()
+  private transactionEvents = new EventEmitter<TransactionEvent>()
   options: SnapshotObject<TestChainOptions>
 
   constructor (options?: Partial<TestChainOptions>) {
@@ -44,17 +45,15 @@ export class TestChain {
   async init () {
     await this.tvm.init()
 
-    this.tvm.installStepHook(runState => this.events.emit('vmstep', runState))
+    this.tvm.installStepHook(runState => this.vmStepEvents.emit(runState))
   }
 
   onVmStep (listener: (runState: InterpreterStep) => void) {
-    const subscription = this.events.addListener('vmstep', listener)
-    return () => subscription.remove()
+    return this.vmStepEvents.addListener(listener)
   }
 
   onTransaction (listener: (event: TransactionEvent) => void) {
-    const subscription = this.events.addListener('transaction', listener)
-    return () => subscription.remove()
+    return this.transactionEvents.addListener(listener)
   }
 
   makeSnapshot (): number {
@@ -120,7 +119,7 @@ export class TestChain {
   }
 
   async sendTransaction (signedTransaction: HexData): Promise<Hash> {
-    this.events.emit('transaction', this.parseTx(signedTransaction))
+    this.transactionEvents.emit(this.parseTx(signedTransaction))
     const hash = await this.tvm.addPendingTransaction(signedTransaction)
     if (this.options.value.autoMining) {
       await this.tvm.mineBlock(this.options.value.clockSkew)
