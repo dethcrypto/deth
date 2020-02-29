@@ -3,9 +3,7 @@ import { WalletManager } from '../../src/WalletManager'
 import { getDefaultProvider } from 'ethers'
 import { DEFAULT_NODE_CONFIG } from '../../src/config/config'
 
-const {
-  accounts: { privateKeys },
-} = DEFAULT_NODE_CONFIG
+const privateKeys = DEFAULT_NODE_CONFIG.blockchain.accounts.privateKeys
 
 describe('WalletManager.getWallets', () => {
   it('returns ten wallets', async () => {

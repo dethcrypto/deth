@@ -1,7 +1,3 @@
-import { TestProvider } from './test-chain/TestProvider/TestProvider'
-import { TestChain } from '../src/test-chain/TestChain'
-import { TestProviderOptions } from './test-chain/TestProvider/TestProviderOptions'
-
 const hexDigits = '0123456789abcdef'
 
 const randomHexDigit = () =>

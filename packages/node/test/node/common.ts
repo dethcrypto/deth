@@ -36,7 +36,7 @@ export async function runRpcHarness () {
   const ctx: NodeCtx = {
     abiDecoder,
     chain,
-    walletManager: new WalletManager(cfg.accounts.privateKeys),
+    walletManager: new WalletManager(cfg.blockchain.accounts.privateKeys),
     logger: new NoopLogger(),
     cfg: cfg,
   }

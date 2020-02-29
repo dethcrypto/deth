@@ -1,4 +1,4 @@
-import { TestChain, getTestChainOptionsFromConfig } from '../test-chain'
+import { TestChain } from '../test-chain'
 import { WalletManager } from '../WalletManager'
 import { RealFileSystem } from '../fs/RealFileSystem'
 import { AbiDecoder } from '../debugger/AbiDecoder'
@@ -24,7 +24,7 @@ export async function makeDefaultCtx (_config: NodeConfig = getConfigWithDefault
 
   const logger = new CliLogger(abiDecoder)
 
-  const chain = new TestChain(getTestChainOptionsFromConfig(config))
+  const chain = new TestChain(config.blockchain)
   await chain.init()
   chain.onVmStep(eventLogger(logger))
   chain.onVmStep(revertLogger(logger))
@@ -32,7 +32,7 @@ export async function makeDefaultCtx (_config: NodeConfig = getConfigWithDefault
 
   return {
     chain,
-    walletManager: new WalletManager(config.accounts.privateKeys),
+    walletManager: new WalletManager(config.blockchain.accounts.privateKeys),
     abiDecoder,
     logger,
     cfg: config,
