@@ -1,5 +1,4 @@
-import Koa from 'koa'
-import koaBody from 'koa-body'
+import express from 'express'
 
 import { Services } from './services'
 import { Config } from './config'
@@ -10,14 +9,13 @@ import { healthRouter } from './middleware/healthRouter'
 import { notFoundRouter } from './middleware/notFoundRouter'
 
 export function buildApp (services: Services, config: Config) {
-  const app = new Koa()
+  const app = express()
 
-  app.use(koaBody())
+  app.use(rpcRouter(services.rpcExecutor))
+  app.use(healthRouter())
+  app.use(notFoundRouter())
 
   app.use(errorHandler)
-  app.use(rpcRouter(services.rpcExecutor).routes())
-  app.use(healthRouter().routes())
-  app.use(notFoundRouter().routes())
 
   return app
 }

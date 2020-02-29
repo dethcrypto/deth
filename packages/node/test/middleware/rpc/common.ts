@@ -2,10 +2,10 @@ import { request, expect } from 'chai'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { ContractFactory, Wallet, Contract } from 'ethers'
 import { numberToQuantity } from '@deth/chain'
-import { Server } from 'http'
+import { Application } from 'express'
 
 export function makeRpcCall (
-  app: Server,
+  app: Application,
   methodName: string,
   params: any[] = [],
 ): Promise<ChaiHttp.Response> {
@@ -20,7 +20,7 @@ export function unwrapRpcResponse (response: ChaiHttp.Response): any {
   return response.body.result
 }
 
-export async function deployCounterContract (app: Server, sender: Wallet): Promise<Contract> {
+export async function deployCounterContract (app: Application, sender: Wallet): Promise<Contract> {
   const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
   const { data } = factory.getDeployTransaction(0)
 

@@ -1,10 +1,10 @@
-import Router from 'koa-router'
+import { Router } from 'express'
 import { NotFoundHttpError } from './errorHandler'
 
 export function notFoundRouter () {
-  const router = new Router()
+  const router = Router()
 
-  router.get('*', async () => {
+  router.get('*', () => {
     throw new NotFoundHttpError()
   })
 

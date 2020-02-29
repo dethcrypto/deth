@@ -1,17 +1,22 @@
-import Router from 'koa-router'
+import { Router } from 'express'
+import bodyParser from 'body-parser'
+import { asyncMiddleware } from './utils'
+
 import { RPCExecutorType, rpcCommandsDescription } from '../rpc/schema'
 import { sanitizeRPCEnvelope, sanitizeRPC, executeRPC, respondRPC } from '../rpc/middlewares'
 
 export function rpcRouter (rpcExecutor: RPCExecutorType) {
-  const router = new Router()
+  const router = Router()
 
-  router.post('/', async ctx => {
-    const envelope = await sanitizeRPCEnvelope(ctx.request.body)
+  router.use(bodyParser.json({ type: '*/*' }))
+
+  router.post('/', asyncMiddleware(async (req, res) => {
+    const envelope = await sanitizeRPCEnvelope(req.body)
     const parameters = await sanitizeRPC(rpcCommandsDescription, envelope)
     const result = await executeRPC(rpcExecutor, envelope.method, parameters)
     const response = respondRPC(rpcCommandsDescription, envelope, result)
-    ctx.body = response
-  })
+    res.status(200).send(response)
+  }))
 
   return router
 }
