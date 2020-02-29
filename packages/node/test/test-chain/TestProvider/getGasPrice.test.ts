@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { utils } from 'ethers'
-import { createTestProvider } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.getGasPrice', () => {
   it('defaults to one gwei', async () => {

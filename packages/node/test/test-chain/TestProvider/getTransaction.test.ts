@@ -1,7 +1,8 @@
 import { expect } from 'chai'
 import { utils, ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
-import { randomHash, createTestProvider } from '../../testutils'
+import { randomHash } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 import { DEFAULT_NODE_CONFIG } from '../../../src/config/config'
 
 describe('TestProvider.getTransaction', () => {

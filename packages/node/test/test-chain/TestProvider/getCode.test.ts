@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { ContractFactory } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE, COUNTER_RUNTIME } from '../../contracts/Counter'
-import { createTestProvider } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.getCode', () => {
   it('returns empty value for normal addresses', async () => {

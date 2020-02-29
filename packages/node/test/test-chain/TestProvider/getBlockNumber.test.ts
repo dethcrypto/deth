@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { createTestProvider } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.getBlockNumber', () => {
   it('starts with block number 0', async () => {

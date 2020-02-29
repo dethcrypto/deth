@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { utils, ContractFactory, providers } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
-import { createTestProvider } from '../../testutils'
+import { createTestProvider } from './TestProvider'
 
 describe('TestProvider.sendTransaction', () => {
   it('can send a simple transfer', async () => {
