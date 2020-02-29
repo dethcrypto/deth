@@ -1,6 +1,6 @@
-import { Hardfork } from '../../../src/test-chain/model'
+import { Hardfork } from '../../src/model'
 import { utils } from 'ethers'
-import { TestChainOptions, getTestChainOptionsWithDefaults } from '../../../src/test-chain/TestChainOptions'
+import { TestChainOptions, getTestChainOptionsWithDefaults } from '../../src/TestChainOptions'
 import BN from 'bn.js'
 import { DeepPartial } from 'ts-essentials'
 

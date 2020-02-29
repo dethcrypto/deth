@@ -1,4 +1,4 @@
-import { TestChain } from '../test-chain'
+import { TestChain } from '@deth/chain'
 import { WalletManager } from '../WalletManager'
 import { RealFileSystem } from '../fs/RealFileSystem'
 import { AbiDecoder } from '../debugger/AbiDecoder'

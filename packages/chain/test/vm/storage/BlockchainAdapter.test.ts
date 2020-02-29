@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { BN } from 'ethereumjs-util'
 
-import { DethBlockchain } from '../../../../src/test-chain/vm/storage/DethBlockchain'
-import { BlockchainAdapter } from '../../../../src/test-chain/vm/storage/BlockchainAdapter'
+import { DethBlockchain } from '../../../src/vm/storage/DethBlockchain'
+import { BlockchainAdapter } from '../../../src/vm/storage/BlockchainAdapter'
 import { dummyBlock } from './utils'
 
 describe('BlockchainAdapter legacy interface', () => {

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { makeHexData } from '../../../../src/test-chain/model'
+import { makeHexData } from '../../../src/model'
 
 describe('makeHexData', () => {
   it('accepts hex data and turns it into lowercase', () => {

@@ -1,6 +1,6 @@
 import { WalletManager } from '../../src/WalletManager'
 import { expect } from 'chai'
-import { makeAddress } from '../../src/test-chain/model'
+import { makeAddress } from '@deth/chain'
 
 describe('WalletManager.getWalletForAddress', () => {
   it('gets wallet if exist', () => {

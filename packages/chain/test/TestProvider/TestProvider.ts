@@ -1,6 +1,6 @@
 import { providers, Wallet } from 'ethers'
-import { TestChain } from '../../../src/test-chain/TestChain'
-import { toRpcTransactionRequest, makeAddress, makeQuantity } from '../../../src/test-chain/model'
+import { TestChain } from '../../src/TestChain'
+import { toRpcTransactionRequest, makeAddress, makeQuantity } from '../../src/model'
 import { TestProviderOptions, toTestChainOptions } from './TestProviderOptions'
 
 export async function createTestProvider (chainOrOptions?: TestChain | TestProviderOptions) {

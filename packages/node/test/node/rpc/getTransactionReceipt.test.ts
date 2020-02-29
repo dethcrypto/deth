@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { NodeCtx } from '../../../src/node/ctx'
 import { makeRpcCall, unwrapRpcResponse, runRpcHarness, deployCounterContract } from '../common'
-import { numberToQuantity } from '../../../src/test-chain/model'
+import { numberToQuantity } from '@deth/chain'
 
 describe('rpc -> getTransactionReceipt', () => {
   let app: Express.Application

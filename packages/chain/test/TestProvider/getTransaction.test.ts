@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { utils, ContractFactory } from 'ethers'
-import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
-import { randomHash } from '../../testutils'
+import { COUNTER_ABI, COUNTER_BYTECODE } from '../contracts/Counter'
+import { randomHash } from '../testutils'
 import { createTestProvider } from './TestProvider'
-import { DEFAULT_OPTIONS } from '../../../src/test-chain'
+import { DEFAULT_OPTIONS } from '../../src/TestChainOptions'
 
 describe('TestProvider.getTransaction', () => {
   it('can return a mined transaction', async () => {

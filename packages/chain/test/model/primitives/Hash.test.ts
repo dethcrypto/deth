@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { makeHash, bufferToHash } from '../../../../src/test-chain/model'
+import { makeHash, bufferToHash } from '../../../src/model'
 import { toBuffer } from 'ethereumjs-util'
 
 describe('makeHash', () => {

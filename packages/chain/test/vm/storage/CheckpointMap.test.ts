@@ -1,4 +1,4 @@
-import { CheckpointMap } from '../../../../src/test-chain/vm/storage/CheckpointMap'
+import { CheckpointMap } from '../../../src/vm/storage/CheckpointMap'
 import { expect } from 'chai'
 
 describe('Checkpoint map', () => {

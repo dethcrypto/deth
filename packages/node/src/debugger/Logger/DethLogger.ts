@@ -1,4 +1,4 @@
-import { Address, HexData } from '../../test-chain'
+import { Address, HexData } from '@deth/chain'
 import { WalletManager } from '../../WalletManager'
 
 export interface DethLogger {
