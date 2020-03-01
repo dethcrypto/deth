@@ -231,10 +231,12 @@ export class Chain {
     const latestBlockNumber = quantityToNumber(await this.vm.getBlockNumber())
 
     const newBlockHashes: Hash[] = []
-    for (let i = filter.lastSeenBlock + 1; i <= latestBlockNumber; i++) {
+    for (let i = filter.lastSeenBlock; i <= latestBlockNumber; i++) {
       const block = await this.vm.getBlock(numberToQuantity(i))
       newBlockHashes.push(block.hash)
     }
+
+    filter.lastSeenBlock = latestBlockNumber + 1;
 
     return newBlockHashes
   }

@@ -15,6 +15,6 @@ describe('rpc -> filters', () => {
 
     const changes = unwrapRpcResponse(await makeRpcCall(app, 'eth_getFilterChanges', [filterId]))
 
-    expect(changes).to.have.length(1)
+    expect(changes).to.have.length(2)
   })
 })

@@ -17,12 +17,15 @@ describe('Chain -> filters', () => {
     expect(id).to.be.eq(numberToQuantity(0))
   })
 
-  it('gets empty changes from existing filters', async () => {
+  it('gets changes right after creating a filter', async () => {
     const chain = await createChain()
 
     const id = await chain.createNewBlockFilter()
 
-    expect(await chain.getFilterChanges(id)).to.be.deep.eq([])
+    const changes = await chain.getFilterChanges(id);
+
+    expect(changes).to.have.length(1)
+    expect(changes[0]).to.be.string
   })
 
   it('gets changes from existing filters', async () => {
@@ -37,8 +40,18 @@ describe('Chain -> filters', () => {
 
     const changes = await chain.getFilterChanges(id)
 
-    expect(changes).to.have.length(1)
-    expect(changes[0]).to.be.string
+    expect(changes).to.have.length(2)
+  })
+
+  it('gets changes from existing filters from the last pool', async () => {
+    const chain = await createChain()
+
+    const id = await chain.createNewBlockFilter()
+    await chain.getFilterChanges(id)
+    const changes = await chain.getFilterChanges(id)
+
+
+    expect(changes).to.have.length(0)
   })
 
   it('throws on not-existing filters', async () => {
