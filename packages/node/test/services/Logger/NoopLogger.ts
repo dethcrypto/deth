@@ -7,5 +7,5 @@ export class NoopLogger implements DethLogger {
   logEvent (): void {}
   logRevert (): void {}
   logNodeInfo (): void {}
-  logNodeListening(): void {}
+  logNodeListening (): void {}
 }

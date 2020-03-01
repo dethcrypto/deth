@@ -1,4 +1,4 @@
-import { Chain, makeHexData, makeAddress } from '@deth/chain'
+import { Chain, makeHexData } from '@deth/chain'
 import { WalletManager } from './WalletManager'
 import { utils } from 'ethers'
 
