@@ -19,7 +19,7 @@ import { Transaction } from 'ethereumjs-tx'
 import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
-import { assert } from 'ts-essentials'
+import { assert, SafeDictionary } from 'ts-essentials'
 
 export interface TransactionEvent {
   to?: Address,
@@ -196,18 +196,19 @@ export class Chain {
     }
   }
 
-  private filters: Filter[] = []
+  private filters: SafeDictionary<Filter> = {}
+  private filtersCount = 0;
   async createNewBlockFilter (): Promise<Quantity> {
-    const currentId = numberToQuantity(this.filters.length)
+    const currentId = numberToQuantity(this.filtersCount++)
 
     const block = await this.vm.getLatestBlock()
-    this.filters.push({ type: 'block', lastSeenBlock: quantityToNumber(block.number) })
+    this.filters[currentId] = { type: 'block', lastSeenBlock: quantityToNumber(block.number) }
 
     return currentId
   }
 
   async getFilterChanges (id: Quantity) {
-    const filter = this.filters[quantityToNumber(id)]
+    const filter = this.filters[id]
     if (!filter) {
       throw new Error(`Filter with ${id} doesnt exist`)
     }
@@ -223,6 +224,17 @@ export class Chain {
     }
 
     return newBlockHashes
+  }
+
+  uninstallFilter (id: Quantity): boolean {
+    const filter = this.filters[id]
+
+    if (!filter) {
+      return false
+    }
+
+    this.filters[id] = undefined
+    return true
   }
 }
 

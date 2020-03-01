@@ -155,6 +155,11 @@ export const rpcCommandsDescription = {
     // note: currently supports only block filters
     returns: t.array(hash),
   },
+  eth_uninstallFilter: {
+    parameters: t.tuple([quantity]),
+    // note: currently supports only block filters
+    returns: t.boolean,
+  },
 
   // ganache compatibility
   // docs: https://github.com/trufflesuite/ganache-cli#custom-methods
