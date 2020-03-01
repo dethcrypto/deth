@@ -20,7 +20,7 @@ export const DEFAULT_CONFIG: Config = {
     abiFilesGlob: undefined,
   },
   cwd: makePath(process.cwd()),
-  fakeHistory: true,
+  fakeHistory: false,
 }
 
 export function getConfigWithDefaults (options: DeepPartial<Config> = {}): Config {

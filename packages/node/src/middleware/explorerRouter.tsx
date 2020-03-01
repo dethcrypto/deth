@@ -61,7 +61,7 @@ export function explorerRouter (explorer: Explorer) {
     ))
   }))
 
-  router.get('*', asyncMiddleware(async (req, res) => {
+  router.get('/explorer/*', asyncMiddleware(async (req, res) => {
     res.status(404).send(renderPage(
       'Not found',
       <NotFound />
