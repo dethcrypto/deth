@@ -24,6 +24,7 @@ type RpcEnvelope = t.TypeOf<typeof jsonRpcEnvelope>
 export async function sanitizeRPCEnvelope (body: unknown) {
   const result = jsonRpcEnvelope.decode(body)
   if (isLeft(result)) {
+    d(`Error during parsing RPC envelope. ${JSON.stringify(body)}`)
     throw new IOTSError(result)
   }
   return result.right
