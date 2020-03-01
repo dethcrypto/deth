@@ -18,7 +18,7 @@ export function buildApp (services: Services, config: Config) {
 
   app.use(rpcRouter(services.rpcExecutor))
   app.use(healthRouter())
-  app.use(explorerRouter())
+  app.use(explorerRouter(services.explorer))
 
   app.use(notFound)
   app.use(errorHandler)
