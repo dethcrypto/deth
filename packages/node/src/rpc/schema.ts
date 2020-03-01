@@ -40,7 +40,6 @@ const log = t.type({
   topics: t.array(hash),
   transactionHash: hash,
   transactionIndex: quantity,
-  // type: t.literal('mined'),
 })
 
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-31
@@ -146,6 +145,15 @@ export const rpcCommandsDescription = {
   eth_accounts: {
     parameters: t.undefined,
     returns: t.array(address),
+  },
+  eth_newBlockFilter: {
+    parameters: t.undefined,
+    returns: quantity,
+  },
+  eth_getFilterChanges: {
+    parameters: t.tuple([quantity]),
+    // note: currently supports only block filters
+    returns: t.array(hash),
   },
 
   // ganache compatibility

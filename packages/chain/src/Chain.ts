@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress } from './model'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress, numberToQuantity, quantityToNumber } from './model'
 import {
   Tag,
   RpcTransactionRequest,
@@ -19,6 +19,7 @@ import { Transaction } from 'ethereumjs-tx'
 import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
+import { assert } from 'ts-essentials'
 
 export interface TransactionEvent {
   to?: Address,
@@ -194,4 +195,38 @@ export class Chain {
       data: tx.data?.length > 0 ? bufferToHexData(tx.data) : undefined,
     }
   }
+
+  private filters: Filter[] = []
+  async createNewBlockFilter (): Promise<Quantity> {
+    const currentId = numberToQuantity(this.filters.length)
+
+    const block = await this.vm.getLatestBlock()
+    this.filters.push({ type: 'block', lastSeenBlock: quantityToNumber(block.number) })
+
+    return currentId
+  }
+
+  async getFilterChanges (id: Quantity) {
+    const filter = this.filters[quantityToNumber(id)]
+    if (!filter) {
+      throw new Error(`Filter with ${id} doesnt exist`)
+    }
+
+    assert(filter.type === 'block')
+
+    const latestBlockNumber = quantityToNumber(await this.vm.getBlockNumber())
+
+    const newBlockHashes: Hash[] = []
+    for (let i = filter.lastSeenBlock; i <= latestBlockNumber; i++) {
+      const block = await this.vm.getBlock(numberToQuantity(i))
+      newBlockHashes.push(block.hash)
+    }
+
+    return newBlockHashes
+  }
+}
+
+interface Filter {
+  type: 'block',
+  lastSeenBlock: number,
 }

@@ -67,6 +67,12 @@ export const createRpcExecutor = (
     eth_accounts: () => {
       return walletManager.getWallets().map(w => makeAddress(w.address))
     },
+    eth_newBlockFilter: () => {
+      return chain.createNewBlockFilter()
+    },
+    eth_getFilterChanges: ([filterId]) => {
+      return chain.getFilterChanges(filterId)
+    },
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {
