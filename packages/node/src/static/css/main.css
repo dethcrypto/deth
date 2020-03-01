@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: auto;
+  font-family: sans-serif;
+  background-color: #f8f8f8;
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+  color: #2196f3;
+}
+
+.page {
+  max-width: 1268px;
+  margin: 0 auto;
+  padding: 32px 16px 64px 16px;
+}
+
+.page--two-columns {
+  display: flex;
+  padding: 32px 8px 64px 8px;
+  flex-wrap: wrap;
+}
+
+.page__title {
+  margin: 0 0 16px 0;
+  font-weight: 300;
+  font-size: 1.8rem;
+}
+
+.page__column {
+  width: 50%;
+  padding: 0 8px;
+}
+
+.header {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.header__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1268px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header__brand {
+  color: inherit;
+  font-weight: 300;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header__brand-subtitle {
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: normal;
+  color: #777;
+}
+
+.header__search-input {
+  min-width: 320px;
+  padding: 4px 16px;
+  border: 1px solid #e3e3e3;
+  border-radius: 16px;
+}
+
+.block {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  background-color: white;
+}
+
+.block__more {
+  border-top: 1px solid #e5e5e5;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+}
+
+.table__wrapper {
+  width: 100%;
+  overflow: auto;
+}
+
+.table__wrapper--small {
+  max-height: 500px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table tr {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background-color: #f8f8f8;
+}
+
+.table__left {
+  padding: 16px;
+  text-align: left;
+}
+
+.table__right {
+  padding: 16px;
+  text-align: right;
+}
+
+.tx-address {
+  padding: 4px 16px;
+}
+
+.tx-address__label {
+  display: inline-block;
+  width: 4em;
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+
+.hash,
+.address {
+  font-family: monospace;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.hash__part {
+  letter-spacing: -8px;
+  display: inline-block;
+  width: 0.7em;
+  height: 1em;
+  color: transparent;
+  padding: 0;
+}
