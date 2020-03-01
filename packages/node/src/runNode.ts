@@ -7,6 +7,6 @@ export async function runNode (config: Config) {
   await initServices(services, config)
 
   const app = buildApp(services, config)
-
-  return app.listen(config.port)
+  app.listen(config.port)
+  services.logger.logNodeListening(config.port)
 }

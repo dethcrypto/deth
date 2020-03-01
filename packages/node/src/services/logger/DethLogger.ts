@@ -9,4 +9,5 @@ export interface DethLogger {
   logRevert(reason: string, address: Address): void,
 
   logNodeInfo(walletManager: WalletManager): void,
+  logNodeListening(port: number): void,
 }
