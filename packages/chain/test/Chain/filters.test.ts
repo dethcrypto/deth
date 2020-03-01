@@ -22,7 +22,7 @@ describe('Chain -> filters', () => {
 
     const id = await chain.createNewBlockFilter()
 
-    const changes = await chain.getFilterChanges(id);
+    const changes = await chain.getFilterChanges(id)
 
     expect(changes).to.have.length(1)
     expect(changes[0]).to.be.string
@@ -49,7 +49,6 @@ describe('Chain -> filters', () => {
     const id = await chain.createNewBlockFilter()
     await chain.getFilterChanges(id)
     const changes = await chain.getFilterChanges(id)
-
 
     expect(changes).to.have.length(0)
   })

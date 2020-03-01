@@ -236,7 +236,7 @@ export class Chain {
       newBlockHashes.push(block.hash)
     }
 
-    filter.lastSeenBlock = latestBlockNumber + 1;
+    filter.lastSeenBlock = latestBlockNumber + 1
 
     return newBlockHashes
   }
