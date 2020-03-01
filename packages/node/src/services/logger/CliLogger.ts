@@ -50,6 +50,11 @@ export class CliLogger implements DethLogger {
     }
     console.log('')
   }
+
+  logNodeListening (port: number): void {
+    console.log(`🚀 Deth node listening on port: ${blue(port)}`)
+    console.log('🌙 Visit the explorer at: ' + blue(`http://localhost:${port}/explorer`))
+  }
 }
 
 function header (name: string) {

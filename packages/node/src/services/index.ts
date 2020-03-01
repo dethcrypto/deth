@@ -7,6 +7,8 @@ import { CliLogger } from './logger/CliLogger'
 import { createChain } from './chain'
 import { WalletManager } from './WalletManager'
 import { createRpcExecutor } from './rpcExecutor'
+import { Explorer } from './Explorer'
+import { fakeHistory } from './fakeHistory'
 
 export type Services = ReturnType<typeof createServices>
 
@@ -22,6 +24,7 @@ export function createServices (config: Config, overrides?: ServiceOverrides) {
   const chain = createChain(logger, config.blockchain)
   const walletManager = new WalletManager(config.blockchain.accounts.privateKeys)
   const rpcExecutor = createRpcExecutor(chain, config.blockchain, walletManager)
+  const explorer = new Explorer(chain)
 
   return {
     fileSystem,
@@ -30,6 +33,7 @@ export function createServices (config: Config, overrides?: ServiceOverrides) {
     chain,
     walletManager,
     rpcExecutor,
+    explorer,
   }
 }
 
@@ -39,4 +43,7 @@ export async function initServices (services: Services, config: Config) {
   }
   await services.chain.init()
   services.logger.logNodeInfo(services.walletManager)
+  if (config.fakeHistory) {
+    await fakeHistory(services.chain, services.walletManager)
+  }
 }
