@@ -1,4 +1,4 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress } from './model'
+import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress, numberToQuantity, quantityToNumber } from './model'
 import {
   Tag,
   RpcTransactionRequest,
@@ -19,6 +19,8 @@ import { Transaction } from 'ethereumjs-tx'
 import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
+import { assert, SafeDictionary } from 'ts-essentials'
+import { ChainFilter } from './model/ChainFilter'
 
 export interface TransactionEvent {
   to?: Address,
@@ -205,5 +207,48 @@ export class Chain {
       from: bufferToAddress((tx as any).from),
       data: tx.data?.length > 0 ? bufferToHexData(tx.data) : undefined,
     }
+  }
+
+  private filters: SafeDictionary<ChainFilter> = {}
+  private filtersCount = 0;
+  async createNewBlockFilter (): Promise<Quantity> {
+    const currentId = numberToQuantity(this.filtersCount++)
+
+    const block = await this.vm.getLatestBlock()
+    this.filters[currentId] = { type: 'block', lastSeenBlock: quantityToNumber(block.number) }
+
+    return currentId
+  }
+
+  async getFilterChanges (id: Quantity): Promise<Hash[]> {
+    const filter = this.filters[id]
+    if (!filter) {
+      throw new Error(`Filter with ${id} doesnt exist`)
+    }
+
+    assert(filter.type === 'block')
+
+    const latestBlockNumber = quantityToNumber(await this.vm.getBlockNumber())
+
+    const newBlockHashes: Hash[] = []
+    for (let i = filter.lastSeenBlock; i <= latestBlockNumber; i++) {
+      const block = await this.vm.getBlock(numberToQuantity(i))
+      newBlockHashes.push(block.hash)
+    }
+
+    filter.lastSeenBlock = latestBlockNumber + 1
+
+    return newBlockHashes
+  }
+
+  uninstallFilter (id: Quantity): boolean {
+    const filter = this.filters[id]
+
+    if (!filter) {
+      return false
+    }
+
+    this.filters[id] = undefined
+    return true
   }
 }
