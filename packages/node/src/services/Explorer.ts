@@ -26,6 +26,10 @@ export class Explorer {
     }
     return blocks
   }
+
+  async getLatestTransactions (limit: number) {
+
+  }
 }
 
 function formatBlock (block: RpcBlockResponse): BlockListItem {

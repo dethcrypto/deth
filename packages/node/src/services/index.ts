@@ -8,6 +8,7 @@ import { createChain } from './chain'
 import { WalletManager } from './WalletManager'
 import { createRpcExecutor } from './rpcExecutor'
 import { Explorer } from './Explorer'
+import { fakeHistory } from './fakeHistory'
 
 export type Services = ReturnType<typeof createServices>
 
@@ -42,4 +43,7 @@ export async function initServices (services: Services, config: Config) {
   }
   await services.chain.init()
   services.logger.logNodeInfo(services.walletManager)
+  if (config.fakeHistory) {
+    await fakeHistory(services.chain, services.walletManager)
+  }
 }

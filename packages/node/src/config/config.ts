@@ -10,6 +10,7 @@ export type Config = {
     abiFilesGlob?: string,
   },
   cwd: Path, // config's directory if it was provided
+  fakeHistory: boolean,
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -19,6 +20,7 @@ export const DEFAULT_CONFIG: Config = {
     abiFilesGlob: undefined,
   },
   cwd: makePath(process.cwd()),
+  fakeHistory: true,
 }
 
 export function getConfigWithDefaults (options: DeepPartial<Config> = {}): Config {
