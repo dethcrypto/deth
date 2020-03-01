@@ -4,12 +4,12 @@ export function Header() {
   return (
     <header className="header">
       <div className="header__content">
-        <p className="header__brand">
+        <a href="/explorer" className="header__brand">
           Deth{' '}
           <span className="header__brand-subtitle">
             Blockchain Explorer
           </span>
-        </p>
+        </a>
         <form
           className="header__search-form"
           action="/explorer/search"
