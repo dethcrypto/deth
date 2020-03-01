@@ -26,15 +26,33 @@ describe('RPC/errors', () => {
       .send({ jsonrpc: '2.0', method: 'net_version', params: [] })
 
     expect(res).to.have.status(400)
-    expect(res.body).to.be.deep.eq({
+    expect(res.body).to.containSubset({
       jsonrpc: '2.0',
       error: {
         code: -32600,
         message: 'BadRequest',
-        details: [
-          'Invalid value undefined supplied to : { jsonrpc: "2.0", id: (number | string), method: string, params: any }/id: (number | string)/0: number',
-          'Invalid value undefined supplied to : { jsonrpc: "2.0", id: (number | string), method: string, params: any }/id: (number | string)/1: string',
-        ],
+        // details are skipped
+      },
+      id: null,
+    })
+  })
+
+  it('throws error on malformed batched envelope', async () => {
+    const app = await buildTestApp()
+    const res = await request(app)
+      .post('/')
+      .send([
+        { jsonrpc: '2.0', id: 1, method: 'net_version', params: [] },
+        { jsonrpc: '2.0', method: 'net_version', params: [] },
+      ])
+
+    expect(res).to.have.status(400)
+    expect(res.body).to.containSubset({
+      jsonrpc: '2.0',
+      error: {
+        code: -32600,
+        message: 'BadRequest',
+        // details are skipped
       },
       id: null,
     })
