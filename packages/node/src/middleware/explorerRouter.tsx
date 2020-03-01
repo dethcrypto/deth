@@ -10,8 +10,11 @@ export function explorerRouter (explorer: Explorer) {
 
   router.get('/explorer', asyncMiddleware(async (req, res) => {
     const blocks = await explorer.getLatestBlocks(10)
-    const page = renderPage('Explorer', <Home blocks={blocks} />)
-    res.send(page)
+    const transactions = await explorer.getLatestTransactions(10)
+    res.send(renderPage(
+      'Explorer',
+      <Home blocks={blocks} transactions={transactions} />,
+    ))
   }))
 
   return router

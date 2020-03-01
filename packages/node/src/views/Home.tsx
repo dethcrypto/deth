@@ -1,51 +1,35 @@
 import React from 'react'
-import { BlockListItem } from '../services/Explorer'
-import { Hash } from './Hash'
+import { BlockListItem, TransactionListItem } from '../services/Explorer'
+import { TransactionTable } from './TransactionTable'
+import { BlockTable } from './BlockTable'
+import { Page } from './Page'
 
 export interface HomeProps {
-  blocks: BlockListItem[]
+  blocks: BlockListItem[],
+  transactions: TransactionListItem[],
 }
 
-export function Home ({ blocks }: HomeProps) {
+export function Home ({ blocks, transactions }: HomeProps) {
   return (
-    <>
-      <Header />
-      <main className="content">
-        <section>
-          <h2>Latest Blocks</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="table__right">Number</th>
-                <th>Hash</th>
-                <th className="table__right">Transactions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {blocks.map((block, i) => <Block block={block} key={i} />)}
-            </tbody>
-          </table>
-        </section>
-      </main>
-    </>
-  )
-}
-
-function Block ({ block }: { block: BlockListItem }) {
-  const link = `/explorer/blocks/${block.hash}`
-  return (
-    <tr>
-      <td className="table__right"><a href={link}>{block.number}</a></td>
-      <td><a href={link}><Hash hash={block.hash} /></a></td>
-      <td className="table__right">{block.transactionCount}</td>
-    </tr>
-  )
-}
-
-function Header () {
-  return (
-    <header className="header">
-      <h1>Deth Chain Explorer</h1>
-    </header>
+    <Page twoColumns>
+      <section className="page__column">
+        <h2 className="page__title">Latest Blocks</h2>
+        <div className="block">
+          <BlockTable blocks={blocks} />
+          <a className="block__more" href="/explorer/blocks">
+            View all blocks →
+          </a>
+        </div>
+      </section>
+      <section className="page__column">
+        <h2 className="page__title">Latest Transactions</h2>
+        <div className="block">
+          <TransactionTable transactions={transactions} />
+          <a className="block__more" href="/explorer/transactions">
+            View all transactions →
+          </a>
+        </div>
+      </section>
+    </Page>
   )
 }
