@@ -1,5 +1,5 @@
 import React from 'react'
-import { Hash } from '@deth/chain'
+import { Hash } from '@ethereum-ts/chain'
 
 export interface HashDisplayProps {
   hash: Hash

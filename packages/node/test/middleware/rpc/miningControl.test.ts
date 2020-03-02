@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { makeRpcCall, unwrapRpcResponse } from './common'
 import { buildTestApp } from '../../buildTestApp'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@ethereum-ts/chain'
 
 describe('rpc -> miningControl', () => {
   it('stops mining', async () => {

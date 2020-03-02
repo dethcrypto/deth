@@ -1,6 +1,6 @@
 import { DethLogger } from './logger/DethLogger'
 import { eventLogger, revertLogger } from './logger/stepsLoggers'
-import { ChainOptions, Chain } from '@deth/chain'
+import { ChainOptions, Chain } from '@ethereum-ts/chain'
 
 export function createChain (logger: DethLogger, options: ChainOptions) {
   const chain = new Chain(options)
