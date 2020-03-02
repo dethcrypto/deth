@@ -66,6 +66,7 @@ export function sanitizeRPC<T extends t.Any> (
     return res.right
   }
 
+  d(`Error during decoding calldata. Method: ${method}, calldata: ${JSON.stringify(params)}`)
   throw new IOTSError(res)
 }
 

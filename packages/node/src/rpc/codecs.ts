@@ -1,5 +1,6 @@
 import * as t from 'io-ts'
 import { Either, map } from 'fp-ts/lib/Either'
+import { flow } from 'lodash'
 import { makeQuantity, makeHexData, makeHash, makeAddress } from '@ethereum-ts/chain'
 
 const mapCodec = <A, O, I, P, X>(
@@ -15,9 +16,16 @@ const mapCodec = <A, O, I, P, X>(
   ) as any // @TODO: without any I can't get compiler to accept this type...
 
 export const quantity = codecFromMake(makeQuantity)
-export const hexData = codecFromMake(makeHexData)
+export const hexData = codecFromMake(flow(normalize0xPrefix, makeHexData))
 export const hash = codecFromMake(makeHash)
 export const address = codecFromMake(makeAddress)
+
+function normalize0xPrefix (data: string): string {
+  if (!data.startsWith('0x')) {
+    return '0x' + data
+  }
+  return data
+}
 
 const toNull = <A>(x: A | undefined): A | null => x ?? null
 const toUndefined = <A>(x: A | null | undefined): A | undefined => x ?? undefined
@@ -53,7 +61,7 @@ function validateFromMake<T> (make: (value: string) => T) {
     try {
       return t.success(make(value))
     } catch (e) {
-      return t.failure(`Can't parse "${value}"`, c)
+      return t.failure(`Can't parse value. Reason: ${e.message ?? 'unknown'}. Original value: "${value}"`, c)
     }
   }
 }
