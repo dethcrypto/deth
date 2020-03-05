@@ -1,6 +1,6 @@
 import * as t from 'io-ts'
 import { AsyncOrSync } from 'ts-essentials'
-import { quantity, hash, hexData, address, undefinable } from './codecs'
+import { quantity, hash, hexData, address, undefinable, undefinableOr } from './codecs'
 
 export const tag = t.union([t.literal('earliest'), t.literal('latest'), t.literal('pending')])
 
@@ -36,10 +36,19 @@ const log = t.type({
   blockNumber: quantity,
   data: hexData,
   logIndex: quantity,
-  removed: t.literal(false),
+  removed: t.boolean,
   topics: t.array(hash),
   transactionHash: hash,
   transactionIndex: quantity,
+})
+
+// https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getlogs
+const logFilter = t.type({
+  fromBlock: undefinableOr(quantityOrTag, 'latest'),
+  toBlock: undefinableOr(quantityOrTag, 'latest'),
+  address: undefinable(address),
+  topics: undefinable(t.array(hash)),
+  blockHash: undefinable(hash),
 })
 
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-31
@@ -159,6 +168,11 @@ export const rpcCommandsDescription = {
     parameters: t.tuple([quantity]),
     // note: currently supports only block filters
     returns: t.boolean,
+  },
+  eth_getLogs: {
+    parameters: t.tuple([logFilter]),
+    // note: currently supports only block filters
+    returns: t.array(log),
   },
 
   // ganache compatibility

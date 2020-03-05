@@ -76,6 +76,9 @@ export const createRpcExecutor = (
     eth_uninstallFilter: ([filterId]) => {
       return chain.uninstallFilter(filterId)
     },
+    eth_getLogs: ([filter]) => {
+      return chain.getLogs(filter)
+    },
 
     // ganache compatibility
     evm_increaseTime: ([n]) => {

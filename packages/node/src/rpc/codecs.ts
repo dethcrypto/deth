@@ -29,12 +29,15 @@ function normalize0xPrefix (data: string): string {
 
 const toNull = <A>(x: A | undefined): A | null => x ?? null
 const toUndefined = <A>(x: A | null | undefined): A | undefined => x ?? undefined
+const toDefaultValue = <A>(defaultValue: A) => (x: A | null | undefined): A | undefined => x ?? defaultValue
 
 // automatically deals with null/undefined conversions across the RPC <-> our code boundary
 // decodes: null and undefined to undefined
 // encodes undefined to nulls
 export const undefinable = <A, O>(type: t.Type<A, O>) =>
   mapCodec(t.union([type, t.null, t.undefined]), map(toUndefined), toNull)
+export const undefinableOr = <A, O>(type: t.Type<A, O>, defaultInputValue: A) =>
+  mapCodec(t.union([type, t.null, t.undefined]), map(toDefaultValue(defaultInputValue)), toNull)
 
 function codecFromMake<T extends string> (make: (value: string) => T) {
   return new t.Type<T, string, unknown>('RPC_QUANTITY', checkFromMake(make), validateFromMake(make), make)
