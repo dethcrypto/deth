@@ -4,8 +4,15 @@ import { Transaction } from 'ethereumjs-tx'
 import { ChainOptions } from '../ChainOptions'
 import { getNextBlock } from './getNextBlock'
 import { getReceiptsAndResponses } from './getReceiptsAndResponses'
+import { DethBlockchain } from './storage/DethBlockchain'
 
-export async function putBlock (vm: VM, transactions: Transaction[], options: ChainOptions, clockSkew: number) {
+export async function putBlock (
+  vm: VM,
+  blockchain: DethBlockchain,
+  transactions: Transaction[],
+  options: ChainOptions,
+  clockSkew: number,
+) {
   const block = await getNextBlock(vm, transactions, options, clockSkew)
 
   const { results } = await vm.runBlock({
@@ -16,10 +23,13 @@ export async function putBlock (vm: VM, transactions: Transaction[], options: Ch
     skipBalance: options.skipBalanceCheck,
   })
   await new Promise((resolve, reject) => {
-    vm.blockchain.putBlock(block, (err: unknown, block: Block) =>
-      err != null ? reject(err) : resolve(block),
-    )
+    vm.blockchain.putBlock(block, (err: unknown, block: Block) => (err != null ? reject(err) : resolve(block)))
   })
 
-  return getReceiptsAndResponses(block, transactions, results)
+  const { receipts, responses } = getReceiptsAndResponses(block, transactions, results)
+
+  blockchain.addReceipts(receipts)
+  blockchain.addTransactions(responses)
+
+  return { receipts, responses }
 }

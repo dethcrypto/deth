@@ -1,8 +1,6 @@
 import VM from 'ethereumts-vm'
-import Block from 'ethereumjs-block'
-import { BN, toBuffer } from 'ethereumjs-util'
 import { Transaction } from 'ethereumjs-tx'
-import { RpcTransactionReceipt, RpcTransactionResponse, RpcBlockResponse, toBlockResponse } from '../model'
+import { RpcBlockResponse, toBlockResponse } from '../model'
 import { ChainOptions } from '../ChainOptions'
 import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData, bufferToHexData } from '../model'
 import { initializeVM } from './initializeVM'
@@ -32,18 +30,19 @@ export class SaneVM {
   vm!: VM
   state: Snapshot<{ stateManger: DethStateManger, blockchain: DethBlockchain }>
   pendingTransactions: Transaction[] = []
-  transactions: Map<Hash, RpcTransactionResponse> = new Map()
-  receipts: Map<Hash, RpcTransactionReceipt> = new Map()
   snapshots: VMSnapshot[] = []
 
   constructor (private options: ChainOptions) {
-    this.state = new Snapshot({
-      stateManger: new DethStateManger(),
-      blockchain: new DethBlockchain(),
-    }, (t) => ({
-      blockchain: t.blockchain.copy(),
-      stateManger: t.stateManger.copy(),
-    }))
+    this.state = new Snapshot(
+      {
+        stateManger: new DethStateManger(),
+        blockchain: new DethBlockchain(),
+      },
+      t => ({
+        blockchain: t.blockchain.copy(),
+        stateManger: t.stateManger.copy(),
+      }),
+    )
   }
 
   async init () {
@@ -93,22 +92,15 @@ export class SaneVM {
     const transactions = this.pendingTransactions
     this.pendingTransactions = []
 
-    const { receipts, responses } = await putBlock(this.vm, transactions, this.options, clockSkew)
-
-    for (const receipt of receipts) {
-      this.receipts.set(receipt.transactionHash, receipt)
-    }
-    for (const response of responses) {
-      this.transactions.set(response.hash, response)
-    }
+    await putBlock(this.vm, this.state.value.blockchain, transactions, this.options, clockSkew)
   }
 
   getTransaction (hash: Hash) {
-    return this.transactions.get(hash)
+    return this.state.value.blockchain.getTransaction(hash)
   }
 
   getTransactionReceipt (hash: Hash) {
-    return this.receipts.get(hash)
+    return this.state.value.blockchain.getTransactionReceipt(hash)
   }
 
   async getNonce (address: Address) {
@@ -134,11 +126,7 @@ export class SaneVM {
     return runIsolatedTransaction(this.vm, transaction, this.options, clockSkew)
   }
 
-  async getBlock (hashOrNumber: string): Promise<RpcBlockResponse> {
-    const query = hashOrNumber.length === 66 ? toBuffer(hashOrNumber) : new BN(hashOrNumber.substr(2), 'hex')
-    const block = await new Promise<Block>((resolve, reject) => {
-      this.vm.blockchain.getBlock(query, (err: unknown, block: Block) => (err != null ? reject(err) : resolve(block)))
-    })
-    return toBlockResponse(block)
+  async getBlock (hashOrNumber: Quantity | Hash): Promise<RpcBlockResponse> {
+    return toBlockResponse(this.state.value.blockchain.getBlock(hashOrNumber))
   }
 }
