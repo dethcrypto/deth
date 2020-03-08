@@ -4,7 +4,6 @@ import { RpcBlockResponse, toBlockResponse } from '../model'
 import { ChainOptions } from '../ChainOptions'
 import { Hash, Address, bufferToHash, Quantity, bufferToQuantity, HexData, bufferToHexData } from '../model'
 import { initializeVM } from './initializeVM'
-import { getLatestBlock } from './getLatestBlock'
 import { putBlock } from './putBlock'
 import { runIsolatedTransaction } from './runIsolatedTransaction'
 import { DethStateManger } from './storage/DethStateManger'
@@ -16,6 +15,7 @@ import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
 import { Snapshot } from '../utils/Snapshot'
+import { assert } from 'ts-essentials'
 
 interface VMSnapshot {
   blockchain: DethBlockchain,
@@ -72,13 +72,17 @@ export class SaneVM {
     ;(this.vm as any).pStateManager = new PStateManager(stateManagerAdapter as any)
   }
 
-  async getBlockNumber (): Promise<Quantity> {
-    const block = await getLatestBlock(this.vm)
+  getBlockNumber (): Quantity {
+    const block = this.state.value.blockchain.getLatestBlock()
+    assert(block, 'Blockchain is empty (no genesis block was generated)')
+
     return bufferToQuantity(block.header.number)
   }
 
-  async getLatestBlock (): Promise<RpcBlockResponse> {
-    const block = await getLatestBlock(this.vm)
+  getLatestBlock (): RpcBlockResponse {
+    const block = this.state.value.blockchain.getLatestBlock()
+    assert(block, 'Blockchain is empty (no genesis block was generated)')
+
     return toBlockResponse(block)
   }
 
@@ -123,7 +127,7 @@ export class SaneVM {
   }
 
   async runIsolatedTransaction (transaction: Transaction, clockSkew: number) {
-    return runIsolatedTransaction(this.vm, transaction, this.options, clockSkew)
+    return runIsolatedTransaction(this.vm, this.state.value.blockchain, transaction, this.options, clockSkew)
   }
 
   async getBlock (hashOrNumber: Quantity | Hash): Promise<RpcBlockResponse> {

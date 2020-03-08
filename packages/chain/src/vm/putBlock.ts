@@ -13,7 +13,7 @@ export async function putBlock (
   options: ChainOptions,
   clockSkew: number,
 ) {
-  const block = await getNextBlock(vm, transactions, options, clockSkew)
+  const block = await getNextBlock(vm, blockchain, transactions, options, clockSkew)
 
   const { results } = await vm.runBlock({
     block,

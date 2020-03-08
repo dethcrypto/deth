@@ -7,8 +7,6 @@ import {
   RpcTransactionResponse,
   RpcTransactionReceipt,
   isHash,
-  FilterRequest,
-  RpcLogObject,
 } from '../../model'
 
 /**
@@ -16,9 +14,9 @@ import {
  */
 export class DethBlockchain {
   constructor (
-    private readonly blocks: Block[] = [],
-    private readonly transactions: Map<Hash, RpcTransactionResponse> = new Map(),
-    private readonly receipts: Map<Hash, RpcTransactionReceipt> = new Map(),
+    public readonly blocks: Block[] = [],
+    public readonly transactions: Map<Hash, RpcTransactionResponse> = new Map(),
+    public readonly receipts: Map<Hash, RpcTransactionReceipt> = new Map(),
   ) {}
 
   addReceipts (receipts: RpcTransactionReceipt[]): void {
@@ -71,6 +69,10 @@ export class DethBlockchain {
     return this.blocks[this.blocks.length - 1]
   }
 
+  getBlockNumber (): number {
+    return this.blocks.length
+  }
+
   getTransaction (hash: Hash) {
     return this.transactions.get(hash)
   }
@@ -79,21 +81,10 @@ export class DethBlockchain {
     return this.receipts.get(hash)
   }
 
-  async getLogs (_filter: FilterRequest): Promise<RpcLogObject[]> {
-    throw new Error('not implemented yet')
-    // let blocks: RpcBlockResponse[] = [];
-    // if (isByBlockRequest(filter)) {
-    //   blocks.push(await this.vm.getBlock(filter.blockHash!));
-    // } else {
-    //   blocks.push(...await this.vm.getBlockByRange(filter.fromBlock, filter.toBlock));
-    // }
-
-    // const txs = await this.vm.getAllTxs(filter)
-    // filter by address
-    // filter by topics
-  }
-
   copy () {
     return new DethBlockchain([...this.blocks], new Map(this.transactions), new Map(this.receipts))
   }
 }
+
+// extract BlockchainRepository with all methods using OUR interface already
+// it should have reference to blockchain?
