@@ -1,6 +1,6 @@
 import { expectReturn, expectGas, memoryGas, Int256, expectStorage } from '../helpers'
 import { GasCost } from '../../src/opcodes'
-import { Byte } from '../../src/Byte'
+import { Bytes } from '../../src/Bytes'
 
 describe('RETURN opcode', () => {
   it('halts execution', () => {
@@ -14,7 +14,7 @@ describe('RETURN opcode', () => {
   })
 
   it('can return empty', () => {
-    expectReturn('PUSH1 00 PUSH1 00 RETURN', [])
+    expectReturn('PUSH1 00 PUSH1 00 RETURN', Bytes.EMPTY)
   })
 
   it('can return selected bytes from memory', () => {
@@ -26,7 +26,7 @@ describe('RETURN opcode', () => {
       PUSH1 1C
       RETURN
     `
-    expectReturn(assembly, [0x01, 0x02, 0x03, 0x04, 0x00] as Byte[])
+    expectReturn(assembly, Bytes.fromString('0102030400'))
   })
 
   it('causes memory expansion', () => {

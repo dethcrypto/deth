@@ -3,7 +3,7 @@ import { StackUnderflow } from '../../src/errors'
 import { executeAssembly, ADDRESS_ZERO } from './executeAssembly'
 import { Int256 } from './Int256'
 import { Bytes32 } from '../../src/Bytes32'
-import { Byte } from '../../src/Byte'
+import { Bytes } from '../../src/Bytes'
 import { ExecutionSuccess } from '../../src/ExecutionResult'
 
 export function expectUnderflow (opcode: string, minimumDepth: number) {
@@ -18,6 +18,7 @@ export function makeStack (depth: number) {
     .map((value, index) => Int256.of(depth - index))
 }
 
+// TODO: This function does not work if you return early !!!
 export function expectStackTop (assembly: string, value: string) {
   const account = ADDRESS_ZERO
   const result = executeAssembly(assembly + ' PUSH1 00 SSTORE', { account })
@@ -44,13 +45,13 @@ export function expectError (assembly: string, error: unknown) {
   expect((result as any).error).to.be.instanceOf(error)
 }
 
-export function expectReturn (assembly: string, value: Byte[]) {
+export function expectReturn (assembly: string, value: Bytes) {
   const result = executeAssembly(assembly)
   expect(result.type).to.equal('ExecutionSuccess')
   expect((result as any).returnValue).to.deep.equal(value)
 }
 
-export function expectRevert (assembly: string, value: Byte[]) {
+export function expectRevert (assembly: string, value: Bytes) {
   const result = executeAssembly(assembly)
   expect(result.type).to.equal('ExecutionRevert')
   expect((result as any).returnValue).to.deep.equal(value)

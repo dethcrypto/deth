@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 
 const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
@@ -27,8 +27,8 @@ export class Bytes32 {
     return new Bytes32(new BN(value, 16))
   }
 
-  static fromBytes (value: Byte[]) {
-    return new Bytes32(new BN(value))
+  static fromBytes (value: Bytes) {
+    return Bytes32.fromHex(value.toHex())
   }
 
   toUnsignedNumber () {
@@ -44,7 +44,7 @@ export class Bytes32 {
   }
 
   toBytes () {
-    return this.value.toArray(undefined, 32) as Byte[]
+    return Bytes.fromString(this.toHex())
   }
 
   private get signed () {

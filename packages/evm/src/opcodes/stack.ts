@@ -1,9 +1,9 @@
 import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
-import { Byte } from '../Byte'
+import { Bytes } from '../Bytes'
 
-export function makeOpPUSH (bytes: Byte[]) {
+export function makeOpPUSH (bytes: Bytes) {
   const word = Bytes32.fromBytes(bytes)
   return function opPUSH (ctx: ExecutionContext) {
     ctx.useGas(GasCost.VERYLOW)

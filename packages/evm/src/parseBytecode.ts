@@ -1,13 +1,14 @@
 import { InvalidBytecode } from './errors'
 import { Opcode, getOpcode, makeOpPUSH, opUnreachable } from './opcodes'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 
-export function parseBytecode (bytes: readonly Byte[]) {
+export function parseBytecode (bytes: Bytes) {
   const result: Opcode[] = []
   for (let i = 0; i < bytes.length; i++) {
-    const pushSize = getPushSize(bytes[i])
+    const byteInt = bytes.getByteInt(i)
+    const pushSize = getPushSize(byteInt)
     if (pushSize === 0) {
-      result.push(getOpcode(bytes[i]))
+      result.push(getOpcode(byteInt))
     } else {
       if (i + pushSize >= bytes.length) {
         throw new InvalidBytecode()
@@ -23,7 +24,7 @@ export function parseBytecode (bytes: readonly Byte[]) {
   return result
 }
 
-function getPushSize (byte: Byte) {
+function getPushSize (byte: number) {
   if (byte >= 0x60 && byte <= 0x7f) {
     return byte + 1 - 0x60
   }
