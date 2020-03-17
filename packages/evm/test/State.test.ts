@@ -46,7 +46,7 @@ describe('State', () => {
     expect(result.eq(Bytes32.ONE)).to.equal(true)
   })
 
-  it('getCode returns [] by default', () => {
+  it('getCode returns empty by default', () => {
     const state = new State()
     const result = state.getCode(address)
     expect(result).to.deep.equal(Bytes.EMPTY)
