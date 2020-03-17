@@ -1,10 +1,8 @@
 import { Bytes } from './Bytes'
 
-export class Tuple {
-  constructor (public items: (Tuple | Bytes)[]) {}
-}
+export type RlpInput = Bytes | RlpInput[]
 
-export function rlpEncode (value: Tuple | Bytes): Bytes {
+export function rlpEncode (value: RlpInput): Bytes {
   if (value instanceof Bytes) {
     return rlpEncodeBytes(value)
   } else {
@@ -12,7 +10,7 @@ export function rlpEncode (value: Tuple | Bytes): Bytes {
   }
 }
 
-function rlpEncodeTuple (value: Tuple) {
+function rlpEncodeTuple (value: RlpInput[]) {
   const items = rlpEncodeTupleItems(value)
   if (items.length < 56) {
     return Bytes.fromNumber(192 + items.length).concat(items)
@@ -24,9 +22,9 @@ function rlpEncodeTuple (value: Tuple) {
   }
 }
 
-function rlpEncodeTupleItems (value: Tuple) {
+function rlpEncodeTupleItems (value: RlpInput[]) {
   let result = Bytes.EMPTY
-  for (const item of value.items) {
+  for (const item of value) {
     result = result.concat(rlpEncode(item))
   }
   return result
@@ -52,7 +50,7 @@ export function rlpEncodeNumber (value: number): Bytes {
   return Bytes.fromNumber(value)
 }
 
-export function rlpDecode (value: Bytes): Tuple | Bytes {
+export function rlpDecode (value: Bytes): RlpInput {
   // TODO: implement
   throw new TypeError('Not implemented!')
 }

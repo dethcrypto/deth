@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import testCasesJSON from './testCases.json'
 import { Bytes } from '../../src/Bytes'
-import { Tuple, rlpEncode, rlpDecode } from '../../src/rlp'
+import { RlpInput, rlpEncode, rlpDecode } from '../../src/rlp'
 
 const testCases = testCasesJSON.map(test => ({
   name: test.name,
@@ -9,11 +9,11 @@ const testCases = testCasesJSON.map(test => ({
   encoded: mapHex(test.encoded),
 }))
 
-type Decoded = (string | Decoded)[] | string
+type Decoded = string | Decoded[]
 
-function mapDecoded (value: Decoded): Tuple | Bytes {
+function mapDecoded (value: Decoded): RlpInput {
   if (Array.isArray(value)) {
-    return new Tuple(value.map(mapDecoded))
+    return value.map(mapDecoded)
   } else {
     return mapHex(value)
   }
