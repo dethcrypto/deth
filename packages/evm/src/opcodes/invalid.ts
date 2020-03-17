@@ -1,8 +1,7 @@
 import { ExecutionContext } from '../ExecutionContext'
 import { InvalidOpcode, UnreachableInstruction } from '../errors'
-import { Byte } from '../Byte'
 
-export function invalidOpcode (opcode: Byte) {
+export function invalidOpcode (opcode: number) {
   return function (ctx: ExecutionContext) {
     throw new InvalidOpcode(opcode)
   }

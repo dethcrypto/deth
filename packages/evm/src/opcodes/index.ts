@@ -38,14 +38,13 @@ import { invalidOpcode } from './invalid'
 import { makeOpDUP, makeOpSWAP, opPOP } from './stack'
 import { opMSIZE, opMLOAD, opMSTORE, opMSTORE8 } from './memory'
 import { opSSTORE, opSLOAD } from './storage'
-import { Byte } from '../Byte'
 
 export { opUnreachable } from './invalid'
 export { makeOpPUSH } from './stack'
 export { Opcode } from './Opcode'
 export { GasCost, GasRefund } from './gasCosts'
 
-export function getOpcode (hex: Byte) {
+export function getOpcode (hex: number) {
   return OP_CODES[hex] ?? invalidOpcode(hex)
 }
 

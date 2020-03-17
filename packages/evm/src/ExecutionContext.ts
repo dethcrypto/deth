@@ -2,16 +2,16 @@ import { Stack } from './Stack'
 import { OutOfGas } from './errors'
 import { Memory } from './Memory'
 import { State } from './State'
-import { Byte } from './Byte'
 import { Message } from './Message'
 import { Opcode } from './opcodes'
 import { parseBytecode } from './parseBytecode'
+import { Bytes } from './Bytes'
 
 export class ExecutionContext {
   code: Opcode[]
   stack = new Stack()
   memory: Memory
-  returnValue?: Byte[]
+  returnValue?: Bytes
   reverted = false
   programCounter = 0
 

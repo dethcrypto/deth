@@ -28,5 +28,5 @@ export function opMSTORE8 (ctx: ExecutionContext) {
   ctx.useGas(GasCost.VERYLOW)
   const offset = ctx.stack.pop().toUnsignedNumber()
   const bytes = ctx.stack.pop().toBytes()
-  ctx.memory.setBytes(offset, bytes.slice(31))
+  ctx.memory.setBytes(offset, bytes.slice(31, 32))
 }

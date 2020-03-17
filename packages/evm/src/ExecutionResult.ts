@@ -1,5 +1,5 @@
 import { State } from './State'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 import { VMError } from './errors'
 
 export type ExecutionResult =
@@ -12,13 +12,13 @@ export interface ExecutionSuccess {
   state: State,
   gasUsed: number,
   gasRefund: number,
-  returnValue: Byte[],
+  returnValue: Bytes,
 }
 
 export interface ExecutionRevert {
   type: 'ExecutionRevert',
   gasUsed: number,
-  returnValue: Byte[],
+  returnValue: Bytes,
 }
 
 export interface ExecutionError {

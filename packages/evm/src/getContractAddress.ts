@@ -1,6 +1,6 @@
 import { Address } from './Address'
 import { Tuple, rlpEncode, rlpEncodeNumber } from './rlp'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 import { keccak256 } from 'js-sha3'
 
 export function getContractAddress (sender: Address, nonce: number) {
@@ -8,11 +8,11 @@ export function getContractAddress (sender: Address, nonce: number) {
     addressToBytes(sender),
     rlpEncodeNumber(nonce),
   ]))
-  return hashToAddress(keccak256(bytes))
+  return hashToAddress(keccak256(bytes.toByteIntArray()))
 }
 
 function addressToBytes (value: Address) {
-  return value.match(/../g)!.map(x => parseInt(x, 16) as Byte)
+  return Bytes.fromString(value)
 }
 
 function hashToAddress (hash: string) {

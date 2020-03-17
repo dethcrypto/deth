@@ -1,11 +1,11 @@
 import { Address } from './Address'
 import { Bytes32 } from './Bytes32'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 
 export interface Message {
   readonly account: Address,
-  readonly code: readonly Byte[],
-  readonly data: readonly Byte[],
+  readonly code: Bytes,
+  readonly data: Bytes,
   readonly origin: Address,
   readonly sender: Address,
   readonly gasLimit: number,
