@@ -58,7 +58,7 @@ describe('CREATE opcode', () => {
     }
   })
 
-  it('account does not have the balance', () => {
+  it('execution fails an reverts when balance is insufficient', () => {
     const state = new State()
     state.setNonce(account, 42)
     state.setBalance(account, Bytes32.fromNumber(0x68))
