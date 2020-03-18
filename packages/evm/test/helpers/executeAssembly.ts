@@ -1,7 +1,7 @@
 import { executeCode } from '../../src/executeCode'
 import { State } from '../../src/State'
 import { Address } from '../../src/Address'
-import { Byte } from '../../src/Byte'
+import { Bytes } from '../../src/Bytes'
 import { Message } from '../../src/Message'
 import { Bytes32 } from '../../src/Bytes32'
 
@@ -14,10 +14,10 @@ export const DEFAULT_MESSAGE: Message = {
   gasLimit: 1_000_000_000,
   gasPrice: Bytes32.ZERO,
   callDepth: 0,
-  data: [],
+  data: Bytes.EMPTY,
   enableStateModifications: true,
   value: Bytes32.ZERO,
-  code: [],
+  code: Bytes.EMPTY,
 }
 
 export function executeAssembly (
@@ -29,20 +29,18 @@ export function executeAssembly (
   return executeCode({ ...DEFAULT_MESSAGE, ...params, code }, state)
 }
 
-export function assemblyToBytecode (code: string): Byte[] {
+export function assemblyToBytecode (code: string): Bytes {
   const instructions = code
     .replace(/\/\/.*/g, ' ') // remove comments
     .trim()
     .split(/\s+/)
-  const result: Byte[] = []
+  let result = Bytes.EMPTY
   for (const instruction of instructions) {
-    const opcode = OPCODES[instruction] as Byte
+    const opcode = OPCODES[instruction]
     if (opcode !== undefined) {
-      result.push(opcode)
+      result = result.concat(Bytes.fromNumber(opcode))
     } else {
-      const bytes = instruction.match(/../g)!
-        .map(x => parseInt(x, 16) as Byte)
-      result.push(...bytes)
+      result = result.concat(Bytes.fromString(instruction))
     }
   }
   return result

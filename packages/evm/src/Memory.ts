@@ -1,8 +1,8 @@
 import { GasCost } from './opcodes'
-import { Byte } from './Byte'
+import { Bytes } from './Bytes'
 
 export class Memory {
-  private items: Byte[] = []
+  private items: number[] = []
   private memoryUsed = 0
   private gasUsed = 0
 
@@ -17,20 +17,20 @@ export class Memory {
   getBytes (offset: number, length: number) {
     this.useGasForAccess(offset, length)
     if (length === 0) {
-      return []
+      return Bytes.EMPTY
     }
     this.expand(offset + length)
-    return this.items.slice(offset, offset + length)
+    return Bytes.fromByteIntArray(this.items.slice(offset, offset + length))
   }
 
-  setBytes (offset: number, bytes: Byte[]) {
+  setBytes (offset: number, bytes: Bytes) {
     this.useGasForAccess(offset, bytes.length)
     if (bytes.length === 0) {
       return
     }
     this.expand(offset + bytes.length)
     for (let i = 0; i < bytes.length; i++) {
-      this.items[offset + i] = bytes[i]
+      this.items[offset + i] = bytes.getByteInt(i)
     }
   }
 
@@ -52,7 +52,7 @@ export class Memory {
   private expand (targetSize: number) {
     const targetLength = 32 * Math.ceil(targetSize / 32)
     for (let i = this.items.length; i < targetLength; i++) {
-      this.items[i] = 0 as Byte
+      this.items[i] = 0
     }
   }
 }

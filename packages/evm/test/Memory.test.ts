@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { Memory } from '../src/Memory'
 import { memoryGas } from './helpers'
-import { Byte } from '../src/Byte'
+import { Bytes } from '../src/Bytes'
 
 describe('Memory', () => {
   let gasUsed = 0
@@ -20,36 +20,36 @@ describe('Memory', () => {
 
   it('expands size and pads it to 32 bytes', () => {
     const memory = new Memory(useGas)
-    memory.setBytes(0, [0xAB, 0xCD] as Byte[])
+    memory.setBytes(0, Bytes.fromString('abcd'))
     expect(memory.getSize()).to.equal(32)
-    memory.setBytes(31, [0xAB, 0xCD] as Byte[])
+    memory.setBytes(31, Bytes.fromString('abcd'))
     expect(memory.getSize()).to.equal(64)
   })
 
   it('expands filling space with zeroes', () => {
     const memory = new Memory(useGas)
-    memory.setBytes(0, [0xAB, 0xCD] as Byte[])
-    memory.setBytes(3, [0xEF] as Byte[])
-    expect(memory.getBytes(0, 5)).to.deep.equal([0xAB, 0xCD, 0x00, 0xEF, 0x00])
+    memory.setBytes(0, Bytes.fromString('abcd'))
+    memory.setBytes(3, Bytes.fromString('ef'))
+    expect(memory.getBytes(0, 5)).to.deep.equal(Bytes.fromString('ABCD00EF00'))
   })
 
   it('getBytes results in memory expansion', () => {
     const memory = new Memory(useGas)
     const bytes = memory.getBytes(10, 1)
-    expect(bytes).to.deep.equal([0x00])
+    expect(bytes).to.deep.equal(Bytes.fromString('00'))
     expect(memory.getSize()).to.equal(32)
   })
 
   it('zero length getBytes does not expand the memory', () => {
     const memory = new Memory(useGas)
     const bytes = memory.getBytes(10_000, 0)
-    expect(bytes).to.deep.equal([])
+    expect(bytes).to.deep.equal(Bytes.EMPTY)
     expect(memory.getSize()).to.equal(0)
   })
 
   it('zero length setBytes does not expand the memory', () => {
     const memory = new Memory(useGas)
-    memory.setBytes(10_000, [])
+    memory.setBytes(10_000, Bytes.EMPTY)
     expect(memory.getSize()).to.equal(0)
   })
 
@@ -77,13 +77,13 @@ describe('Memory', () => {
 
     it('tracks memory use for setBytes', () => {
       const memory = new Memory(useGas)
-      memory.setBytes(300, [0xBA] as Byte[])
+      memory.setBytes(300, Bytes.fromString('ba'))
       expect(gasUsed).to.equal(memoryGas(301))
     })
 
     it('forwards getSize', () => {
       const memory = new Memory(useGas)
-      memory.setBytes(300, [0xBA] as Byte[])
+      memory.setBytes(300, Bytes.fromString('ba'))
       const size = memory.getSize()
       expect(size).to.equal(Math.ceil(301 / 32) * 32)
     })

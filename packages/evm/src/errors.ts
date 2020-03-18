@@ -1,5 +1,4 @@
 import { Bytes32 } from './Bytes32'
-import { Byte } from './Byte'
 
 export class VMError extends Error {
   constructor (message: string) {
@@ -26,7 +25,7 @@ export class InvalidBytecode extends VMError {
 }
 
 export class InvalidOpcode extends VMError {
-  constructor (opcode: Byte) {
+  constructor (opcode: number) {
     super('Invalid opcode 0x' + opcode.toString(16).padStart(2, '0'))
   }
 }

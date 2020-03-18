@@ -2,6 +2,7 @@ import { ExecutionContext } from '../ExecutionContext'
 import { Bytes32 } from '../Bytes32'
 import { getContractAddress } from '../getContractAddress'
 import { executeCode } from '../executeCode'
+import { Bytes } from '../Bytes'
 
 export function opCREATE (ctx: ExecutionContext) {
   const value = ctx.stack.pop()
@@ -33,7 +34,7 @@ export function opCREATE (ctx: ExecutionContext) {
     gasLimit,
     gasPrice: ctx.message.gasPrice,
     code: initCode,
-    data: [],
+    data: Bytes.EMPTY,
     enableStateModifications: ctx.message.enableStateModifications,
     value,
   }, ctx.state.clone())

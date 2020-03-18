@@ -1,6 +1,6 @@
 import { expectGas, memoryGas, expectRevert } from '../helpers'
 import { GasCost } from '../../src/opcodes'
-import { Byte } from '../../src/Byte'
+import { Bytes } from '../../src/Bytes'
 
 describe('REVERT opcode', () => {
   it(`uses ${GasCost.ZERO} gas`, () => {
@@ -8,7 +8,7 @@ describe('REVERT opcode', () => {
   })
 
   it('can return empty', () => {
-    expectRevert('PUSH1 00 PUSH1 00 REVERT', [])
+    expectRevert('PUSH1 00 PUSH1 00 REVERT', Bytes.EMPTY)
   })
 
   it('can return selected bytes from memory', () => {
@@ -20,7 +20,7 @@ describe('REVERT opcode', () => {
       PUSH1 1C
       REVERT
     `
-    expectRevert(assembly, [0x01, 0x02, 0x03, 0x04, 0x00] as Byte[])
+    expectRevert(assembly, Bytes.fromString('0102030400'))
   })
 
   it('causes memory expansion', () => {

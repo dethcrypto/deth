@@ -37,6 +37,7 @@ describe('TestProvider.getTransaction', () => {
       v: response.v,
       raw: tx.raw,
       creates: null,
+      chainId: DEFAULT_CHAIN_OPTIONS.chainId,
       networkId: DEFAULT_CHAIN_OPTIONS.chainId,
       wait: tx.wait,
     })

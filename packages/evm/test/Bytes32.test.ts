@@ -2,8 +2,8 @@ import { expect } from 'chai'
 import { Bytes32 } from '../src/Bytes32'
 import { TestCases } from './opcodes/bytes32/cases'
 import { TestCase } from './opcodes/bytes32/cases/helpers'
-import { Byte } from '../src/Byte'
 import { Address } from '../src/Address'
+import { Bytes } from '../src/Bytes'
 
 describe('Bytes32', () => {
   runTestCases('add', TestCases.ADD)
@@ -106,20 +106,24 @@ describe('Bytes32', () => {
 
   describe('from and to bytes', () => {
     it('fromBytes works for small numbers', () => {
-      const a = Bytes32.fromBytes([0x11, 0x22] as Byte[])
+      const a = Bytes32.fromBytes(Bytes.fromString('1122'))
       const b = Bytes32.fromHex('1122')
       expect(a.eq(b)).to.equal(true)
     })
 
     it('fromBytes works for large numbers', () => {
-      const a = Bytes32.fromBytes(new Array(32).fill(0xff))
+      const a = Bytes32.fromBytes(
+        Bytes.fromByteIntArray(new Array(32).fill(0xff)),
+      )
       const b = Bytes32.MAX
       expect(a.eq(b)).to.equal(true)
     })
 
     it('toBytes pads zeroes at the start', () => {
-      const result = Bytes32.fromBytes([0x1, 0x3] as Byte[]).toBytes()
-      expect(result).to.deep.equal(new Array(30).fill(0x00).concat(0x1, 0x3))
+      const result = Bytes32.fromBytes(Bytes.fromString('0103')).toBytes()
+      expect(result).to.deep.equal(
+        Bytes.fromString('0103'.padStart(64, '0')),
+      )
     })
   })
 

@@ -1,10 +1,11 @@
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
 import { InvalidJumpDestination } from '../errors'
+import { Bytes } from '../Bytes'
 
 export function opSTOP (ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
-  ctx.returnValue = []
+  ctx.returnValue = Bytes.EMPTY
 }
 
 export function opRETURN (ctx: ExecutionContext) {
