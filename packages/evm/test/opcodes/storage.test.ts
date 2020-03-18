@@ -45,6 +45,8 @@ describe('Storage opcodes', () => {
       expectUnderflow('SSTORE', 2)
     })
 
+    xit('respects state modification permissions')
+
     describe('refund', () => {
       it(`gets ${GasRefund.SCLEAR} refund when changing non-zero`, () => {
         const assembly = `

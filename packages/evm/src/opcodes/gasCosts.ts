@@ -12,6 +12,7 @@ export const GasCost = {
   SSET: 20_000,
   SRESET: 5_000,
   CODEDEPOSIT: 200,
+  CREATE: 32_000,
 }
 
 export const GasRefund = {

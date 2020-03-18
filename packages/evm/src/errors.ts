@@ -42,6 +42,12 @@ export class InvalidJumpDestination extends VMError {
   }
 }
 
+export class IllegalStateModification extends VMError {
+  constructor (kind: string) {
+    super(`Illegal state modification attempted: ${kind}`)
+  }
+}
+
 export class OutOfGas extends VMError {
   constructor () {
     super('Out of gas')

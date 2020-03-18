@@ -80,4 +80,20 @@ describe('CREATE opcode', () => {
       expect(returnValue).to.equal(Bytes32.ZERO)
     }
   })
+
+  xit('sets the code of the new account')
+  xit('does not set the code in case of error')
+  xit('does not set the code in case of revert')
+  xit('does not set the code in case of selfdestruct')
+
+  xit('sets the nonce of the new account')
+  xit('sets the balance of the new account')
+  xit('accounts for potential previous balance')
+
+  xit('only uses partial gas in case of revert')
+
+  xit('correctly uses gas')
+  xit('handles child out of gas')
+  xit('respects call depth limit')
+  xit('respects state modification permissions')
 })

@@ -1,7 +1,12 @@
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost, GasRefund } from './gasCosts'
+import { IllegalStateModification } from '../errors'
 
 export function opSSTORE (ctx: ExecutionContext) {
+  if (!ctx.message.enableStateModifications) {
+    throw new IllegalStateModification('SSTORE')
+  }
+
   const location = ctx.stack.pop()
   const value = ctx.stack.pop()
 

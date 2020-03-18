@@ -6,7 +6,7 @@ import { ExecutionResult } from './ExecutionResult'
 import { State } from './State'
 
 export function executeCode (message: Message, state: State): ExecutionResult {
-  const ctx = new ExecutionContext(message, state)
+  const ctx = new ExecutionContext(message, state.clone())
 
   while (ctx.returnValue === undefined) {
     const opcode = ctx.code[ctx.programCounter] || opSTOP

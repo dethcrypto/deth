@@ -12,6 +12,7 @@ export class ExecutionContext {
   stack = new Stack()
   memory: Memory
   returnValue?: Bytes
+  previousCallReturnValue = Bytes.EMPTY
   reverted = false
   programCounter = 0
 

@@ -90,7 +90,7 @@ This glossary will make reading the whitepaper much easier
 - I<sub>v</sub> - value
 - I<sub>b</sub> - code to be executed
 - I<sub>H</sub> - block header of current block
-- I<sub>e</sub> - call depth
+- I<sub>e</sub> - call depth (initially 0)
 - I<sub>w</sub> - state modification permission
 
 ### Other
