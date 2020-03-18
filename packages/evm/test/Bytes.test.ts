@@ -45,6 +45,16 @@ describe('Bytes', () => {
     expect(bytes.slice(1, 3)).to.deep.equal(Bytes.fromString('3456'))
   })
 
+  it('slice returns less if there is no content', () => {
+    const bytes = Bytes.fromString('123456')
+    expect(bytes.slice(1, 10)).to.deep.equal(Bytes.fromString('3456'))
+  })
+
+  it('can pad zeroes at the end', () => {
+    const padded = Bytes.fromString('1234').padZeroesEnd(5)
+    expect(padded).to.deep.equal(Bytes.fromString('1234000000'))
+  })
+
   it('can concat', () => {
     const first = Bytes.fromString('1234')
     const second = Bytes.fromString('5678')

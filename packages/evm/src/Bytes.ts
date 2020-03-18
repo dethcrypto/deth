@@ -48,6 +48,10 @@ export class Bytes {
     return new Bytes(this.value.slice(start * 2, end * 2))
   }
 
+  padZeroesEnd (length: number) {
+    return new Bytes(this.value.padEnd(length * 2, '0'))
+  }
+
   concat (other: Bytes) {
     return new Bytes(this.value + other.value)
   }
