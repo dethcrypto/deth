@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import { executeAssembly } from "../helpers"
-import { Address } from "../../src/Address"
-import { State } from "../../src/State"
+import { executeAssembly } from '../helpers'
+import { Address } from '../../src/Address'
+import { State } from '../../src/State'
 import { getContractAddress } from '../../src/getContractAddress'
 import { Bytes32 } from '../../src/Bytes32'
 
