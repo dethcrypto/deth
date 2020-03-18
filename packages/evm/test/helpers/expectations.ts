@@ -18,7 +18,7 @@ export function makeStack (depth: number) {
     .map((value, index) => Int256.of(depth - index))
 }
 
-// TODO: This function does not work if you return early !!!
+// FIXME: This function does not work if you return early !!!
 export function expectStackTop (assembly: string, value: string) {
   const account = ADDRESS_ZERO
   const result = executeAssembly(assembly + ' PUSH1 00 SSTORE', { account })
