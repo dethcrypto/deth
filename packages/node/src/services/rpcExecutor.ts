@@ -8,7 +8,7 @@ import {
   makeAddress,
   ChainOptions,
   Chain,
-} from '@deth/chain'
+} from '@ethereum-ts/chain'
 import { BadRequestHttpError } from '../middleware/errorHandler'
 import { WalletManager } from './WalletManager'
 
@@ -75,6 +75,9 @@ export const createRpcExecutor = (
     },
     eth_uninstallFilter: ([filterId]) => {
       return chain.uninstallFilter(filterId)
+    },
+    eth_getLogs: ([filter]) => {
+      return chain.getLogs(filter)
     },
 
     // ganache compatibility

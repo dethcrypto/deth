@@ -10,12 +10,16 @@ export interface FilterByRangeRequest {
   fromBlock?: Quantity | Tag,
   toBlock?: Quantity | Tag,
   address?: Address,
-  topics?: unknown,
+  topics?: Hash[],
 }
 
 // https://github.com/ethers-io/ethers.js/blob/4ac08432b8e2c7c374dc4a0e141a39a369e2d430/src.ts/providers/base-provider.ts#L370
 export interface FilterByBlockRequest {
   blockHash?: Hash,
   address?: Address,
-  topics?: unknown,
+  topics?: Hash[],
+}
+
+export function isByBlockRequest (filter: FilterRequest): filter is FilterByBlockRequest {
+  return (filter as any).blockHash
 }

@@ -1,6 +1,7 @@
 import { Opaque } from 'ts-essentials'
 import { HEX_REGEX } from './common'
 import { bufferToHex, toBuffer } from 'ethereumjs-util'
+import { isString } from 'lodash'
 
 /**
  * A hexadecimal string representing a hash.
@@ -20,4 +21,8 @@ export function bufferToHash (buffer: Buffer): Hash {
 
 export function hashToBuffer (hash: Hash): Buffer {
   return toBuffer(hash)
+}
+
+export function isHash (value: any): value is Hash {
+  return isString(value) && value.length === 66
 }

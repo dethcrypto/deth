@@ -169,7 +169,7 @@ export class Chain {
   ): Promise<RpcBlockResponse | RpcRichBlockResponse>
 
   async getBlock (blockTagOrHash: Quantity | Tag | Hash, includeTransactions?: boolean) {
-    if (blockTagOrHash === 'pending') {
+    if (blockTagOrHash === 'pending' || blockTagOrHash === 'earliest') {
       throw unsupportedBlockTag('call', blockTagOrHash)
     }
 

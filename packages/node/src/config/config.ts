@@ -1,4 +1,4 @@
-import { ChainOptions, DEFAULT_CHAIN_OPTIONS } from '@deth/chain'
+import { ChainOptions, DEFAULT_CHAIN_OPTIONS } from '@ethereum-ts/chain'
 import { Path, makePath } from '../services/fs/Path'
 import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'

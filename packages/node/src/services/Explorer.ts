@@ -6,7 +6,7 @@ import {
   Hash,
   Address,
   RpcTransactionResponse,
-} from '@deth/chain'
+} from '@ethereum-ts/chain'
 import { utils } from 'ethers'
 
 export interface BlockListItem {

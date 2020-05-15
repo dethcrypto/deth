@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
-import { bufferToAddress, bufferToHexData } from '@deth/chain'
+import { bufferToAddress, bufferToHexData } from '@ethereum-ts/chain'
 import { DethLogger } from './DethLogger'
 
 export const eventLogger = (logger: DethLogger) => (runState: InterpreterStep) => {

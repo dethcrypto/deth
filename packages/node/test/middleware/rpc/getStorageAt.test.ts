@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { makeRpcCall, unwrapRpcResponse } from './common'
 import { buildTestApp } from '../../buildTestApp'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@ethereum-ts/chain'
 
 describe('rpc -> getStorageAt', () => {
   it('works with not-existing data', async () => {

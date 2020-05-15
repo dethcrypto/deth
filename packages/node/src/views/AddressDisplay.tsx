@@ -1,5 +1,5 @@
 import React from 'react'
-import { Address } from '@deth/chain'
+import { Address } from '@ethereum-ts/chain'
 
 export interface AddressDisplayProps {
   address: Address
