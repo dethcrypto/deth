@@ -1,22 +1,36 @@
-const HEX_REGEX = /^[a-f\d]*$/i
-
 export class Bytes {
   private constructor(private value: string) {}
 
   static EMPTY = new Bytes('')
 
-  static fromString(value: string) {
-    if (!HEX_REGEX.test(value) || value.length % 2 !== 0) {
-      throw new TypeError('Invalid value')
+  static fromHex(value: string) {
+    if (!isHexString(value)) {
+      throw new TypeError('Hex string expected')
     }
-    return new Bytes(value.toLowerCase())
+    return new Bytes(normalizeHexString(value))
   }
 
-  static fromNumber(value: number) {
+  static fromByte(value: number) {
+    if (!isByte(value)) {
+      throw new TypeError('Byte expected')
+    }
     return new Bytes(numberToHex(value))
   }
 
-  static fromByteIntArray(value: number[]) {
+  static fromNumber(value: number) {
+    if (!isNonNegativeInteger(value)) {
+      throw new TypeError('Non-negative integer expected')
+    }
+    if (value === 0) {
+      return Bytes.EMPTY
+    }
+    return new Bytes(numberToHex(value))
+  }
+
+  static fromByteArray(value: number[]) {
+    if (!Array.isArray(value) || !value.every(isByte)) {
+      throw new TypeError('Array of bytes expected')
+    }
     return new Bytes(value.map(numberToHex).join(''))
   }
 
@@ -24,20 +38,24 @@ export class Bytes {
     return this.value === other.value
   }
 
-  toByteIntArray() {
+  toByteArray() {
     const array = new Array<number>(this.length)
     for (let i = 0; i < this.length; i++) {
-      array[i] = this.getByteInt(i)
+      array[i] = this.get(i)
     }
     return array
   }
 
-  getByte(index: number) {
-    return this.value[index * 2] + this.value[index * 2 + 1]
+  toHex() {
+    return this.value
   }
 
-  getByteInt(index: number) {
-    return parseInt(this.getByte(index), 16)
+  get(index: number) {
+    if (!isNonNegativeInteger(index) || index >= this.length) {
+      throw new Error('Index out of bounds')
+    }
+    const value = this.value[index * 2] + this.value[index * 2 + 1]
+    return parseInt(value, 16)
   }
 
   get length() {
@@ -51,13 +69,30 @@ export class Bytes {
   concat(other: Bytes) {
     return new Bytes(this.value + other.value)
   }
+}
 
-  toHex() {
-    return this.value
-  }
+const HEX_REGEX = /^(0x)?[a-f\d]*$/i
+function isHexString(value: unknown): value is string {
+  return typeof value === 'string' && HEX_REGEX.test(value)
+}
+
+function normalizeHexString(value: string) {
+  const hex = value.startsWith('0x') ? value.substring(2) : value
+  return normalizeHexLength(hex.toLowerCase())
+}
+
+function normalizeHexLength(hex: string) {
+  return hex.length % 2 === 0 ? hex : '0' + hex
 }
 
 function numberToHex(value: number) {
-  const hex = value.toString(16)
-  return hex.length % 2 === 0 ? hex : '0' + hex
+  return normalizeHexLength(value.toString(16))
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0
+}
+
+function isByte(value: unknown): value is number {
+  return isNonNegativeInteger(value) && value < 256
 }

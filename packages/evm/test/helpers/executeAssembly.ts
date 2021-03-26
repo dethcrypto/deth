@@ -35,9 +35,9 @@ function assemblyToBytecode(code: string): Bytes {
   for (const instruction of instructions) {
     const opcode = OPCODES[instruction]
     if (opcode !== undefined) {
-      result = result.concat(Bytes.fromNumber(opcode))
+      result = result.concat(Bytes.fromByte(opcode))
     } else {
-      result = result.concat(Bytes.fromString(instruction))
+      result = result.concat(Bytes.fromHex(instruction))
     }
   }
   return result

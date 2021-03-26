@@ -90,22 +90,20 @@ describe('Bytes32', () => {
 
   describe('from and to bytes', () => {
     it('fromBytes works for small numbers', () => {
-      const a = Bytes32.fromBytes(Bytes.fromString('1122'))
+      const a = Bytes32.fromBytes(Bytes.fromHex('1122'))
       const b = Bytes32.fromHex('1122')
       expect(a.eq(b)).to.equal(true)
     })
 
     it('fromBytes works for large numbers', () => {
-      const a = Bytes32.fromBytes(
-        Bytes.fromByteIntArray(new Array(32).fill(0xff))
-      )
+      const a = Bytes32.fromBytes(Bytes.fromByteArray(new Array(32).fill(0xff)))
       const b = Bytes32.MAX
       expect(a.eq(b)).to.equal(true)
     })
 
     it('toBytes pads zeroes at the start', () => {
-      const result = Bytes32.fromBytes(Bytes.fromString('0103')).toBytes()
-      expect(result).to.deep.equal(Bytes.fromString('0103'.padStart(64, '0')))
+      const result = Bytes32.fromBytes(Bytes.fromHex('0103')).toBytes()
+      expect(result).to.deep.equal(Bytes.fromHex('0103'.padStart(64, '0')))
     })
   })
 

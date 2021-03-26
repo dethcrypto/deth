@@ -20,7 +20,7 @@ describe('REVERT opcode', () => {
       PUSH1 1C
       REVERT
     `
-    expectRevert(assembly, Bytes.fromString('0102030400'))
+    expectRevert(assembly, Bytes.fromHex('0102030400'))
   })
 
   it('causes memory expansion', () => {

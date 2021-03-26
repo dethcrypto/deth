@@ -20,23 +20,23 @@ describe('Memory', () => {
 
   it('expands size and pads it to 32 bytes', () => {
     const memory = new Memory(useGas)
-    memory.setBytes(0, Bytes.fromString('abcd'))
+    memory.setBytes(0, Bytes.fromHex('abcd'))
     expect(memory.getSize()).to.equal(32)
-    memory.setBytes(31, Bytes.fromString('abcd'))
+    memory.setBytes(31, Bytes.fromHex('abcd'))
     expect(memory.getSize()).to.equal(64)
   })
 
   it('expands filling space with zeroes', () => {
     const memory = new Memory(useGas)
-    memory.setBytes(0, Bytes.fromString('abcd'))
-    memory.setBytes(3, Bytes.fromString('ef'))
-    expect(memory.getBytes(0, 5)).to.deep.equal(Bytes.fromString('ABCD00EF00'))
+    memory.setBytes(0, Bytes.fromHex('abcd'))
+    memory.setBytes(3, Bytes.fromHex('ef'))
+    expect(memory.getBytes(0, 5)).to.deep.equal(Bytes.fromHex('ABCD00EF00'))
   })
 
   it('getBytes results in memory expansion', () => {
     const memory = new Memory(useGas)
     const bytes = memory.getBytes(10, 1)
-    expect(bytes).to.deep.equal(Bytes.fromString('00'))
+    expect(bytes).to.deep.equal(Bytes.fromHex('00'))
     expect(memory.getSize()).to.equal(32)
   })
 
@@ -77,13 +77,13 @@ describe('Memory', () => {
 
     it('tracks memory use for setBytes', () => {
       const memory = new Memory(useGas)
-      memory.setBytes(300, Bytes.fromString('ba'))
+      memory.setBytes(300, Bytes.fromHex('ba'))
       expect(gasUsed).to.equal(memoryGas(301))
     })
 
     it('forwards getSize', () => {
       const memory = new Memory(useGas)
-      memory.setBytes(300, Bytes.fromString('ba'))
+      memory.setBytes(300, Bytes.fromHex('ba'))
       const size = memory.getSize()
       expect(size).to.equal(Math.ceil(301 / 32) * 32)
     })
