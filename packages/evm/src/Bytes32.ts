@@ -44,7 +44,7 @@ export class Bytes32 {
   }
 
   toBytes() {
-    return Bytes.fromString(this.toHex())
+    return Bytes.fromHex(this.toHex())
   }
 
   private get signed() {

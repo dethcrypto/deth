@@ -20,7 +20,7 @@ function mapDecoded(value: Decoded): RlpInput {
 }
 
 function mapHex(value: string) {
-  return Bytes.fromString(value.substring(2))
+  return Bytes.fromHex(value.substring(2))
 }
 
 describe('rlpEncode', () => {

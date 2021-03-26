@@ -32,7 +32,7 @@ describe('RETURN opcode', () => {
       PUSH1 1C
       RETURN
     `
-    expectReturn(assembly, Bytes.fromString('0102030400'))
+    expectReturn(assembly, Bytes.fromHex('0102030400'))
   })
 
   it('causes memory expansion', () => {

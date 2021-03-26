@@ -2,79 +2,155 @@ import { expect } from 'chai'
 import { Bytes } from '../src/Bytes'
 
 describe('Bytes', () => {
-  it('checks constructor arguments', () => {
-    expect(() => Bytes.fromString('foo')).to.throw(TypeError)
+  describe('fromHex', () => {
+    it('checks constructor arguments', () => {
+      expect(() => Bytes.fromHex('foo')).to.throw(TypeError)
+      expect(() => Bytes.fromHex('0x123G')).to.throw(TypeError)
+    })
+
+    it('normalizes the input', () => {
+      const bytes = Bytes.fromHex('0x123')
+      expect(bytes.toHex()).to.equal('0123')
+    })
   })
 
-  it('can be constructed from a number', () => {
-    const bytes = Bytes.fromNumber(0x00000000123)
-    expect(bytes.toHex()).to.equal('0123')
+  describe('fromByte', () => {
+    it('checks constructor arguments', () => {
+      expect(() => Bytes.fromByte(1.5)).to.throw(TypeError)
+      expect(() => Bytes.fromByte(-2)).to.throw(TypeError)
+      expect(() => Bytes.fromByte(256)).to.throw(TypeError)
+    })
+
+    it('encodes 0 as 00', () => {
+      const bytes = Bytes.fromByte(0)
+      expect(bytes.toHex()).to.equal('00')
+    })
+
+    it('encodes the byte', () => {
+      const bytes = Bytes.fromByte(0xfa)
+      expect(bytes.toHex()).to.equal('fa')
+    })
   })
 
-  it('when constructing from number zero is not treated as empty', () => {
-    const bytes = Bytes.fromNumber(0)
-    expect(bytes.length).to.equal(1)
+  describe('fromNumber', () => {
+    it('checks constructor arguments', () => {
+      expect(() => Bytes.fromNumber(1.5)).to.throw(TypeError)
+      expect(() => Bytes.fromNumber(-2)).to.throw(TypeError)
+    })
+
+    it('encodes 0 as a empty', () => {
+      const bytes = Bytes.fromNumber(0)
+      expect(bytes.toHex()).to.equal('')
+    })
+
+    it('encodes a number', () => {
+      const bytes = Bytes.fromNumber(123456)
+      expect(bytes.toHex()).to.equal('01e240')
+    })
   })
 
-  it('can be constructed from byte int array', () => {
-    const bytes = Bytes.fromByteIntArray([0, 1, 0, 2])
-    expect(bytes).to.deep.equal(Bytes.fromString('00010002'))
+  describe('fromByteArray', () => {
+    it('checks constructor arguments', () => {
+      expect(() => Bytes.fromByteArray([1.5])).to.throw(TypeError)
+      expect(() => Bytes.fromByteArray([-2])).to.throw(TypeError)
+      expect(() => Bytes.fromByteArray([256])).to.throw(TypeError)
+    })
+
+    it('concatenates encoded bytes', () => {
+      const bytes = Bytes.fromByteArray([0, 1, 2, 3])
+      expect(bytes.toHex()).to.equal('00010203')
+    })
   })
 
-  it('can get a specific byte', () => {
-    const bytes = Bytes.fromString('123456abcd')
-    expect(bytes.getByte(0)).to.equal('12')
-    expect(bytes.getByte(1)).to.equal('34')
-    expect(bytes.getByte(4)).to.equal('cd')
+  describe('equals', () => {
+    const first = Bytes.fromHex('56ab')
+    const second = Bytes.fromHex('56AB')
+    const third = Bytes.fromHex('1234')
+
+    it('first == second', () => {
+      expect(first.equals(second)).to.equal(true)
+    })
+
+    it('second == first', () => {
+      expect(second.equals(first)).to.equal(true)
+    })
+
+    it('first != third', () => {
+      expect(first.equals(third)).to.equal(false)
+    })
+
+    it('third != first', () => {
+      expect(third.equals(first)).to.equal(false)
+    })
+
+    it('second != third', () => {
+      expect(second.equals(third)).to.equal(false)
+    })
+
+    it('third != second', () => {
+      expect(third.equals(second)).to.equal(false)
+    })
   })
 
-  it('can get a specific byte as int', () => {
-    const bytes = Bytes.fromString('123456abcd')
-    expect(bytes.getByteInt(0)).to.equal(0x12)
-    expect(bytes.getByteInt(1)).to.equal(0x34)
-    expect(bytes.getByteInt(4)).to.equal(0xcd)
+  describe('toByteArray', () => {
+    it('encodes empty as []', () => {
+      expect(Bytes.EMPTY.toByteArray()).to.deep.equal([])
+    })
+
+    it('encodes bytes', () => {
+      const bytes = Bytes.fromHex('abcd1234')
+      expect(bytes.toByteArray()).to.deep.equal([0xab, 0xcd, 0x12, 0x34])
+    })
   })
 
-  it('can get length', () => {
-    const bytes = Bytes.fromString('123456abcd')
-    expect(bytes.length).to.equal(5)
+  describe('toHex', () => {
+    it('encodes empty as ""', () => {
+      expect(Bytes.EMPTY.toHex()).to.equal('')
+    })
+
+    it('encodes bytes as normalized hex string', () => {
+      const bytes = Bytes.fromHex('aBcD123')
+      expect(bytes.toHex()).to.equal('0abcd123')
+    })
   })
 
-  it('can slice the content', () => {
-    const bytes = Bytes.fromString('123456abcd')
-    expect(bytes.slice(1, 3)).to.deep.equal(Bytes.fromString('3456'))
+  describe('get', () => {
+    it('throws when index is out of bounds', () => {
+      const bytes = Bytes.fromHex('112233')
+      expect(() => bytes.get(-1)).to.throw()
+      expect(() => bytes.get(1.5)).to.throw()
+      expect(() => bytes.get(3)).to.throw()
+    })
+
+    it('returns a specific byte', () => {
+      const bytes = Bytes.fromHex('112233')
+      expect(bytes.get(1)).to.equal(0x22)
+    })
   })
 
-  it('can concat', () => {
-    const first = Bytes.fromString('1234')
-    const second = Bytes.fromString('5678')
-    expect(first.concat(second)).to.deep.equal(Bytes.fromString('12345678'))
+  describe('length', () => {
+    it('returns 0 for empty', () => {
+      expect(Bytes.EMPTY.length).to.equal(0)
+    })
+
+    it('returns the number of bytes', () => {
+      const bytes = Bytes.fromHex('112233')
+      expect(bytes.length).to.equal(3)
+    })
   })
 
-  it('can convert to string', () => {
-    const bytes = Bytes.fromString('123456abcd')
-    expect(bytes.toHex()).to.equal('123456abcd')
+  describe('slice', () => {
+    it('returns a slice', () => {
+      const bytes = Bytes.fromHex('123456abcd')
+      expect(bytes.slice(1, 3)).to.deep.equal(Bytes.fromHex('3456'))
+    })
   })
 
-  it('ignores casing', () => {
-    const bytes = Bytes.fromString('AB12cd')
-    expect(bytes.toHex()).to.equal('ab12cd')
-  })
-
-  it('can compare equality', () => {
-    const first = Bytes.fromString('56ab')
-    const second = Bytes.fromString('56AB')
-    const third = Bytes.fromString('1234')
-    expect(first.equals(second)).to.equal(true)
-    expect(second.equals(first)).to.equal(true)
-    expect(first.equals(third)).to.equal(false)
-    expect(third.equals(first)).to.equal(false)
-    expect(second.equals(third)).to.equal(false)
-    expect(third.equals(second)).to.equal(false)
-  })
-
-  it('can be converted to byte int array', () => {
-    const array = Bytes.fromString('1234ab').toByteIntArray()
-    expect(array).to.deep.equal([0x12, 0x34, 0xab])
+  describe('concat', () => {
+    it('concatenates bytes', () => {
+      const first = Bytes.fromHex('1234')
+      const second = Bytes.fromHex('5678')
+      expect(first.concat(second)).to.deep.equal(Bytes.fromHex('12345678'))
+    })
   })
 })

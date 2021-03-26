@@ -5,10 +5,10 @@ import { Bytes } from './Bytes'
 export function parseBytecode(bytes: Bytes) {
   const result: Opcode[] = []
   for (let i = 0; i < bytes.length; i++) {
-    const byteInt = bytes.getByteInt(i)
-    const pushSize = getPushSize(byteInt)
+    const byte = bytes.get(i)
+    const pushSize = getPushSize(byte)
     if (pushSize === 0) {
-      result.push(getOpcode(byteInt))
+      result.push(getOpcode(byte))
     } else {
       if (i + pushSize >= bytes.length) {
         throw new InvalidBytecode()

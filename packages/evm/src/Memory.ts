@@ -18,7 +18,7 @@ export class Memory {
       return Bytes.EMPTY
     }
     this.expand(offset + length)
-    return Bytes.fromByteIntArray(this.items.slice(offset, offset + length))
+    return Bytes.fromByteArray(this.items.slice(offset, offset + length))
   }
 
   setBytes(offset: number, bytes: Bytes) {
@@ -28,7 +28,7 @@ export class Memory {
     }
     this.expand(offset + bytes.length)
     for (let i = 0; i < bytes.length; i++) {
-      this.items[offset + i] = bytes.getByteInt(i)
+      this.items[offset + i] = bytes.get(i)
     }
   }
 
