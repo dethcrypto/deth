@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import testCasesJSON from './testCases.json'
 import { Bytes } from '../../src/Bytes'
-import { RlpInput, rlpEncode, rlpDecode } from '../../src/rlp'
+import { RlpSerializable, rlpEncode, rlpDecode } from '../../src/rlp'
 
 const testCases = testCasesJSON.map((test) => ({
   name: test.name,
@@ -11,7 +11,7 @@ const testCases = testCasesJSON.map((test) => ({
 
 type Decoded = string | Decoded[]
 
-function mapDecoded(value: Decoded): RlpInput {
+function mapDecoded(value: Decoded): RlpSerializable {
   if (Array.isArray(value)) {
     return value.map(mapDecoded)
   } else {
@@ -32,7 +32,7 @@ describe('rlpEncode', () => {
   }
 })
 
-describe.skip('rlpDecode', () => {
+describe('rlpDecode', () => {
   for (const testCase of testCases) {
     it(testCase.name, () => {
       const result = rlpDecode(testCase.encoded)

@@ -114,6 +114,17 @@ describe('Bytes', () => {
     })
   })
 
+  describe('toNumber', () => {
+    it('treats empty as zero', () => {
+      expect(Bytes.EMPTY.toNumber()).to.equal(0)
+    })
+
+    it('returns a number', () => {
+      const bytes = Bytes.fromHex('00000123')
+      expect(bytes.toNumber()).to.equal(291)
+    })
+  })
+
   describe('get', () => {
     it('throws when index is out of bounds', () => {
       const bytes = Bytes.fromHex('112233')
