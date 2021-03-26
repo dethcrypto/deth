@@ -8,20 +8,20 @@ export type ExecutionResult =
   | ExecutionError
 
 export interface ExecutionSuccess {
-  type: 'ExecutionSuccess',
-  state: State,
-  gasUsed: number,
-  gasRefund: number,
-  returnValue: Bytes,
+  type: 'ExecutionSuccess'
+  state: State
+  gasUsed: number
+  gasRefund: number
+  returnValue: Bytes
 }
 
 export interface ExecutionRevert {
-  type: 'ExecutionRevert',
-  gasUsed: number,
-  returnValue: Bytes,
+  type: 'ExecutionRevert'
+  gasUsed: number
+  returnValue: Bytes
 }
 
 export interface ExecutionError {
-  type: 'ExecutionError',
-  error: VMError,
+  type: 'ExecutionError'
+  error: VMError
 }

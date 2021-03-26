@@ -6,7 +6,9 @@ describe('WalletManager.addFromMnemonic', () => {
   it('adds not connected wallets from mnemonic', () => {
     const walletManager = new WalletManager()
 
-    walletManager.addFromMnemonic('sunset setup guard source about taste volume clown method shield height butter')
+    walletManager.addFromMnemonic(
+      'sunset setup guard source about taste volume clown method shield height butter'
+    )
 
     const allWallets = walletManager.getWallets()
 
@@ -14,11 +16,15 @@ describe('WalletManager.addFromMnemonic', () => {
     expect(allWallets[0].provider).to.be.undefined
   })
 
-  it('doesn\'t add duplicates', () => {
+  it("doesn't add duplicates", () => {
     const walletManager = new WalletManager()
 
-    walletManager.addFromMnemonic('sunset setup guard source about taste volume clown method shield height butter')
-    walletManager.addFromMnemonic('sunset setup guard source about taste volume clown method shield height butter')
+    walletManager.addFromMnemonic(
+      'sunset setup guard source about taste volume clown method shield height butter'
+    )
+    walletManager.addFromMnemonic(
+      'sunset setup guard source about taste volume clown method shield height butter'
+    )
 
     const allWallets = walletManager.getWallets()
 
@@ -30,7 +36,9 @@ describe('WalletManager.addFromMnemonic', () => {
 
     const walletManager = new WalletManager(undefined, provider)
 
-    walletManager.addFromMnemonic('sunset setup guard source about taste volume clown method shield height butter')
+    walletManager.addFromMnemonic(
+      'sunset setup guard source about taste volume clown method shield height butter'
+    )
 
     const allWallets = walletManager.getWallets()
 

@@ -6,11 +6,11 @@ import { getConfigWithDefaults, Config } from '../src/config/config'
 import { Application } from 'express'
 
 export interface TestApp extends Application {
-  services: Services,
-  config: Config,
+  services: Services
+  config: Config
 }
 
-export async function buildTestApp (): Promise<TestApp> {
+export async function buildTestApp(): Promise<TestApp> {
   const config = getConfigWithDefaults()
   const services = createServices(config, {
     fileSystem: mockFs(),

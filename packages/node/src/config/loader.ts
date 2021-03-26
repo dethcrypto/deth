@@ -10,7 +10,7 @@ import { getConfigWithDefaults } from './config'
  * - typecheck config with iots
  * - load BN values as strings in JSON
  */
-export function loadConfig (fs: FileSystem, path: Path) {
+export function loadConfig(fs: FileSystem, path: Path) {
   const exists = fs.fileExists(path)
 
   if (!exists) {

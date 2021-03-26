@@ -18,16 +18,16 @@ export class ExecutionContext {
   private _gasUsed = 0
   private _gasRefund = 0
 
-  constructor (public message: Message, public state: State) {
+  constructor(public message: Message, public state: State) {
     this.code = parseBytecode(message.code)
     this.memory = new Memory(this.useGas.bind(this))
   }
 
-  get gasUsed () {
+  get gasUsed() {
     return this._gasUsed
   }
 
-  useGas (gas: number) {
+  useGas(gas: number) {
     this._gasUsed += gas
     if (this._gasUsed > this.message.gasLimit) {
       this._gasUsed = this.message.gasLimit
@@ -35,11 +35,11 @@ export class ExecutionContext {
     }
   }
 
-  get gasRefund () {
+  get gasRefund() {
     return this._gasRefund
   }
 
-  refund (gas: number) {
+  refund(gas: number) {
     this._gasRefund += gas
   }
 }

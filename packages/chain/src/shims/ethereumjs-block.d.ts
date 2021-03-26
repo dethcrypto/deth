@@ -50,7 +50,11 @@ declare module 'ethereumjs-block' {
     canonicalDifficulty(parentBlock: Block): BN
     validateDifficulty(parentBlock: Block): boolean
     validateGasLimit(parentBlock: Block): boolean
-    validate(blockchain: Blockchain, height: BN, cb: (err: unknown) => void): void
+    validate(
+      blockchain: Blockchain,
+      height: BN,
+      cb: (err: unknown) => void
+    ): void
     hash(): Buffer
     isGenesis(): boolean
     setGenesisParams(): void
@@ -59,33 +63,33 @@ declare module 'ethereumjs-block' {
   type BufferInput = string | number | Buffer | BN | null | undefined
 
   export interface BlockData {
-    header?: BlockHeaderData,
-    uncleHeaders?: BlockHeaderData[],
-    transactions?: any,
+    header?: BlockHeaderData
+    uncleHeaders?: BlockHeaderData[]
+    transactions?: any
   }
 
   export interface BlockHeaderData {
-    parentHash?: BufferInput,
-    uncleHash?: BufferInput,
-    coinbase?: BufferInput,
-    stateRoot?: BufferInput,
-    transactionsTrie?: BufferInput,
-    receiptTrie?: BufferInput,
-    bloom?: BufferInput,
-    difficulty?: BufferInput,
-    number?: BufferInput,
-    gasLimit?: BufferInput,
-    gasUsed?: BufferInput,
-    timestamp?: BufferInput,
-    extraData?: BufferInput,
-    mixHash?: BufferInput,
-    nonce?: BufferInput,
+    parentHash?: BufferInput
+    uncleHash?: BufferInput
+    coinbase?: BufferInput
+    stateRoot?: BufferInput
+    transactionsTrie?: BufferInput
+    receiptTrie?: BufferInput
+    bloom?: BufferInput
+    difficulty?: BufferInput
+    number?: BufferInput
+    gasLimit?: BufferInput
+    gasUsed?: BufferInput
+    timestamp?: BufferInput
+    extraData?: BufferInput
+    mixHash?: BufferInput
+    nonce?: BufferInput
   }
 
   export interface BlockOpts {
-    chain?: string,
-    hardfork?: string,
-    common?: Common,
+    chain?: string
+    hardfork?: string
+    common?: Common
   }
 
   export default Block

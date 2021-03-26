@@ -5,7 +5,7 @@ export interface AddressDisplayProps {
   address: Address
 }
 
-export function AddressDisplay ({ address }: AddressDisplayProps) {
+export function AddressDisplay({ address }: AddressDisplayProps) {
   return (
     <a
       href={`/explorer/address/${address}`}

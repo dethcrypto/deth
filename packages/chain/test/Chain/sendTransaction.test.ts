@@ -52,7 +52,9 @@ describe('TestProvider.sendTransaction', () => {
     const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, wallet)
     const contract = await factory.deploy(0)
 
-    const response: providers.TransactionResponse = await contract.incrementAndRevert(1)
+    const response: providers.TransactionResponse = await contract.incrementAndRevert(
+      1
+    )
     const receipt = await provider.getTransactionReceipt(response.hash!) // note: potential race
     const value = await contract.value()
 

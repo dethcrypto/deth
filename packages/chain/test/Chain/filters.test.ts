@@ -1,7 +1,7 @@
 import { Chain, numberToQuantity } from '../../src'
 import { expect } from 'chai'
 
-async function createChain (): Promise<Chain> {
+async function createChain(): Promise<Chain> {
   const chain = new Chain()
   await chain.init()
 

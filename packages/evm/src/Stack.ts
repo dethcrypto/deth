@@ -6,14 +6,14 @@ const MAX_STACK_SIZE = 1024
 export class Stack {
   private items: Bytes32[] = []
 
-  push (word: Bytes32) {
+  push(word: Bytes32) {
     if (this.items.length === MAX_STACK_SIZE) {
       throw new StackOverflow()
     }
     this.items.push(word)
   }
 
-  pop () {
+  pop() {
     const value = this.items.pop()
     if (!value) {
       throw new StackUnderflow()
@@ -21,7 +21,7 @@ export class Stack {
     return value
   }
 
-  dup (position: number) {
+  dup(position: number) {
     if (this.items.length < position) {
       throw new StackUnderflow()
     }
@@ -30,7 +30,7 @@ export class Stack {
     this.push(this.items[target])
   }
 
-  swap (position: number) {
+  swap(position: number) {
     if (this.items.length <= position) {
       throw new StackUnderflow()
     }

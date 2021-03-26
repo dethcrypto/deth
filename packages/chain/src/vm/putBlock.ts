@@ -5,7 +5,12 @@ import { ChainOptions } from '../ChainOptions'
 import { getNextBlock } from './getNextBlock'
 import { getReceiptsAndResponses } from './getReceiptsAndResponses'
 
-export async function putBlock (vm: VM, transactions: Transaction[], options: ChainOptions, clockSkew: number) {
+export async function putBlock(
+  vm: VM,
+  transactions: Transaction[],
+  options: ChainOptions,
+  clockSkew: number
+) {
   const block = await getNextBlock(vm, transactions, options, clockSkew)
 
   const { results } = await vm.runBlock({
@@ -17,7 +22,7 @@ export async function putBlock (vm: VM, transactions: Transaction[], options: Ch
   })
   await new Promise((resolve, reject) => {
     vm.blockchain.putBlock(block, (err: unknown, block: Block) =>
-      err != null ? reject(err) : resolve(block),
+      err != null ? reject(err) : resolve(block)
     )
   })
 

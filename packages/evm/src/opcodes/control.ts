@@ -3,33 +3,33 @@ import { GasCost } from './gasCosts'
 import { InvalidJumpDestination } from '../errors'
 import { Bytes } from '../Bytes'
 
-export function opSTOP (ctx: ExecutionContext) {
+export function opSTOP(ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
   ctx.returnValue = Bytes.EMPTY
 }
 
-export function opRETURN (ctx: ExecutionContext) {
+export function opRETURN(ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
   ctx.returnValue = ctx.memory.getBytes(
     ctx.stack.pop().toUnsignedNumber(),
-    ctx.stack.pop().toUnsignedNumber(),
+    ctx.stack.pop().toUnsignedNumber()
   )
 }
 
-export function opREVERT (ctx: ExecutionContext) {
+export function opREVERT(ctx: ExecutionContext) {
   ctx.useGas(GasCost.ZERO)
   ctx.returnValue = ctx.memory.getBytes(
     ctx.stack.pop().toUnsignedNumber(),
-    ctx.stack.pop().toUnsignedNumber(),
+    ctx.stack.pop().toUnsignedNumber()
   )
   ctx.reverted = true
 }
 
-export function opJUMPDEST (ctx: ExecutionContext) {
+export function opJUMPDEST(ctx: ExecutionContext) {
   ctx.useGas(GasCost.JUMPDEST)
 }
 
-export function opJUMP (ctx: ExecutionContext) {
+export function opJUMP(ctx: ExecutionContext) {
   ctx.useGas(GasCost.MID)
 
   const destination = ctx.stack.pop()
@@ -42,7 +42,7 @@ export function opJUMP (ctx: ExecutionContext) {
   }
 }
 
-export function opJUMPI (ctx: ExecutionContext) {
+export function opJUMPI(ctx: ExecutionContext) {
   ctx.useGas(GasCost.HIGH)
 
   const destination = ctx.stack.pop()

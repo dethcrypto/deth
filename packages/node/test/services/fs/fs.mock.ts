@@ -2,7 +2,9 @@ import { FileSystem } from '../../../src/services/fs/FileSystem'
 import { spy, SinonSpy } from 'sinon'
 
 type Spied<T> = {
-  [P in keyof T]: T[P] extends (...args: any) => any ? SinonSpy<any, ReturnType<T[P]>> : T[P]
+  [P in keyof T]: T[P] extends (...args: any) => any
+    ? SinonSpy<any, ReturnType<T[P]>>
+    : T[P]
 }
 
 export const mockFs = (fs?: Partial<Spied<FileSystem>>): Spied<FileSystem> => {

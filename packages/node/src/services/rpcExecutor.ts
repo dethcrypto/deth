@@ -19,7 +19,7 @@ type SafeBlock = NoNullProperties<RpcBlockResponse>
 export const createRpcExecutor = (
   chain: Chain,
   options: ChainOptions,
-  walletManager: WalletManager,
+  walletManager: WalletManager
 ): RPCExecutorType => {
   return {
     web3_clientVersion: () => options.chainName,
@@ -33,25 +33,31 @@ export const createRpcExecutor = (
     },
     eth_blockNumber: () => chain.getBlockNumber(),
     eth_getCode: ([address, blockTag]) => chain.getCode(address, 'latest'),
-    eth_getTransactionCount: ([address, _blockTag]) => chain.getTransactionCount(address, 'latest'),
+    eth_getTransactionCount: ([address, _blockTag]) =>
+      chain.getTransactionCount(address, 'latest'),
     eth_getBlockByNumber: async ([blockTag, includeTransactions]) => {
       const block = await chain.getBlock('latest', false)
       return block as SafeBlock
     },
     // @TODO: as any b/c logs are not implemented properly right now...
-    eth_getTransactionReceipt: ([txHash]) => chain.getTransactionReceipt(txHash) as any,
+    eth_getTransactionReceipt: ([txHash]) =>
+      chain.getTransactionReceipt(txHash) as any,
     eth_sendRawTransaction: ([signedTx]) => chain.sendTransaction(signedTx),
     eth_sendTransaction: async ([tx]) => {
       const { from, nonce: _nonce, gas: _gas, ...restTx } = tx
       const wallet = walletManager.getWalletForAddress(from)
       if (!wallet) {
-        throw new BadRequestHttpError([`Can't sign tx. ${from} is not unlocked!`])
+        throw new BadRequestHttpError([
+          `Can't sign tx. ${from} is not unlocked!`,
+        ])
       }
 
       const nonce = _nonce ?? (await chain.getTransactionCount(from, 'latest'))
       const gas = _gas ?? numberToQuantity(90_000)
 
-      const signedTx = makeHexData(await wallet.sign(toEthersTransaction({ ...restTx, gas, nonce })))
+      const signedTx = makeHexData(
+        await wallet.sign(toEthersTransaction({ ...restTx, gas, nonce }))
+      )
 
       return chain.sendTransaction(signedTx)
     },
@@ -65,7 +71,7 @@ export const createRpcExecutor = (
       return result
     },
     eth_accounts: () => {
-      return walletManager.getWallets().map(w => makeAddress(w.address))
+      return walletManager.getWallets().map((w) => makeAddress(w.address))
     },
     eth_newBlockFilter: () => {
       return chain.createNewBlockFilter()

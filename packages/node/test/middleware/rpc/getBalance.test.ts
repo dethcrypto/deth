@@ -21,7 +21,10 @@ describe('rpc -> getBalance', () => {
       },
     ])
 
-    const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
+    const res = await makeRpcCall(app, 'eth_getBalance', [
+      recipient.address,
+      'latest',
+    ])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(value.toHexString())
@@ -31,7 +34,10 @@ describe('rpc -> getBalance', () => {
     const app = await buildTestApp()
     const recipient = app.services.walletManager.createEmptyWallet()
 
-    const res = await makeRpcCall(app, 'eth_getBalance', [recipient.address, 'latest'])
+    const res = await makeRpcCall(app, 'eth_getBalance', [
+      recipient.address,
+      'latest',
+    ])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq('0x0')

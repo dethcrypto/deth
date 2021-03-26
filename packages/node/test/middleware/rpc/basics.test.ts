@@ -28,7 +28,9 @@ describe('rpc -> basics', () => {
     const res = await makeRpcCall(app, 'net_version', [])
 
     expect(res).to.have.status(200)
-    expect(res.body.result).to.be.eq(DEFAULT_CONFIG.blockchain.chainId.toString())
+    expect(res.body.result).to.be.eq(
+      DEFAULT_CONFIG.blockchain.chainId.toString()
+    )
   })
 
   it('supports json batched envelope', async () => {
@@ -77,9 +79,7 @@ describe('rpc -> basics', () => {
     // should it throw an error?
     const app = await buildTestApp()
 
-    const res = await request(app)
-      .post('/')
-      .send([])
+    const res = await request(app).post('/').send([])
 
     expect(res).to.have.status(200)
     expect(res.body).to.be.deep.eq([])

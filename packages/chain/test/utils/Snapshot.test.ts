@@ -18,7 +18,7 @@ describe('Snapshot', () => {
   })
 
   it('can revert to any state', () => {
-    const snapshotObject = new Snapshot(420, x => x)
+    const snapshotObject = new Snapshot(420, (x) => x)
     const first = snapshotObject.save()
     snapshotObject.value = 21
     const second = snapshotObject.save()

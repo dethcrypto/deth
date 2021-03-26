@@ -3,7 +3,7 @@ import testCasesJSON from './testCases.json'
 import { Bytes } from '../../src/Bytes'
 import { RlpInput, rlpEncode, rlpDecode } from '../../src/rlp'
 
-const testCases = testCasesJSON.map(test => ({
+const testCases = testCasesJSON.map((test) => ({
   name: test.name,
   decoded: mapDecoded(test.decoded),
   encoded: mapHex(test.encoded),
@@ -11,7 +11,7 @@ const testCases = testCasesJSON.map(test => ({
 
 type Decoded = string | Decoded[]
 
-function mapDecoded (value: Decoded): RlpInput {
+function mapDecoded(value: Decoded): RlpInput {
   if (Array.isArray(value)) {
     return value.map(mapDecoded)
   } else {
@@ -19,7 +19,7 @@ function mapDecoded (value: Decoded): RlpInput {
   }
 }
 
-function mapHex (value: string) {
+function mapHex(value: string) {
   return Bytes.fromString(value.substring(2))
 }
 

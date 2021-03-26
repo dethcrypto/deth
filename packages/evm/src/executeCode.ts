@@ -5,7 +5,7 @@ import { VMError } from './errors'
 import { ExecutionResult } from './ExecutionResult'
 import { State } from './State'
 
-export function executeCode (message: Message, state: State): ExecutionResult {
+export function executeCode(message: Message, state: State): ExecutionResult {
   const ctx = new ExecutionContext(message, state)
 
   while (ctx.returnValue === undefined) {

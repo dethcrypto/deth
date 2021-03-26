@@ -2,6 +2,6 @@
  * Internal stored representation of blockchain filter
  */
 export interface ChainFilter {
-  type: 'block',
-  lastSeenBlock: number,
+  type: 'block'
+  lastSeenBlock: number
 }

@@ -32,7 +32,7 @@ describe('WalletManager.createEmptyUntrackedWallet', () => {
     const wallet = walletManager.createEmptyUntrackedWallet()
     const other = walletManager.getWallets()
 
-    const unique = other.every(x => x.address !== wallet.address)
+    const unique = other.every((x) => x.address !== wallet.address)
     expect(unique).to.equal(true)
   })
 })

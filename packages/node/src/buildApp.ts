@@ -10,7 +10,7 @@ import { rpcRouter } from './middleware/rpcRouter'
 import { healthRouter } from './middleware/healthRouter'
 import { explorerRouter } from './middleware/explorerRouter'
 
-export function buildApp (services: Services, config: Config) {
+export function buildApp(services: Services, config: Config) {
   const app = express()
 
   app.set('views', path.join(__dirname, './views'))

@@ -1,14 +1,14 @@
 import React from 'react'
-import { TransactionListItem } from "../services/Explorer"
-import { HashDisplay } from "./HashDisplay"
-import { utils } from "ethers"
+import { TransactionListItem } from '../services/Explorer'
+import { HashDisplay } from './HashDisplay'
+import { utils } from 'ethers'
 import { AddressDisplay } from './AddressDisplay'
 
 export interface TransactionTableProps {
   transactions: TransactionListItem[]
 }
 
-export function TransactionTable ({ transactions }: TransactionTableProps) {
+export function TransactionTable({ transactions }: TransactionTableProps) {
   return (
     <div className="table__wrapper table__wrapper--small">
       <table className="table">
@@ -40,7 +40,9 @@ function Transaction({ transaction }: { transaction: TransactionListItem }) {
         <a href={blockLink}>{transaction.blockNumber}</a>
       </td>
       <td className="table__left">
-        <a href={txLink}><HashDisplay hash={transaction.hash} /></a>
+        <a href={txLink}>
+          <HashDisplay hash={transaction.hash} />
+        </a>
       </td>
       <td className="table__left tx-address">
         <div>
@@ -52,10 +54,7 @@ function Transaction({ transaction }: { transaction: TransactionListItem }) {
           <AddressDisplay address={transaction.to} />
         </div>
       </td>
-      <td className="table__right">
-        {utils.formatEther(transaction.value)}
-      </td>
+      <td className="table__right">{utils.formatEther(transaction.value)}</td>
     </tr>
   )
 }
-

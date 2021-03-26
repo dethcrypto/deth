@@ -21,7 +21,9 @@ describe('DethBlockchain', () => {
     blockchain.putBlock(firstBlock)
     blockchain.putBlock(secondBlock)
 
-    expect(blockchain.getBlockByHash(bufferToHash(secondBlock.hash()))).to.eq(secondBlock)
+    expect(blockchain.getBlockByHash(bufferToHash(secondBlock.hash()))).to.eq(
+      secondBlock
+    )
   })
 
   it('gets not existing blocks by hash', () => {
@@ -34,7 +36,9 @@ describe('DethBlockchain', () => {
     blockchain.putBlock(firstBlock)
     blockchain.putBlock(secondBlock)
 
-    expect(blockchain.getBlockByHash(bufferToHash(thirdBlock.hash()))).to.eq(undefined)
+    expect(blockchain.getBlockByHash(bufferToHash(thirdBlock.hash()))).to.eq(
+      undefined
+    )
   })
 
   it('gets latest block', () => {

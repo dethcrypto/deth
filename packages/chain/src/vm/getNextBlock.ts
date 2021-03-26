@@ -6,18 +6,22 @@ import { toBuffer } from 'ethereumjs-util'
 import { ChainOptions } from '../ChainOptions'
 import { getLatestBlock } from './getLatestBlock'
 
-export async function getNextBlock (
+export async function getNextBlock(
   vm: VM,
   transactions: Transaction[],
   options: ChainOptions,
-  clockSkew: number,
+  clockSkew: number
 ): Promise<Block> {
   const block = await getEmptyNextBlock(vm, options, clockSkew)
   await addTransactionsToBlock(block, transactions)
   return block
 }
 
-async function getEmptyNextBlock (vm: VM, options: ChainOptions, clockSkew: number) {
+async function getEmptyNextBlock(
+  vm: VM,
+  options: ChainOptions,
+  clockSkew: number
+) {
   const latestBlock = await getLatestBlock(vm)
 
   const header: BlockHeaderData = {
@@ -30,15 +34,20 @@ async function getEmptyNextBlock (vm: VM, options: ChainOptions, clockSkew: numb
   }
   const block = new Block({ header }, { common: vm._common })
   block.validate = (blockchain, cb) => cb(null)
-  block.header.difficulty = toBuffer(block.header.canonicalDifficulty(latestBlock))
+  block.header.difficulty = toBuffer(
+    block.header.canonicalDifficulty(latestBlock)
+  )
 
   return block
 }
 
-async function addTransactionsToBlock (block: Block, transactions: Transaction[]) {
+async function addTransactionsToBlock(
+  block: Block,
+  transactions: Transaction[]
+) {
   block.transactions.push(...transactions)
   await new Promise<void>((resolve, reject) => {
-    block.genTxTrie(err => err != null ? reject(err) : resolve())
+    block.genTxTrie((err) => (err != null ? reject(err) : resolve()))
   })
   block.header.transactionsTrie = block.txTrie.root
 }

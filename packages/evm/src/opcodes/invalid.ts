@@ -1,12 +1,11 @@
-import { ExecutionContext } from '../ExecutionContext'
 import { InvalidOpcode, UnreachableInstruction } from '../errors'
 
-export function invalidOpcode (opcode: number) {
-  return function (ctx: ExecutionContext) {
+export function invalidOpcode(opcode: number) {
+  return function () {
     throw new InvalidOpcode(opcode)
   }
 }
 
-export function opUnreachable (ctx: ExecutionContext) {
+export function opUnreachable() {
   throw new UnreachableInstruction()
 }

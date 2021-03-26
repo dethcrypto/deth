@@ -5,7 +5,7 @@ const TWO_POW256 = new BN('1' + '0'.repeat(64), 16)
 const MAX_256 = new BN('f'.repeat(64), 16)
 
 export class Bytes32 {
-  private constructor (private value: BN) {
+  private constructor(private value: BN) {
     if (value.isNeg() || value.gt(MAX_256)) {
       throw new TypeError('Invalid Bytes32 initialized')
     }
@@ -15,23 +15,23 @@ export class Bytes32 {
   static ONE = new Bytes32(new BN(1))
   static MAX = new Bytes32(MAX_256)
 
-  static fromBoolean (value: boolean) {
+  static fromBoolean(value: boolean) {
     return value ? Bytes32.ONE : Bytes32.ZERO
   }
 
-  static fromNumber (value: number) {
+  static fromNumber(value: number) {
     return new Bytes32(new BN(value).toTwos(256))
   }
 
-  static fromHex (value: string) {
+  static fromHex(value: string) {
     return new Bytes32(new BN(value, 16))
   }
 
-  static fromBytes (value: Bytes) {
+  static fromBytes(value: Bytes) {
     return Bytes32.fromHex(value.toHex())
   }
 
-  toUnsignedNumber () {
+  toUnsignedNumber() {
     try {
       return this.value.toNumber()
     } catch {
@@ -39,57 +39,50 @@ export class Bytes32 {
     }
   }
 
-  toHex () {
+  toHex() {
     return this.value.toString(16, 64)
   }
 
-  toBytes () {
+  toBytes() {
     return Bytes.fromString(this.toHex())
   }
 
-  private get signed () {
+  private get signed() {
     return this.value.fromTwos(256)
   }
 
   /**
    * Returns the result of adding the argument to this machine word
    */
-  add (other: Bytes32) {
-    const result = this.value
-      .add(other.value)
-      .mod(TWO_POW256)
+  add(other: Bytes32) {
+    const result = this.value.add(other.value).mod(TWO_POW256)
     return new Bytes32(result)
   }
 
   /**
    * Returns the result of multiplying this machine word by the argument
    */
-  mul (other: Bytes32) {
-    const result = this.value
-      .mul(other.value)
-      .mod(TWO_POW256)
+  mul(other: Bytes32) {
+    const result = this.value.mul(other.value).mod(TWO_POW256)
     return new Bytes32(result)
   }
 
   /**
    * Returns the result of subtracting the argument from this machine word
    */
-  sub (other: Bytes32) {
-    const result = this.value
-      .sub(other.value)
-      .toTwos(256)
+  sub(other: Bytes32) {
+    const result = this.value.sub(other.value).toTwos(256)
     return new Bytes32(result)
   }
 
   /**
    * Returns the result of dividing this machine word by the argument
    */
-  div (other: Bytes32) {
+  div(other: Bytes32) {
     if (other.value.isZero()) {
       return Bytes32.ZERO
     }
-    const result = this.value
-      .div(other.value)
+    const result = this.value.div(other.value)
     return new Bytes32(result)
   }
 
@@ -97,25 +90,22 @@ export class Bytes32 {
    * Returns the result of dividing this machine word by the argument.
    * Treats the contents as two's complement signed integers
    */
-  sdiv (other: Bytes32) {
+  sdiv(other: Bytes32) {
     if (other.value.isZero()) {
       return Bytes32.ZERO
     }
-    const result = this.signed
-      .div(other.signed)
-      .toTwos(256)
+    const result = this.signed.div(other.signed).toTwos(256)
     return new Bytes32(result)
   }
 
   /**
    * Returns the remainder after dividing this machine word by the argument
    */
-  mod (other: Bytes32) {
+  mod(other: Bytes32) {
     if (other.value.isZero()) {
       return Bytes32.ZERO
     }
-    const result = this.value
-      .mod(other.value)
+    const result = this.value.mod(other.value)
     return new Bytes32(result)
   }
 
@@ -123,7 +113,7 @@ export class Bytes32 {
    * Returns the remainder after dividing this machine word by the argument.
    * Treats the contents as two's complement signed integers
    */
-  smod (other: Bytes32) {
+  smod(other: Bytes32) {
     if (other.value.isZero()) {
       return Bytes32.ZERO
     }
@@ -138,7 +128,7 @@ export class Bytes32 {
   /**
    * Returns this machine word raised to the power of the argument
    */
-  exp (power: Bytes32) {
+  exp(power: Bytes32) {
     if (power.value.isZero()) {
       return Bytes32.ONE
     }
@@ -155,14 +145,11 @@ export class Bytes32 {
    * integer, by extending the sign of it's n-byte fragment, where n is
    * specified by the argument
    */
-  signextend (bytes: Bytes32) {
+  signextend(bytes: Bytes32) {
     if (bytes.value.gten(31)) {
       return this
     }
-    const signBit = bytes.value
-      .muln(8)
-      .iaddn(7)
-      .toNumber()
+    const signBit = bytes.value.muln(8).iaddn(7).toNumber()
     const mask = new BN(1).ishln(signBit).isubn(1)
     const result = this.value.testn(signBit)
       ? this.value.or(mask.notn(256))
@@ -174,7 +161,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is lesser than the argument. Otherwise
    * returns `false`
    */
-  lt (other: Bytes32) {
+  lt(other: Bytes32) {
     return this.value.lt(other.value)
   }
 
@@ -182,7 +169,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is greater than the argument. Otherwise
    * returns `false`
    */
-  gt (other: Bytes32) {
+  gt(other: Bytes32) {
     return this.value.gt(other.value)
   }
 
@@ -190,7 +177,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is lesser than the argument. Otherwise
    * returns `false`. Treats the contents as two's complement signed integers
    */
-  slt (other: Bytes32) {
+  slt(other: Bytes32) {
     return this.signed.lt(other.signed)
   }
 
@@ -198,7 +185,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is greater than the argument. Otherwise
    * returns `false`. Treats the contents as two's complement signed integers
    */
-  sgt (other: Bytes32) {
+  sgt(other: Bytes32) {
     return this.signed.gt(other.signed)
   }
 
@@ -206,7 +193,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is equal to the argument. Otherwise
    * returns `false`
    */
-  eq (other: Bytes32) {
+  eq(other: Bytes32) {
     return this.value.eq(other.value)
   }
 
@@ -214,7 +201,7 @@ export class Bytes32 {
    * Returns `true` if this machine word is equal to ZERO. Otherwise
    * returns `false`
    */
-  iszero () {
+  iszero() {
     return this.value.isZero()
   }
 
@@ -222,7 +209,7 @@ export class Bytes32 {
    * Returns the result of the binary AND operation on this machine word and
    * the argument
    */
-  and (other: Bytes32) {
+  and(other: Bytes32) {
     const result = this.value.and(other.value)
     return new Bytes32(result)
   }
@@ -231,7 +218,7 @@ export class Bytes32 {
    * Returns the result of the binary OR operation on this machine word and
    * the argument
    */
-  or (other: Bytes32) {
+  or(other: Bytes32) {
     const result = this.value.or(other.value)
     return new Bytes32(result)
   }
@@ -240,7 +227,7 @@ export class Bytes32 {
    * Returns the result of the binary XOR operation on this machine word and
    * the argument
    */
-  xor (other: Bytes32) {
+  xor(other: Bytes32) {
     const result = this.value.xor(other.value)
     return new Bytes32(result)
   }
@@ -248,7 +235,7 @@ export class Bytes32 {
   /**
    * Returns the result of the binary NOT operation on this machine word
    */
-  not () {
+  not() {
     const result = this.value.notn(256)
     return new Bytes32(result)
   }
@@ -257,7 +244,7 @@ export class Bytes32 {
    * Returns the n-th byte of this machine word, or ZERO if n >= 32, where n is
    * specified by the argument
    */
-  byte (position: Bytes32) {
+  byte(position: Bytes32) {
     if (position.value.gten(32)) {
       return Bytes32.ZERO
     }
@@ -272,7 +259,7 @@ export class Bytes32 {
    * Returns this machine word shifted left by n bits, where n is specified by
    * the argument
    */
-  shl (by: Bytes32) {
+  shl(by: Bytes32) {
     if (by.value.gten(256)) {
       return Bytes32.ZERO
     }
@@ -284,7 +271,7 @@ export class Bytes32 {
    * Returns this machine word logically shifted right by n bits, where n is
    * specified by the argument
    */
-  shr (by: Bytes32) {
+  shr(by: Bytes32) {
     if (by.value.gten(256)) {
       return Bytes32.ZERO
     }
@@ -296,7 +283,7 @@ export class Bytes32 {
    * Returns this machine word arithmetically shifted right by n bits, where n
    * is specified by the argument
    */
-  sar (by: Bytes32) {
+  sar(by: Bytes32) {
     const isSigned = this.value.testn(255)
     if (by.value.gten(256)) {
       if (isSigned) {

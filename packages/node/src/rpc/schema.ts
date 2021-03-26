@@ -2,7 +2,11 @@ import * as t from 'io-ts'
 import { AsyncOrSync } from 'ts-essentials'
 import { quantity, hash, hexData, address, undefinable } from './codecs'
 
-export const tag = t.union([t.literal('earliest'), t.literal('latest'), t.literal('pending')])
+export const tag = t.union([
+  t.literal('earliest'),
+  t.literal('latest'),
+  t.literal('pending'),
+])
 
 export const quantityOrTag = t.union([quantity, tag])
 
@@ -192,10 +196,14 @@ export const rpcCommandsDescription = {
 
 type rpcCommandsDescriptionType = typeof rpcCommandsDescription
 type RpcCommandsParamsType = {
-  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<rpcCommandsDescriptionType[K]['parameters']>
+  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<
+    rpcCommandsDescriptionType[K]['parameters']
+  >
 }
 type RpcCommandsReturnsType = {
-  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<rpcCommandsDescriptionType[K]['returns']>
+  [K in keyof rpcCommandsDescriptionType]: t.TypeOf<
+    rpcCommandsDescriptionType[K]['returns']
+  >
 }
 export type RPCExecutorType = {
   [cmd in keyof rpcCommandsDescriptionType]: (

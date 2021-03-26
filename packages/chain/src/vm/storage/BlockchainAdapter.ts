@@ -12,10 +12,14 @@ import { callbackifySync } from './adapter-utils'
  * Wraps DethBlockchain into ethereum-js/blockchain compatible interface
  */
 export class BlockchainAdapter {
-  constructor (public readonly dethBlockchain: DethBlockchain) {}
-  putGenesis = callbackifySync(this.dethBlockchain.putGenesis.bind(this.dethBlockchain))
+  constructor(public readonly dethBlockchain: DethBlockchain) {}
+  putGenesis = callbackifySync(
+    this.dethBlockchain.putGenesis.bind(this.dethBlockchain)
+  )
 
-  getLatestBlock = callbackifySync(this.dethBlockchain.getLatestBlock.bind(this.dethBlockchain))
+  getLatestBlock = callbackifySync(
+    this.dethBlockchain.getLatestBlock.bind(this.dethBlockchain)
+  )
 
   getBlock = callbackify(async (numberOrTag: Buffer | number | BN) => {
     if (numberOrTag instanceof Buffer) {
@@ -28,5 +32,7 @@ export class BlockchainAdapter {
   })
 
   // @todo isGenesis arg is missing
-  putBlock = callbackifySync(this.dethBlockchain.putBlock.bind(this.dethBlockchain))
+  putBlock = callbackifySync(
+    this.dethBlockchain.putBlock.bind(this.dethBlockchain)
+  )
 }

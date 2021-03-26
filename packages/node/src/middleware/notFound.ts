@@ -1,5 +1,5 @@
 import { NotFoundHttpError } from './errorHandler'
 
-export function notFound () {
+export function notFound() {
   throw new NotFoundHttpError()
 }

@@ -8,7 +8,7 @@ export const Int256 = {
   MAX_UNSIGNED: 'f'.repeat(64),
   MAX_SIGNED: '7' + 'f'.repeat(63),
   MIN_SIGNED: '8' + '0'.repeat(63),
-  of (value: number | string) {
+  of(value: number | string) {
     if (typeof value === 'string') {
       if (!HEX_REGEX.test(value)) {
         throw new TypeError('Invalid Int256')
@@ -25,8 +25,6 @@ export const Int256 = {
   },
 }
 
-function negative (value: string) {
-  return Bytes32.ZERO
-    .sub(Bytes32.fromHex(value))
-    .toHex()
+function negative(value: string) {
+  return Bytes32.ZERO.sub(Bytes32.fromHex(value)).toHex()
 }

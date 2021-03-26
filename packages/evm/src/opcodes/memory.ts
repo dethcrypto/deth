@@ -2,14 +2,14 @@ import { Bytes32 } from '../Bytes32'
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost } from './gasCosts'
 
-export function opMSIZE (ctx: ExecutionContext) {
+export function opMSIZE(ctx: ExecutionContext) {
   ctx.useGas(GasCost.BASE)
   const size = ctx.memory.getSize()
   const result = Bytes32.fromNumber(size)
   ctx.stack.push(result)
 }
 
-export function opMLOAD (ctx: ExecutionContext) {
+export function opMLOAD(ctx: ExecutionContext) {
   ctx.useGas(GasCost.VERYLOW)
   const offset = ctx.stack.pop().toUnsignedNumber()
   const bytes = ctx.memory.getBytes(offset, 32)
@@ -17,14 +17,14 @@ export function opMLOAD (ctx: ExecutionContext) {
   ctx.stack.push(result)
 }
 
-export function opMSTORE (ctx: ExecutionContext) {
+export function opMSTORE(ctx: ExecutionContext) {
   ctx.useGas(GasCost.VERYLOW)
   const offset = ctx.stack.pop().toUnsignedNumber()
   const bytes = ctx.stack.pop().toBytes()
   ctx.memory.setBytes(offset, bytes)
 }
 
-export function opMSTORE8 (ctx: ExecutionContext) {
+export function opMSTORE8(ctx: ExecutionContext) {
   ctx.useGas(GasCost.VERYLOW)
   const offset = ctx.stack.pop().toUnsignedNumber()
   const bytes = ctx.stack.pop().toBytes()

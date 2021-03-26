@@ -75,101 +75,32 @@ import paritySAR from './parity/sar'
 export { TestCase } from './helpers'
 
 export const TestCases = {
-  ADD: [
-    ...importGeth(gethADD),
-    ...importParity(parityADD),
-    ...dethADD,
-  ],
-  MUL: [
-    ...importGeth(gethMUL),
-    ...importParity(parityMUL),
-  ],
-  SUB: [
-    ...importGeth(gethSUB),
-    ...importParity(paritySUB),
-  ],
-  DIV: [
-    ...importGeth(gethDIV),
-    ...importParity(parityDIV),
-  ],
-  SDIV: [
-    ...importGeth(gethSDIV),
-    ...importParity(paritySDIV),
-  ],
-  MOD: [
-    ...importGeth(gethMOD),
-    ...importParity(parityMOD),
-  ],
-  SMOD: [
-    ...importGeth(gethSMOD),
-    ...importParity(paritySMOD),
-  ],
-  ADDMOD: [
-    ...importParity(parityADDMOD),
-  ],
-  MULMOD: [
-    ...importParity(parityMULMOD),
-  ],
-  EXP: [
-    ...importGeth(gethEXP),
-    ...importParity(parityEXP),
-  ],
+  ADD: [...importGeth(gethADD), ...importParity(parityADD), ...dethADD],
+  MUL: [...importGeth(gethMUL), ...importParity(parityMUL)],
+  SUB: [...importGeth(gethSUB), ...importParity(paritySUB)],
+  DIV: [...importGeth(gethDIV), ...importParity(parityDIV)],
+  SDIV: [...importGeth(gethSDIV), ...importParity(paritySDIV)],
+  MOD: [...importGeth(gethMOD), ...importParity(parityMOD)],
+  SMOD: [...importGeth(gethSMOD), ...importParity(paritySMOD)],
+  ADDMOD: [...importParity(parityADDMOD)],
+  MULMOD: [...importParity(parityMULMOD)],
+  EXP: [...importGeth(gethEXP), ...importParity(parityEXP)],
   SIGNEXTEND: [
     ...importGeth(gethSIGNEXTEND),
     ...importParity(paritySIGNEXTEND),
   ],
-  LT: [
-    ...importGeth(gethLT),
-    ...importParity(parityLT),
-  ],
-  GT: [
-    ...importGeth(gethGT),
-    ...importParity(parityGT),
-  ],
-  SLT: [
-    ...importGeth(gethSLT),
-    ...importParity(paritySLT),
-  ],
-  SGT: [
-    ...importGeth(gethSGT),
-    ...importParity(paritySGT),
-  ],
-  EQ: [
-    ...importGeth(gethEQ),
-    ...importParity(parityEQ),
-  ],
-  ISZERO: [
-    ...importParity(parityISZERO),
-  ],
-  AND: [
-    ...importGeth(gethAND),
-    ...importParity(parityAND),
-  ],
-  OR: [
-    ...importGeth(gethOR),
-    ...importParity(parityOR),
-  ],
-  XOR: [
-    ...importGeth(gethXOR),
-    ...importParity(parityXOR),
-  ],
-  NOT: [
-    ...importParity(parityNOT),
-  ],
-  BYTE: [
-    ...importGeth(gethBYTE),
-    ...importParity(parityBYTE),
-  ],
-  SHL: [
-    ...importGeth(gethSHL),
-    ...importParity(paritySHL),
-  ],
-  SHR: [
-    ...importGeth(gethSHR),
-    ...importParity(paritySHR),
-  ],
-  SAR: [
-    ...importGeth(gethSAR),
-    ...importParity(paritySAR),
-  ],
+  LT: [...importGeth(gethLT), ...importParity(parityLT)],
+  GT: [...importGeth(gethGT), ...importParity(parityGT)],
+  SLT: [...importGeth(gethSLT), ...importParity(paritySLT)],
+  SGT: [...importGeth(gethSGT), ...importParity(paritySGT)],
+  EQ: [...importGeth(gethEQ), ...importParity(parityEQ)],
+  ISZERO: [...importParity(parityISZERO)],
+  AND: [...importGeth(gethAND), ...importParity(parityAND)],
+  OR: [...importGeth(gethOR), ...importParity(parityOR)],
+  XOR: [...importGeth(gethXOR), ...importParity(parityXOR)],
+  NOT: [...importParity(parityNOT)],
+  BYTE: [...importGeth(gethBYTE), ...importParity(parityBYTE)],
+  SHL: [...importGeth(gethSHL), ...importParity(paritySHL)],
+  SHR: [...importGeth(gethSHR), ...importParity(paritySHR)],
+  SAR: [...importGeth(gethSAR), ...importParity(paritySAR)],
 }

@@ -4,13 +4,13 @@ import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
 
 export type Config = {
-  port: number,
-  blockchain: ChainOptions,
+  port: number
+  blockchain: ChainOptions
   debugger: {
-    abiFilesGlob?: string,
-  },
-  cwd: Path, // config's directory if it was provided
-  fakeHistory: boolean,
+    abiFilesGlob?: string
+  }
+  cwd: Path // config's directory if it was provided
+  fakeHistory: boolean
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -23,6 +23,8 @@ export const DEFAULT_CONFIG: Config = {
   fakeHistory: false,
 }
 
-export function getConfigWithDefaults (options: DeepPartial<Config> = {}): Config {
+export function getConfigWithDefaults(
+  options: DeepPartial<Config> = {}
+): Config {
   return merge({}, DEFAULT_CONFIG, options)
 }

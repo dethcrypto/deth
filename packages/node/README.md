@@ -47,16 +47,16 @@ module.exports = {
       '0x24e467ab36f3cf70767135775ec1f7cc2a8b17363055e548113d85072136f945',
       '0xc3bc1a16a82622f9bddf48f8e754c98092755e2e3782aafdca4ce21a1082747f',
       '0xe54c55b3c5d80d445841afa3141e52592bec8523d8993d8df1811bfc5bf64d59',
-      '0x48ee1f88167591357bb6780cbc09bc01e2a93d439e789d44261bf747034164e0'
+      '0x48ee1f88167591357bb6780cbc09bc01e2a93d439e789d44261bf747034164e0',
     ],
-    initialBalance: new BN(10000).pow(new BN(18))
+    initialBalance: new BN(10000).pow(new BN(18)),
   },
   blockchain: {
-    chainId: 420
+    chainId: 420,
   },
   debugger: {
-    abiFilesGlob: '../contracts/**/out/*.abi'
-  }
+    abiFilesGlob: '../contracts/**/out/*.abi',
+  },
 }
 ```
 

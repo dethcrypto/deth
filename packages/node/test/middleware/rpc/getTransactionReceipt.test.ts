@@ -7,9 +7,12 @@ import { numberToQuantity } from '@dethnode/chain'
 describe('rpc -> getTransactionReceipt', () => {
   it('supports eth_getTransactionReceipt for not existing txs', async () => {
     const app = await buildTestApp()
-    const notExistingTx = '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
+    const notExistingTx =
+      '0x436a358b4f1bbca97516d1118f6d537748b8b8256e241bd0b2573e14e22841e8'
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [notExistingTx])
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
+      notExistingTx,
+    ])
 
     expect(res).to.have.status(200)
     expect(res.body.result).to.be.eq(null)
@@ -32,10 +35,12 @@ describe('rpc -> getTransactionReceipt', () => {
           gasPrice: numberToQuantity(1_000_000_000),
         },
         'latest',
-      ]),
+      ])
     )
 
-    const res = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txReceipt]))
+    const res = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txReceipt])
+    )
 
     expect(res).to.containSubset({
       blockNumber: '0x2',
@@ -48,8 +53,11 @@ describe('rpc -> getTransactionReceipt', () => {
           blockNumber: '0x2',
           logIndex: '0x0',
           transactionIndex: '0x0',
-          data: '0x0000000000000000000000000000000000000000000000000000000000000001',
-          topics: ['0x51af157c2eee40f68107a47a49c32fbbeb0a3c9e5cd37aa56e88e6be92368a81'],
+          data:
+            '0x0000000000000000000000000000000000000000000000000000000000000001',
+          topics: [
+            '0x51af157c2eee40f68107a47a49c32fbbeb0a3c9e5cd37aa56e88e6be92368a81',
+          ],
         },
       ],
       logsBloom:

@@ -5,11 +5,14 @@ import { DEFAULT_MESSAGE } from './helpers'
 import { State } from '../src/State'
 
 describe('ExecutionContext', () => {
-  function makeContext (gasLimit: number) {
-    return new ExecutionContext({
-      ...DEFAULT_MESSAGE,
-      gasLimit,
-    }, new State())
+  function makeContext(gasLimit: number) {
+    return new ExecutionContext(
+      {
+        ...DEFAULT_MESSAGE,
+        gasLimit,
+      },
+      new State()
+    )
   }
 
   it('can track gas usage', () => {

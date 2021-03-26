@@ -1,4 +1,14 @@
-import { Address, Hash, Quantity, bnToQuantity, HexData, bufferToHexData, bufferToAddress, numberToQuantity, quantityToNumber } from './model'
+import {
+  Address,
+  Hash,
+  Quantity,
+  bnToQuantity,
+  HexData,
+  bufferToHexData,
+  bufferToAddress,
+  numberToQuantity,
+  quantityToNumber,
+} from './model'
 import {
   Tag,
   RpcTransactionRequest,
@@ -12,7 +22,11 @@ import {
 } from './model'
 import { SaneVM } from './vm/SaneVM'
 import { ChainOptions, getChainOptionsWithDefaults } from './ChainOptions'
-import { transactionNotFound, unsupportedBlockTag, unsupportedOperation } from './errors'
+import {
+  transactionNotFound,
+  unsupportedBlockTag,
+  unsupportedOperation,
+} from './errors'
 import { Snapshot } from './utils/Snapshot'
 import { cloneDeep } from 'lodash'
 import { Transaction } from 'ethereumjs-tx'
@@ -23,9 +37,9 @@ import { assert, SafeDictionary } from 'ts-essentials'
 import { ChainFilter } from './model/ChainFilter'
 
 export interface TransactionEvent {
-  to?: Address,
-  from: Address,
-  data?: HexData,
+  to?: Address
+  from: Address
+  data?: HexData
 }
 
 /**
@@ -39,88 +53,103 @@ export class Chain {
   private transactionEvents = new EventEmitter<TransactionEvent>()
   options: Snapshot<ChainOptions>
 
-  constructor (options?: Partial<ChainOptions>) {
+  constructor(options?: Partial<ChainOptions>) {
     this.options = new Snapshot(getChainOptionsWithDefaults(options), cloneDeep)
     this.vm = new SaneVM(this.options.value)
   }
 
-  async init () {
+  async init() {
     await this.vm.init()
 
-    this.vm.installStepHook(runState => this.vmStepEvents.emit(runState))
+    this.vm.installStepHook((runState) => this.vmStepEvents.emit(runState))
   }
 
-  onVmStep (listener: (runState: InterpreterStep) => void) {
+  onVmStep(listener: (runState: InterpreterStep) => void) {
     return this.vmStepEvents.addListener(listener)
   }
 
-  onTransaction (listener: (event: TransactionEvent) => void) {
+  onTransaction(listener: (event: TransactionEvent) => void) {
     return this.transactionEvents.addListener(listener)
   }
 
-  makeSnapshot (): number {
+  makeSnapshot(): number {
     this.options.save()
     return this.vm.makeSnapshot()
   }
 
-  revertToSnapshot (id: number) {
+  revertToSnapshot(id: number) {
     this.options.revert(id)
     return this.vm.revertToSnapshot(id)
   }
 
-  skewClock (delta: number) {
+  skewClock(delta: number) {
     this.options.value.clockSkew += delta
   }
 
-  startAutoMining () {
+  startAutoMining() {
     this.options.value.autoMining = true
   }
 
-  stopAutoMining () {
+  stopAutoMining() {
     this.options.value.autoMining = false
   }
 
-  async mineBlock () {
+  async mineBlock() {
     return this.vm.mineBlock(this.options.value.clockSkew)
   }
 
-  async getBlockNumber (): Promise<Quantity> {
+  async getBlockNumber(): Promise<Quantity> {
     return this.vm.getBlockNumber()
   }
 
-  getGasPrice (): Quantity {
+  getGasPrice(): Quantity {
     return bnToQuantity(this.options.value.defaultGasPrice)
   }
 
-  async getBalance (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
+  async getBalance(
+    address: Address,
+    blockTag: Quantity | Tag
+  ): Promise<Quantity> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getBalance', blockTag, ['latest'])
     }
     return this.vm.getBalance(address)
   }
 
-  async getTransactionCount (address: Address, blockTag: Quantity | Tag): Promise<Quantity> {
+  async getTransactionCount(
+    address: Address,
+    blockTag: Quantity | Tag
+  ): Promise<Quantity> {
     if (blockTag !== 'latest' && blockTag !== 'pending') {
-      throw unsupportedBlockTag('getTransactionCount', blockTag, ['latest', 'pending'])
+      throw unsupportedBlockTag('getTransactionCount', blockTag, [
+        'latest',
+        'pending',
+      ])
     }
     // TODO: handle pending better
     return this.vm.getNonce(address)
   }
 
-  async getCode (address: Address, blockTag: Quantity | Tag): Promise<HexData> {
+  async getCode(address: Address, blockTag: Quantity | Tag): Promise<HexData> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('getCode', blockTag, ['latest'])
     }
     return this.vm.getCode(address)
   }
 
-  async getStorageAt (address: Address, position: Quantity, blockTag: Quantity | Tag): Promise<HexData> {
+  async getStorageAt(
+    address: Address,
+    position: Quantity,
+    blockTag: Quantity | Tag
+  ): Promise<HexData> {
     // @TODO: always assumes blockTag === latest
 
-    return bufferToHexData(this.vm.state.value.stateManger.getContractStorage(address, position))
+    return bufferToHexData(
+      this.vm.state.value.stateManger.getContractStorage(address, position)
+    )
   }
 
-  async sendTransaction (signedTransaction: HexData): Promise<Hash> {
+  async sendTransaction(signedTransaction: HexData): Promise<Hash> {
     this.transactionEvents.emit(this.parseTx(signedTransaction))
     const hash = await this.vm.addPendingTransaction(signedTransaction)
     if (this.options.value.autoMining) {
@@ -129,7 +158,10 @@ export class Chain {
     return hash
   }
 
-  async call (transactionRequest: RpcTransactionRequest, blockTag: Quantity | Tag): Promise<HexData> {
+  async call(
+    transactionRequest: RpcTransactionRequest,
+    blockTag: Quantity | Tag
+  ): Promise<HexData> {
     if (blockTag !== 'latest') {
       throw unsupportedBlockTag('call', blockTag, ['latest'])
     }
@@ -137,53 +169,66 @@ export class Chain {
       ...transactionRequest,
       gas: bnToQuantity(this.options.value.blockGasLimit),
     })
-    const result = await this.vm.runIsolatedTransaction(tx, this.options.value.clockSkew)
+    const result = await this.vm.runIsolatedTransaction(
+      tx,
+      this.options.value.clockSkew
+    )
     // TODO: handle errors
     return bufferToHexData(result.execResult.returnValue)
   }
 
   // @NOTE: this is very simplified implementation
-  async estimateGas (transactionRequest: RpcTransactionRequest): Promise<Quantity> {
+  async estimateGas(
+    transactionRequest: RpcTransactionRequest
+  ): Promise<Quantity> {
     if (!transactionRequest.gas) {
       transactionRequest.gas = bnToQuantity(this.options.value.blockGasLimit)
     }
     const tx = toFakeTransaction(transactionRequest)
-    const result = await this.vm.runIsolatedTransaction(tx, this.options.value.clockSkew)
+    const result = await this.vm.runIsolatedTransaction(
+      tx,
+      this.options.value.clockSkew
+    )
     // TODO: handle errors
     return bnToQuantity(result.gasUsed)
   }
 
-  async getBlock (
+  async getBlock(
     blockTagOrHash: Quantity | Tag | Hash,
-    includeTransactions?: false,
+    includeTransactions?: false
   ): Promise<RpcBlockResponse>
 
-  async getBlock (
+  async getBlock(
     blockTagOrHash: Quantity | Tag | Hash,
-    includeTransactions: true,
+    includeTransactions: true
   ): Promise<RpcRichBlockResponse>
 
-  async getBlock (
+  async getBlock(
     blockTagOrHash: Quantity | Tag | Hash,
-    includeTransactions: boolean,
+    includeTransactions: boolean
   ): Promise<RpcBlockResponse | RpcRichBlockResponse>
 
-  async getBlock (blockTagOrHash: Quantity | Tag | Hash, includeTransactions?: boolean) {
+  async getBlock(
+    blockTagOrHash: Quantity | Tag | Hash,
+    includeTransactions?: boolean
+  ) {
     if (blockTagOrHash === 'pending') {
       throw unsupportedBlockTag('call', blockTagOrHash)
     }
 
     const block =
-      blockTagOrHash === 'latest' ? await this.vm.getLatestBlock() : await this.vm.getBlock(blockTagOrHash)
+      blockTagOrHash === 'latest'
+        ? await this.vm.getLatestBlock()
+        : await this.vm.getBlock(blockTagOrHash)
 
     if (!includeTransactions) {
       return block
     }
-    const transactions = block.transactions.map(tx => this.getTransaction(tx))
+    const transactions = block.transactions.map((tx) => this.getTransaction(tx))
     return { ...block, transactions }
   }
 
-  getTransaction (transactionHash: Hash): RpcTransactionResponse {
+  getTransaction(transactionHash: Hash): RpcTransactionResponse {
     const transaction = this.vm.getTransaction(transactionHash)
     if (!transaction) {
       throw transactionNotFound(transactionHash)
@@ -191,16 +236,20 @@ export class Chain {
     return transaction
   }
 
-  getTransactionReceipt (transactionHash: Hash): RpcTransactionReceipt | undefined {
+  getTransactionReceipt(
+    transactionHash: Hash
+  ): RpcTransactionReceipt | undefined {
     return this.vm.getTransactionReceipt(transactionHash)
   }
 
-  async getLogs (filter: FilterRequest): Promise<RpcLogObject[]> {
+  async getLogs(filter: FilterRequest): Promise<RpcLogObject[]> {
     throw unsupportedOperation('getLogs')
   }
 
-  private parseTx (signedTransaction: HexData): TransactionEvent {
-    const tx = new Transaction(signedTransaction, { common: this.vm.vm._common })
+  private parseTx(signedTransaction: HexData): TransactionEvent {
+    const tx = new Transaction(signedTransaction, {
+      common: this.vm.vm._common,
+    })
 
     return {
       to: tx.to?.length > 0 ? bufferToAddress(tx.to) : undefined,
@@ -210,17 +259,20 @@ export class Chain {
   }
 
   private filters: SafeDictionary<ChainFilter> = {}
-  private filtersCount = 0;
-  async createNewBlockFilter (): Promise<Quantity> {
+  private filtersCount = 0
+  async createNewBlockFilter(): Promise<Quantity> {
     const currentId = numberToQuantity(this.filtersCount++)
 
     const block = await this.vm.getLatestBlock()
-    this.filters[currentId] = { type: 'block', lastSeenBlock: quantityToNumber(block.number) }
+    this.filters[currentId] = {
+      type: 'block',
+      lastSeenBlock: quantityToNumber(block.number),
+    }
 
     return currentId
   }
 
-  async getFilterChanges (id: Quantity): Promise<Hash[]> {
+  async getFilterChanges(id: Quantity): Promise<Hash[]> {
     const filter = this.filters[id]
     if (!filter) {
       throw new Error(`Filter with ${id} doesnt exist`)
@@ -241,7 +293,7 @@ export class Chain {
     return newBlockHashes
   }
 
-  uninstallFilter (id: Quantity): boolean {
+  uninstallFilter(id: Quantity): boolean {
     const filter = this.filters[id]
 
     if (!filter) {

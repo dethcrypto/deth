@@ -6,7 +6,7 @@ export interface BlockTableProps {
   blocks: BlockListItem[]
 }
 
-export function BlockTable ({ blocks }: BlockTableProps) {
+export function BlockTable({ blocks }: BlockTableProps) {
   return (
     <div className="table__wrapper table__wrapper--small">
       <table className="table">
@@ -27,7 +27,7 @@ export function BlockTable ({ blocks }: BlockTableProps) {
   )
 }
 
-function Block ({ block }: { block: BlockListItem }) {
+function Block({ block }: { block: BlockListItem }) {
   const link = `/explorer/blocks/${block.hash}`
   return (
     <tr>
@@ -35,11 +35,11 @@ function Block ({ block }: { block: BlockListItem }) {
         <a href={link}>{block.number}</a>
       </td>
       <td className="table__left">
-        <a href={link}><HashDisplay hash={block.hash} /></a>
+        <a href={link}>
+          <HashDisplay hash={block.hash} />
+        </a>
       </td>
-      <td className="table__right">
-        {block.transactionCount}
-      </td>
+      <td className="table__right">{block.transactionCount}</td>
     </tr>
   )
 }

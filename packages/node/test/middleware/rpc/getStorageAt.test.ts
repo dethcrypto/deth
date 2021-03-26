@@ -9,9 +9,13 @@ describe('rpc -> getStorageAt', () => {
     const app = await buildTestApp()
     const emptyAcc = app.services.walletManager.createEmptyWallet()
 
-    const response = unwrapRpcResponse(await makeRpcCall(app, 'eth_getStorageAt', [
-      emptyAcc.address, numberToQuantity(0), 'latest',
-    ]))
+    const response = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getStorageAt', [
+        emptyAcc.address,
+        numberToQuantity(0),
+        'latest',
+      ])
+    )
     // @todo: could be 0x0000000000000000000 as well... verify with geth/parity
     expect(response).to.be.eq('0x00')
   })

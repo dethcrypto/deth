@@ -2,18 +2,15 @@
 export class Snapshot<T> {
   private snapshots: T[] = []
 
-  constructor (
-    public value: T,
-    private copy: (value: T) => T,
-  ) {}
+  constructor(public value: T, private copy: (value: T) => T) {}
 
-  save () {
+  save() {
     const id = this.snapshots.length
     this.snapshots.push(this.copy(this.value))
     return id
   }
 
-  revert (id: number) {
+  revert(id: number) {
     if (this.snapshots.length < id) {
       throw new Error(`Snapshot id ${id} doesn't exist`)
     }

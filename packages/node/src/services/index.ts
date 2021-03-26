@@ -13,16 +13,18 @@ import { fakeHistory } from './fakeHistory'
 export type Services = ReturnType<typeof createServices>
 
 interface ServiceOverrides {
-  fileSystem?: FileSystem,
-  logger?: DethLogger,
+  fileSystem?: FileSystem
+  logger?: DethLogger
 }
 
-export function createServices (config: Config, overrides?: ServiceOverrides) {
+export function createServices(config: Config, overrides?: ServiceOverrides) {
   const fileSystem = overrides?.fileSystem ?? new RealFileSystem()
   const abiDecoder = new AbiDecoder(fileSystem)
   const logger = overrides?.logger ?? new CliLogger(abiDecoder)
   const chain = createChain(logger, config.blockchain)
-  const walletManager = new WalletManager(config.blockchain.accounts.privateKeys)
+  const walletManager = new WalletManager(
+    config.blockchain.accounts.privateKeys
+  )
   const rpcExecutor = createRpcExecutor(chain, config.blockchain, walletManager)
   const explorer = new Explorer(chain)
 
@@ -37,7 +39,7 @@ export function createServices (config: Config, overrides?: ServiceOverrides) {
   }
 }
 
-export async function initServices (services: Services, config: Config) {
+export async function initServices(services: Services, config: Config) {
   if (config.debugger.abiFilesGlob) {
     services.abiDecoder.loadAbis(config.debugger.abiFilesGlob, config.cwd)
   }

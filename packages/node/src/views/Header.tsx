@@ -6,14 +6,9 @@ export function Header() {
       <div className="header__content">
         <a href="/explorer" className="header__brand">
           Deth{' '}
-          <span className="header__brand-subtitle">
-            Blockchain Explorer
-          </span>
+          <span className="header__brand-subtitle">Blockchain Explorer</span>
         </a>
-        <form
-          className="header__search-form"
-          action="/explorer/search"
-        >
+        <form className="header__search-form" action="/explorer/search">
           <input
             className="header__search-input"
             placeholder="Search block or transaction hash"

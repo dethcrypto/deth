@@ -59,12 +59,12 @@ describe('bytes32 opcodes', () => {
   })
 })
 
-function runTestCases (opcode: string, testCases: TestCase[]) {
+function runTestCases(opcode: string, testCases: TestCase[]) {
   describe('Opcode: ' + opcode, () => {
     for (const testCase of testCases) {
       it(testCase.title, () => {
         const assembly = testCase.stack
-          .map(x => `PUSH32 ${x}`)
+          .map((x) => `PUSH32 ${x}`)
           .concat([opcode])
           .join(' ')
         expectStackTop(assembly, testCase.expected)
@@ -73,11 +73,8 @@ function runTestCases (opcode: string, testCases: TestCase[]) {
   })
 }
 
-function testGasPushN (n: number, opcode: string, expectedGas: number) {
+function testGasPushN(n: number, opcode: string, expectedGas: number) {
   it(`${opcode} uses ${expectedGas} gas`, () => {
-    expectGas(
-      'PUSH1 00 '.repeat(n) + opcode,
-      GasCost.VERYLOW * n + expectedGas,
-    )
+    expectGas('PUSH1 00 '.repeat(n) + opcode, GasCost.VERYLOW * n + expectedGas)
   })
 }
