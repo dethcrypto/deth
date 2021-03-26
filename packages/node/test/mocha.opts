@@ -1,4 +1,0 @@
--r ts-node/register/transpile-only
---extension ts
---watch-extensions ts
-'test/**/*.test.ts'

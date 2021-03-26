@@ -18,6 +18,10 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.2",
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
     "wsrun": "^5.2.0"
   }
 }
