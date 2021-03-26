@@ -1,5 +1,5 @@
 {
-  "name": "@deth/evm",
+  "name": "@dethnode/evm",
   "description": "Implementation of evm, tweaked for development",
   "version": "0.1.0",
   "license": "MIT",

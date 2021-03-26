@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import { makeRpcCall } from './common'
 import { buildTestApp } from '../../buildTestApp'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@dethnode/chain'
 
 describe('rpc -> sendTransaction', () => {
   it('supports eth_sendTransaction', async () => {

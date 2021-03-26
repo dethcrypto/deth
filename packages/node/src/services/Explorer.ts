@@ -6,7 +6,7 @@ import {
   Hash,
   Address,
   RpcTransactionResponse,
-} from '@deth/chain'
+} from '@dethnode/chain'
 import { utils } from 'ethers'
 
 export interface BlockListItem {

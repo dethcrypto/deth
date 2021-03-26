@@ -1,7 +1,7 @@
 import { request, expect } from 'chai'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { ContractFactory, Wallet, Contract } from 'ethers'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@dethnode/chain'
 import { Application } from 'express'
 
 export function makeRpcCall (
