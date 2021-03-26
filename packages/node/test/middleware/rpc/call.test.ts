@@ -4,7 +4,7 @@ import { ContractFactory, Contract } from 'ethers'
 import { COUNTER_ABI, COUNTER_BYTECODE } from '../../contracts/Counter'
 import { makeRpcCall } from './common'
 import { buildTestApp } from '../../buildTestApp'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@dethnode/chain'
 
 describe('rpc -> call', () => {
   xit('supports eth_call calling smartcontracts')

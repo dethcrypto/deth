@@ -3,7 +3,7 @@ import { utils } from 'ethers'
 
 import { makeRpcCall } from './common'
 import { buildTestApp } from '../../buildTestApp'
-import { numberToQuantity } from '@deth/chain'
+import { numberToQuantity } from '@dethnode/chain'
 
 describe('rpc -> getBalance', () => {
   it('supports eth_getBalance call for account with non-zero balance', async () => {

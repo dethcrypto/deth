@@ -8,7 +8,7 @@ import {
   makeAddress,
   ChainOptions,
   Chain,
-} from '@deth/chain'
+} from '@dethnode/chain'
 import { BadRequestHttpError } from '../middleware/errorHandler'
 import { WalletManager } from './WalletManager'
 
