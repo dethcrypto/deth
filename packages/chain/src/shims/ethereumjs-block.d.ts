@@ -2,7 +2,7 @@
 declare module 'ethereumjs-block' {
   import Blockchain from 'ethereumjs-blockchain'
   import Common from 'ethereumjs-common'
-  import { BN, rlp } from 'ethereumjs-util'
+  import { BN } from 'ethereumjs-util'
   import { Transaction } from 'ethereumjs-tx'
 
   class Block {

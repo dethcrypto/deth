@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "^11.15.0",
+    "node": ">=11.15.0",
     "yarn": ">=1.15.2"
   },
   "scripts": {
@@ -18,6 +18,16 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.2",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.22.0",
+    "eslint-plugin-no-only-tests": "^2.4.0",
+    "mocha": "^8.3.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3",
     "wsrun": "^5.2.0"
   }
 }

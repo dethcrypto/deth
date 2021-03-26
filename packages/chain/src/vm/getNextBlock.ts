@@ -37,7 +37,7 @@ async function getEmptyNextBlock (vm: VM, options: ChainOptions, clockSkew: numb
 
 async function addTransactionsToBlock (block: Block, transactions: Transaction[]) {
   block.transactions.push(...transactions)
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     block.genTxTrie(err => err != null ? reject(err) : resolve())
   })
   block.header.transactionsTrie = block.txTrie.root

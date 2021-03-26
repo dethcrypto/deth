@@ -17,7 +17,7 @@ export async function putGenesisBlock (vm: VM, options: ChainOptions) {
     },
   }, { common: vm._common })
 
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     vm.blockchain.putGenesis(genesisBlock, (err: unknown) =>
       err != null ? reject(err) : resolve(),
     )
