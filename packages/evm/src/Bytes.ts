@@ -38,6 +38,10 @@ export class Bytes {
     return this.value === other.value
   }
 
+  toNumber() {
+    return parseInt(this.value || '0', 16)
+  }
+
   toByteArray() {
     const array = new Array<number>(this.length)
     for (let i = 0; i < this.length; i++) {
