@@ -1,4 +1,11 @@
-import { Address, Quantity, HexData, makeQuantity, makeAddress, makeHexData } from './primitives'
+import {
+  Address,
+  Quantity,
+  HexData,
+  makeQuantity,
+  makeAddress,
+  makeHexData,
+} from './primitives'
 import { FakeTransaction } from 'ethereumjs-tx'
 import { providers, utils } from 'ethers'
 
@@ -6,16 +13,16 @@ type WithoutPromises<T> = { [K in keyof T]: Exclude<T[K], Promise<unknown>> }
 type EthersTxRequest = WithoutPromises<providers.TransactionRequest>
 
 export interface RpcTransactionRequest {
-  from?: Address,
-  to?: Address,
-  gas?: Quantity,
-  gasPrice?: Quantity,
-  value?: Quantity,
-  nonce?: Quantity,
-  data?: HexData,
+  from?: Address
+  to?: Address
+  gas?: Quantity
+  gasPrice?: Quantity
+  value?: Quantity
+  nonce?: Quantity
+  data?: HexData
 }
 
-export function toFakeTransaction (tx: RpcTransactionRequest) {
+export function toFakeTransaction(tx: RpcTransactionRequest) {
   return new FakeTransaction({
     from: tx.from ?? '0x0000000000000000000000000000000000000000', // @TODO what should be a default address to use?
     to: tx.to,
@@ -29,11 +36,14 @@ export function toFakeTransaction (tx: RpcTransactionRequest) {
 
 type Hexable = string | number | ArrayLike<number> | utils.Hexable
 
-const toQuantity = (value: Hexable) => makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
+const toQuantity = (value: Hexable) =>
+  makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
 const toAddress = (value: Hexable) => makeAddress(utils.hexlify(value))
 const toHexData = (value: Hexable) => makeHexData(utils.hexlify(value))
 
-export function toRpcTransactionRequest (transaction: EthersTxRequest): RpcTransactionRequest {
+export function toRpcTransactionRequest(
+  transaction: EthersTxRequest
+): RpcTransactionRequest {
   const result: RpcTransactionRequest = {}
 
   if (transaction.gasLimit) {
@@ -60,7 +70,9 @@ export function toRpcTransactionRequest (transaction: EthersTxRequest): RpcTrans
   return result
 }
 
-export function toEthersTransaction (tx: RpcTransactionRequest): EthersTxRequest {
+export function toEthersTransaction(
+  tx: RpcTransactionRequest
+): EthersTxRequest {
   const result: EthersTxRequest = {}
 
   if (tx.data) {

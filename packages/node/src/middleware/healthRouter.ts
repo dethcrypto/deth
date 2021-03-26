@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-export function healthRouter () {
+export function healthRouter() {
   const router = Router()
 
   router.get('/health', (req, res) => {

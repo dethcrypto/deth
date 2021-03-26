@@ -1,7 +1,7 @@
 import { ExecutionContext } from '../ExecutionContext'
 import { GasCost, GasRefund } from './gasCosts'
 
-export function opSSTORE (ctx: ExecutionContext) {
+export function opSSTORE(ctx: ExecutionContext) {
   const location = ctx.stack.pop()
   const value = ctx.stack.pop()
 
@@ -15,7 +15,7 @@ export function opSSTORE (ctx: ExecutionContext) {
   ctx.state.setStorage(ctx.message.account, location, value)
 }
 
-export function opSLOAD (ctx: ExecutionContext) {
+export function opSLOAD(ctx: ExecutionContext) {
   ctx.useGas(GasCost.SLOAD)
   const location = ctx.stack.pop()
   const value = ctx.state.getStorage(ctx.message.account, location)

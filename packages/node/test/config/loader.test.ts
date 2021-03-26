@@ -18,7 +18,9 @@ describe('config loader', () => {
     const config = loadConfig(testFileSystem, dir)
 
     expect(config).to.be.deep.eq(getConfigWithDefaults(customConfig))
-    expect(testFileSystem.requireFile).to.be.calledWithExactly('/deth/deth.json')
+    expect(testFileSystem.requireFile).to.be.calledWithExactly(
+      '/deth/deth.json'
+    )
   })
 
   it('throws on missing config', () => {

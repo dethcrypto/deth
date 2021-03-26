@@ -82,8 +82,6 @@ describe('TestProvider.getTransaction', () => {
     const provider = await createTestProvider()
     const hash = '0x' + '0'.repeat(64)
 
-    await expect(
-      provider.getTransaction(hash),
-    ).to.be.rejectedWith('not found')
+    await expect(provider.getTransaction(hash)).to.be.rejectedWith('not found')
   })
 })

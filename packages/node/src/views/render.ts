@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
 import ReactDOMServer from 'react-dom/server'
 
-export function renderPage (title: string, page: ReactElement) {
+export function renderPage(title: string, page: ReactElement) {
   return wrapPage(title, ReactDOMServer.renderToStaticMarkup(page))
 }
 
-function wrapPage (title: string, content: string) {
+function wrapPage(title: string, content: string) {
   return `
 <!DOCTYPE html>
 <html lang="en">

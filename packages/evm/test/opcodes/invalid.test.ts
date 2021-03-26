@@ -19,7 +19,7 @@ describe('invalid opcodes', () => {
   }
 })
 
-function range (from: string, to: string) {
+function range(from: string, to: string) {
   const start = parseInt(from, 16)
   const end = parseInt(to, 16)
   const result = []

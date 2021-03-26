@@ -17,21 +17,21 @@ describe('BlockchainAdapter legacy interface', () => {
     legacyBlockchain = new BlockchainAdapter(blockchain)
   })
 
-  it('works with number', done => {
+  it('works with number', (done) => {
     legacyBlockchain.getBlock(1, (_err, block) => {
       expect(block).to.be.eq(secondBlock)
       done()
     })
   })
 
-  it('works with BN', done => {
+  it('works with BN', (done) => {
     legacyBlockchain.getBlock(new BN(1), (_err, block) => {
       expect(block).to.be.eq(secondBlock)
       done()
     })
   })
 
-  it('works with Buffer', done => {
+  it('works with Buffer', (done) => {
     legacyBlockchain.getBlock(secondBlock.hash(), (_err, block) => {
       expect(block).to.be.eq(secondBlock)
       done()

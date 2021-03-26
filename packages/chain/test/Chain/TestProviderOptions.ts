@@ -1,19 +1,24 @@
 import { Hardfork } from '../../src/model'
 import { utils } from 'ethers'
-import { ChainOptions, getChainOptionsWithDefaults } from '../../src/ChainOptions'
+import {
+  ChainOptions,
+  getChainOptionsWithDefaults,
+} from '../../src/ChainOptions'
 import BN from 'bn.js'
 import { DeepPartial } from 'ts-essentials'
 
 export interface TestProviderOptions {
-  hardfork?: Hardfork,
-  privateKeys?: string[],
-  initialBalance?: utils.BigNumber,
-  blockGasLimit?: utils.BigNumber,
-  defaultGasPrice?: utils.BigNumber,
-  coinbaseAddress?: string,
+  hardfork?: Hardfork
+  privateKeys?: string[]
+  initialBalance?: utils.BigNumber
+  blockGasLimit?: utils.BigNumber
+  defaultGasPrice?: utils.BigNumber
+  coinbaseAddress?: string
 }
 
-export function toTestChainOptions (options: TestProviderOptions = {}): ChainOptions {
+export function toTestChainOptions(
+  options: TestProviderOptions = {}
+): ChainOptions {
   const result: DeepPartial<ChainOptions> = {}
 
   if (options.hardfork) {
@@ -40,6 +45,6 @@ export function toTestChainOptions (options: TestProviderOptions = {}): ChainOpt
   return getChainOptionsWithDefaults(result)
 }
 
-function toBN (bigNumber: utils.BigNumber) {
+function toBN(bigNumber: utils.BigNumber) {
   return new BN(bigNumber.toString())
 }

@@ -55,7 +55,7 @@ describe('TestProvider.getBalance', () => {
     const wallet = provider.createEmptyWallet()
 
     await expect(
-      provider.getBalance(wallet.address, 'pending'),
+      provider.getBalance(wallet.address, 'pending')
     ).to.be.rejectedWith('Unsupported blockTag')
   })
 })

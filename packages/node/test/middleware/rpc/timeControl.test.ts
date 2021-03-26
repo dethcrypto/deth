@@ -32,10 +32,17 @@ describe('rpc -> time control', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
-    const block = unwrapRpcResponse(await makeRpcCall(app, 'eth_getBlockByNumber', [receipt.blockNumber, false]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
+    const block = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getBlockByNumber', [
+        receipt.blockNumber,
+        false,
+      ])
+    )
 
     const blockTimestamp = quantityToNumber(block.timestamp)
     expect(blockTimestamp).to.eq(clockSkew)
@@ -61,10 +68,17 @@ describe('rpc -> time control', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
-    const block = unwrapRpcResponse(await makeRpcCall(app, 'eth_getBlockByNumber', [receipt.blockNumber, false]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
+    const block = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getBlockByNumber', [
+        receipt.blockNumber,
+        false,
+      ])
+    )
 
     const blockTimestamp = quantityToNumber(block.timestamp)
     expect(blockTimestamp).to.eq(clockSkew)

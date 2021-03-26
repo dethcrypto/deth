@@ -10,7 +10,9 @@ describe('TestProvider.getGasPrice', () => {
   })
 
   it('can be overwritten', async () => {
-    const provider = await createTestProvider({ defaultGasPrice: utils.bigNumberify(1_000) })
+    const provider = await createTestProvider({
+      defaultGasPrice: utils.bigNumberify(1_000),
+    })
     const gasPrice = await provider.getGasPrice()
     expect(gasPrice.toNumber()).to.equal(1_000)
   })

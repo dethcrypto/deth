@@ -40,7 +40,9 @@ describe('rpc -> snapshot', () => {
     ])
     expect(valueRequest).to.have.status(200)
     // note: this probably is wrong... it should be just encoded as 0x0?
-    expect(valueRequest.body.result).to.eq('0x0000000000000000000000000000000000000000000000000000000000000001')
+    expect(valueRequest.body.result).to.eq(
+      '0x0000000000000000000000000000000000000000000000000000000000000001'
+    )
 
     const revertResponse = await makeRpcCall(app, 'evm_revert', [snapshotId])
     expect(revertResponse).to.have.status(200)
@@ -55,11 +57,14 @@ describe('rpc -> snapshot', () => {
           gasPrice: numberToQuantity(1_000_000_000),
         },
         'latest',
-      ]),
+      ])
     )
     expect(valueAfterRevert).to.eq('0x')
     const codeAfterRevert = unwrapRpcResponse(
-      await makeRpcCall(app, 'eth_getCode', ['0xd36ec1a54c6fba5b74e79f3cedce04f9685399f9', 'latest']),
+      await makeRpcCall(app, 'eth_getCode', [
+        '0xd36ec1a54c6fba5b74e79f3cedce04f9685399f9',
+        'latest',
+      ])
     )
     expect(codeAfterRevert).to.eq('0x')
   })

@@ -21,10 +21,12 @@ describe('rpc -> miningControl', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
 
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
 
     expect(receipt).to.be.null // b/c its not mined
   })
@@ -45,15 +47,19 @@ describe('rpc -> miningControl', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
 
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
     expect(receipt).to.be.null // b/c its not mined
 
     unwrapRpcResponse(await makeRpcCall(app, 'evm_mine'))
 
-    const realReceipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
+    const realReceipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
     expect(realReceipt).to.be.not.null
   })
 
@@ -74,10 +80,12 @@ describe('rpc -> miningControl', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
 
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
     expect(receipt).to.be.not.null // b/c its not mined
   })
 
@@ -100,10 +108,12 @@ describe('rpc -> miningControl', () => {
           to: recipient.address,
           value: numberToQuantity(1_000),
         },
-      ]),
+      ])
     )
 
-    const receipt = unwrapRpcResponse(await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash]))
+    const receipt = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_getTransactionReceipt', [txHash])
+    )
 
     expect(receipt).to.be.null // b/c its not mined
   })

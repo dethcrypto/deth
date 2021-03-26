@@ -1,7 +1,7 @@
 import React from 'react'
 import { Page } from './Page'
 
-export function ComingSoon () {
+export function ComingSoon() {
   return (
     <Page>
       <h1 className="page__title">Coming Soon!</h1>

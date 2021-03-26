@@ -20,9 +20,13 @@ describe('rpc -> sendRawTransaction', () => {
       nonce: 0,
     })
 
-    const txHashResponse = unwrapRpcResponse(await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx]))
+    const txHashResponse = unwrapRpcResponse(
+      await makeRpcCall(app, 'eth_sendRawTransaction', [signedTx])
+    )
 
-    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [txHashResponse])
+    const res = await makeRpcCall(app, 'eth_getTransactionReceipt', [
+      txHashResponse,
+    ])
 
     expect(res).to.have.status(200)
     expect(res.body.result.contractAddress).to.not.be.null
@@ -46,11 +50,7 @@ describe('rpc -> sendRawTransaction', () => {
         },
       ])
 
-    const requests = await Promise.all(
-      Array(5)
-        .fill(5)
-        .map(sendTx),
-    )
+    const requests = await Promise.all(Array(5).fill(5).map(sendTx))
 
     for (const request of requests) {
       expect(request).to.have.status(200)

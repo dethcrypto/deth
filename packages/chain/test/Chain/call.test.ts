@@ -41,8 +41,8 @@ describe('TestProvider.call', () => {
   it('throws for blockTag !== latest', async () => {
     const provider = await createTestProvider()
 
-    await expect(
-      provider.call({}, 'pending'),
-    ).to.be.rejectedWith('Unsupported blockTag')
+    await expect(provider.call({}, 'pending')).to.be.rejectedWith(
+      'Unsupported blockTag'
+    )
   })
 })

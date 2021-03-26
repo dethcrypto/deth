@@ -20,16 +20,16 @@ export const DEFAULT_MESSAGE: Message = {
   code: Bytes.EMPTY,
 }
 
-export function executeAssembly (
+export function executeAssembly(
   assembly: string,
   params?: Partial<Message>,
-  state = new State(),
+  state = new State()
 ) {
   const code = assemblyToBytecode(assembly)
   return executeCode({ ...DEFAULT_MESSAGE, ...params, code }, state)
 }
 
-function assemblyToBytecode (code: string): Bytes {
+function assemblyToBytecode(code: string): Bytes {
   const instructions = code.trim().split(/\s+/)
   let result = Bytes.EMPTY
   for (const instruction of instructions) {

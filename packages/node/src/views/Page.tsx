@@ -3,11 +3,11 @@ import cx from 'classnames'
 import { Header } from './Header'
 
 export interface PageProps {
-  children: ReactNode,
-  twoColumns?: boolean,
+  children: ReactNode
+  twoColumns?: boolean
 }
 
-export function Page ({ children, twoColumns }: PageProps) {
+export function Page({ children, twoColumns }: PageProps) {
   return (
     <>
       <Header />

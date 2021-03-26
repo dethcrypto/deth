@@ -64,6 +64,8 @@ describe('rpc -> call', () => {
     ])
     expect(statusRequest).to.have.status(200)
     // note: this probably is wrong... it should be just encoded as 0x01?
-    expect(statusRequest.body.result).to.eq('0x0000000000000000000000000000000000000000000000000000000000000001')
+    expect(statusRequest.body.result).to.eq(
+      '0x0000000000000000000000000000000000000000000000000000000000000001'
+    )
   })
 })

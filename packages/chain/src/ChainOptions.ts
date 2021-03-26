@@ -4,20 +4,20 @@ import { DeepPartial } from 'ts-essentials'
 import { merge } from 'lodash'
 
 export interface ChainOptions {
-  hardfork: Hardfork,
-  blockGasLimit: BN,
-  defaultGasPrice: BN,
-  coinbaseAddress: string,
-  chainId: number,
-  chainName: string,
-  clockSkew: number,
-  autoMining: boolean,
-  skipNonceCheck: boolean,
-  skipBalanceCheck: boolean,
+  hardfork: Hardfork
+  blockGasLimit: BN
+  defaultGasPrice: BN
+  coinbaseAddress: string
+  chainId: number
+  chainName: string
+  clockSkew: number
+  autoMining: boolean
+  skipNonceCheck: boolean
+  skipBalanceCheck: boolean
   accounts: {
-    privateKeys: string[],
-    initialBalance: BN,
-  },
+    privateKeys: string[]
+    initialBalance: BN
+  }
 }
 
 export const DEFAULT_CHAIN_OPTIONS: ChainOptions = {
@@ -49,6 +49,8 @@ export const DEFAULT_CHAIN_OPTIONS: ChainOptions = {
   skipBalanceCheck: false,
 }
 
-export function getChainOptionsWithDefaults (options: DeepPartial<ChainOptions> = {}): ChainOptions {
+export function getChainOptionsWithDefaults(
+  options: DeepPartial<ChainOptions> = {}
+): ChainOptions {
   return merge({}, DEFAULT_CHAIN_OPTIONS, options)
 }

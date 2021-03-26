@@ -5,7 +5,7 @@ export interface HashDisplayProps {
   hash: Hash
 }
 
-export function HashDisplay ({ hash }: HashDisplayProps) {
+export function HashDisplay({ hash }: HashDisplayProps) {
   const parts: string[] = []
   for (let i = 0; i < 10; i++) {
     parts.push(hash.substring((i + 1) * 6, (i + 2) * 6))

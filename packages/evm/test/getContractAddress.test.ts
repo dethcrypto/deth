@@ -22,7 +22,10 @@ describe('getContractAddress', () => {
   ]
   for (const testCase of testCases) {
     it(`works for ${testCase.sender} and nonce ${testCase.nonce}`, () => {
-      const contract = getContractAddress(testCase.sender as Address, testCase.nonce)
+      const contract = getContractAddress(
+        testCase.sender as Address,
+        testCase.nonce
+      )
       expect(contract).to.equal(testCase.contract)
     })
   }

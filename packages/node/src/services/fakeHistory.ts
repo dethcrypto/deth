@@ -2,7 +2,7 @@ import { Chain, makeHexData } from '@dethnode/chain'
 import { WalletManager } from './WalletManager'
 import { utils } from 'ethers'
 
-export async function fakeHistory (chain: Chain, walletManager: WalletManager) {
+export async function fakeHistory(chain: Chain, walletManager: WalletManager) {
   const wallets = walletManager.getWallets()
   const nonces = new Array(wallets.length).fill(0)
 
@@ -29,6 +29,6 @@ export async function fakeHistory (chain: Chain, walletManager: WalletManager) {
   }
 }
 
-function randInt (min: number, max: number) {
+function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min
 }

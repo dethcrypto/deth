@@ -97,7 +97,7 @@ describe('Bytes32', () => {
 
     it('fromBytes works for large numbers', () => {
       const a = Bytes32.fromBytes(
-        Bytes.fromByteIntArray(new Array(32).fill(0xff)),
+        Bytes.fromByteIntArray(new Array(32).fill(0xff))
       )
       const b = Bytes32.MAX
       expect(a.eq(b)).to.equal(true)
@@ -105,9 +105,7 @@ describe('Bytes32', () => {
 
     it('toBytes pads zeroes at the start', () => {
       const result = Bytes32.fromBytes(Bytes.fromString('0103')).toBytes()
-      expect(result).to.deep.equal(
-        Bytes.fromString('0103'.padStart(64, '0')),
-      )
+      expect(result).to.deep.equal(Bytes.fromString('0103'.padStart(64, '0')))
     })
   })
 
@@ -124,18 +122,18 @@ describe('Bytes32', () => {
   })
 })
 
-export function invert (testCases: TestCase[]): TestCase[] {
-  return testCases.map(testCase => ({
+export function invert(testCases: TestCase[]): TestCase[] {
+  return testCases.map((testCase) => ({
     ...testCase,
     stack: [...testCase.stack].reverse(),
   }))
 }
 
-function runTestCases (method: keyof Bytes32, testCases: TestCase[]) {
+function runTestCases(method: keyof Bytes32, testCases: TestCase[]) {
   describe('Bytes32.' + method, () => {
     for (const testCase of testCases) {
       it(testCase.title, () => {
-        const mws = testCase.stack.map(x => Bytes32.fromHex(x))
+        const mws = testCase.stack.map((x) => Bytes32.fromHex(x))
         const [mw, ...args] = mws.reverse()
         let result = (mw as any)[method](...args)
         if (typeof result === 'boolean') {

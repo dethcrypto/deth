@@ -5,11 +5,11 @@ import { RunTxResult } from 'ethereumts-vm/dist/runTx'
 import { getNextBlock } from './getNextBlock'
 import { ChainOptions } from '../ChainOptions'
 
-export async function runIsolatedTransaction (
+export async function runIsolatedTransaction(
   vm: VM,
   transaction: Transaction,
   options: ChainOptions,
-  clockSkew: number,
+  clockSkew: number
 ): Promise<RunTxResult> {
   const psm = vm.pStateManager
   const initialStateRoot = await psm.getStateRoot()

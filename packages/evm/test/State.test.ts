@@ -76,14 +76,20 @@ describe('State', () => {
     clone.setCode(address, Bytes.fromString('0405'))
 
     expect(state.getBalance(address).eq(Bytes32.ONE)).to.equal(true)
-    expect(state.getStorage(address, Bytes32.ZERO).eq(Bytes32.ONE)).to.equal(true)
+    expect(state.getStorage(address, Bytes32.ZERO).eq(Bytes32.ONE)).to.equal(
+      true
+    )
     expect(state.getStorage(address, Bytes32.ONE).iszero()).to.equal(true)
     expect(state.getNonce(address)).to.equal(1)
     expect(state.getCode(address)).to.deep.equal(Bytes.fromString('010203'))
 
     expect(clone.getBalance(address).eq(Bytes32.MAX)).to.equal(true)
-    expect(clone.getStorage(address, Bytes32.ZERO).eq(Bytes32.MAX)).to.equal(true)
-    expect(clone.getStorage(address, Bytes32.ONE).eq(Bytes32.ONE)).to.equal(true)
+    expect(clone.getStorage(address, Bytes32.ZERO).eq(Bytes32.MAX)).to.equal(
+      true
+    )
+    expect(clone.getStorage(address, Bytes32.ONE).eq(Bytes32.ONE)).to.equal(
+      true
+    )
     expect(clone.getNonce(address)).to.equal(2)
     expect(clone.getCode(address)).to.deep.equal(Bytes.fromString('0405'))
   })

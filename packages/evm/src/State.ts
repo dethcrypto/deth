@@ -8,39 +8,39 @@ export class State {
   private storage: Record<string, Bytes32 | undefined> = {}
   private codes: Record<string, Bytes | undefined> = {}
 
-  getBalance (address: Address): Bytes32 {
+  getBalance(address: Address): Bytes32 {
     return this.balances[address] ?? Bytes32.ZERO
   }
 
-  setBalance (address: Address, balance: Bytes32) {
+  setBalance(address: Address, balance: Bytes32) {
     this.balances[address] = balance
   }
 
-  getNonce (address: Address): number {
+  getNonce(address: Address): number {
     return this.nonces[address] ?? 0
   }
 
-  setNonce (address: Address, value: number) {
+  setNonce(address: Address, value: number) {
     this.nonces[address] = value
   }
 
-  getStorage (address: Address, location: Bytes32): Bytes32 {
+  getStorage(address: Address, location: Bytes32): Bytes32 {
     return this.storage[getStorageKey(address, location)] ?? Bytes32.ZERO
   }
 
-  setStorage (address: Address, location: Bytes32, value: Bytes32) {
+  setStorage(address: Address, location: Bytes32, value: Bytes32) {
     this.storage[getStorageKey(address, location)] = value
   }
 
-  getCode (address: Address): Bytes {
+  getCode(address: Address): Bytes {
     return this.codes[address] ?? Bytes.EMPTY
   }
 
-  setCode (address: Address, value: Bytes) {
+  setCode(address: Address, value: Bytes) {
     this.codes[address] = value
   }
 
-  clone (): State {
+  clone(): State {
     const clone = new State()
     clone.balances = { ...this.balances }
     clone.nonces = { ...this.nonces }
@@ -50,6 +50,6 @@ export class State {
   }
 }
 
-function getStorageKey (address: Address, location: Bytes32) {
+function getStorageKey(address: Address, location: Bytes32) {
   return address + '.' + location.toHex()
 }

@@ -4,23 +4,28 @@ import { ContractFactory, Wallet, Contract } from 'ethers'
 import { numberToQuantity } from '@dethnode/chain'
 import { Application } from 'express'
 
-export function makeRpcCall (
+export function makeRpcCall(
   app: Application,
   methodName: string,
-  params: any[] = [],
+  params: any[] = []
 ): Promise<ChaiHttp.Response> {
   return request(app)
     .post('/')
     .send({ jsonrpc: '2.0', method: methodName, params: params, id: 1 })
 }
 
-export function unwrapRpcResponse (response: ChaiHttp.Response): any {
-  expect(response, 'Trying to unwrap unsuccessful RPC response').to.have.status(200)
+export function unwrapRpcResponse(response: ChaiHttp.Response): any {
+  expect(response, 'Trying to unwrap unsuccessful RPC response').to.have.status(
+    200
+  )
 
   return response.body.result
 }
 
-export async function deployCounterContract (app: Application, sender: Wallet): Promise<Contract> {
+export async function deployCounterContract(
+  app: Application,
+  sender: Wallet
+): Promise<Contract> {
   const factory = new ContractFactory(COUNTER_ABI, COUNTER_BYTECODE, sender)
   const { data } = factory.getDeployTransaction(0)
 

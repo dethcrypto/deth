@@ -1,4 +1,10 @@
-import { expectReturn, expectGas, memoryGas, Int256, expectStorage } from '../helpers'
+import {
+  expectReturn,
+  expectGas,
+  memoryGas,
+  Int256,
+  expectStorage,
+} from '../helpers'
 import { GasCost } from '../../src/opcodes'
 import { Bytes } from '../../src/Bytes'
 

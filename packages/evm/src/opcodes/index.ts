@@ -44,7 +44,7 @@ export { makeOpPUSH } from './stack'
 export { Opcode } from './Opcode'
 export { GasCost, GasRefund } from './gasCosts'
 
-export function getOpcode (hex: number) {
+export function getOpcode(hex: number) {
   return OP_CODES[hex] ?? invalidOpcode(hex)
 }
 

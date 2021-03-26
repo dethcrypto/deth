@@ -13,35 +13,35 @@ import { RpcTransactionResponse } from './RpcTransactionResponse'
 import Block from 'ethereumjs-block'
 
 interface RpcBlockResponseBase {
-  number: Quantity,
-  hash: Hash,
-  parentHash: Hash,
-  nonce: HexData,
-  sha3Uncles: Hash,
-  logsBloom: HexData,
-  transactionsRoot: Hash,
-  stateRoot: Hash,
-  receiptsRoot: Hash,
-  miner: Address,
-  difficulty: Quantity,
-  totalDifficulty: Quantity,
-  extraData: HexData,
-  size: Quantity,
-  gasLimit: Quantity,
-  gasUsed: Quantity,
-  timestamp: Quantity,
-  uncles: Hash[],
+  number: Quantity
+  hash: Hash
+  parentHash: Hash
+  nonce: HexData
+  sha3Uncles: Hash
+  logsBloom: HexData
+  transactionsRoot: Hash
+  stateRoot: Hash
+  receiptsRoot: Hash
+  miner: Address
+  difficulty: Quantity
+  totalDifficulty: Quantity
+  extraData: HexData
+  size: Quantity
+  gasLimit: Quantity
+  gasUsed: Quantity
+  timestamp: Quantity
+  uncles: Hash[]
 }
 
 export interface RpcBlockResponse extends RpcBlockResponseBase {
-  transactions: Hash[],
+  transactions: Hash[]
 }
 
 export interface RpcRichBlockResponse extends RpcBlockResponseBase {
-  transactions: RpcTransactionResponse[],
+  transactions: RpcTransactionResponse[]
 }
 
-export function toBlockResponse (block: Block): RpcBlockResponse {
+export function toBlockResponse(block: Block): RpcBlockResponse {
   return {
     number: bufferToQuantity(block.header.number),
     hash: bufferToHash(block.hash()),
@@ -62,7 +62,7 @@ export function toBlockResponse (block: Block): RpcBlockResponse {
     gasLimit: bufferToQuantity(block.header.gasLimit),
     gasUsed: bufferToQuantity(block.header.gasUsed),
     timestamp: bufferToQuantity(block.header.timestamp),
-    transactions: block.transactions.map(tx => bufferToHash(tx.hash())),
+    transactions: block.transactions.map((tx) => bufferToHash(tx.hash())),
     uncles: [],
   }
 }

@@ -27,8 +27,10 @@
   "scripts": {
     "prepublishOnly": "yarn lint && yarn test && yarn build",
     "start": "ts-node -T ./src/runner.ts",
-    "lint": "eslint --ext .ts src test",
-    "lint:fix": "yarn lint --fix",
+    "lint": "yarn lint:prettier --check && yarn lint:eslint",
+    "lint:fix": "prettier --write . && yarn lint:eslint --fix",
+    "lint:prettier": "prettier --check .",
+    "lint:eslint": "eslint src test --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "prebuild": "rm -rf dist",
     "build": "./build.sh",

@@ -5,11 +5,11 @@ import { BlockTable } from './BlockTable'
 import { Page } from './Page'
 
 export interface HomeProps {
-  blocks: BlockListItem[],
-  transactions: TransactionListItem[],
+  blocks: BlockListItem[]
+  transactions: TransactionListItem[]
 }
 
-export function Home ({ blocks, transactions }: HomeProps) {
+export function Home({ blocks, transactions }: HomeProps) {
   return (
     <Page twoColumns>
       <section className="page__column">

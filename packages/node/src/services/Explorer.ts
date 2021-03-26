@@ -10,25 +10,24 @@ import {
 import { utils } from 'ethers'
 
 export interface BlockListItem {
-  hash: Hash,
-  number: number,
-  transactionCount: number,
+  hash: Hash
+  number: number
+  transactionCount: number
 }
 
 export interface TransactionListItem {
-  blockHash: Hash,
-  blockNumber: number,
-  hash: Hash,
-  from: Address,
-  to: Address,
-  value: utils.BigNumber,
+  blockHash: Hash
+  blockNumber: number
+  hash: Hash
+  from: Address
+  to: Address
+  value: utils.BigNumber
 }
 
 export class Explorer {
-  constructor (private chain: Chain) {
-  }
+  constructor(private chain: Chain) {}
 
-  async getLatestBlocks (limit: number) {
+  async getLatestBlocks(limit: number) {
     const latest = await this.chain.getBlockNumber()
     const number = quantityToNumber(latest)
     const blocks: BlockListItem[] = []
@@ -39,7 +38,7 @@ export class Explorer {
     return blocks
   }
 
-  async getLatestTransactions (limit: number) {
+  async getLatestTransactions(limit: number) {
     const latest = await this.chain.getBlockNumber()
     const number = quantityToNumber(latest)
     const transactions: TransactionListItem[] = []
@@ -54,7 +53,7 @@ export class Explorer {
   }
 }
 
-function formatBlock (block: RpcBlockResponse): BlockListItem {
+function formatBlock(block: RpcBlockResponse): BlockListItem {
   return {
     hash: block.hash,
     number: quantityToNumber(block.number),
@@ -64,7 +63,9 @@ function formatBlock (block: RpcBlockResponse): BlockListItem {
 
 const ZERO_ADDRESS = ('0x' + '0'.repeat(64)) as Address
 
-function formatTransaction (transaction: RpcTransactionResponse): TransactionListItem {
+function formatTransaction(
+  transaction: RpcTransactionResponse
+): TransactionListItem {
   return {
     blockHash: transaction.blockHash!,
     blockNumber: quantityToNumber(transaction.blockNumber!),
