@@ -36,4 +36,14 @@ export class TrieBranch {
   encode(): Bytes {
     return rlpEncode([...this.children, this.value])
   }
+
+  setBranch(index: number, value: Bytes) {
+    const newChildren = [...this.children]
+    newChildren[index] = value
+    return new TrieBranch(newChildren, this.value)
+  }
+
+  setValue(value: Bytes) {
+    return new TrieBranch(this.children, value)
+  }
 }

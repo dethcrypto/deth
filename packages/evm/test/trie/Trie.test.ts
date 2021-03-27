@@ -17,7 +17,7 @@ describe('Trie', () => {
       it(name, () => {
         const trie = new Trie()
         for (const [key, value] of Object.entries(testCase.in)) {
-          trie.put(toBytes(key), toBytes(value))
+          trie.set(toBytes(key), toBytes(value))
         }
         expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
       })
@@ -29,7 +29,7 @@ describe('Trie', () => {
       it(name, () => {
         const trie = new Trie()
         for (const [key, value] of testCase.in) {
-          trie.put(toBytes(key), toBytes(value))
+          trie.set(toBytes(key), toBytes(value))
         }
         expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
       })

@@ -19,4 +19,12 @@ export class TrieLeaf {
   encode(): Bytes {
     return rlpEncode([hexPrefixEncode(this.path, true), this.value])
   }
+
+  setPath(path: string) {
+    return new TrieLeaf(path, this.value)
+  }
+
+  setValue(value: Bytes) {
+    return new TrieLeaf(this.path, value)
+  }
 }

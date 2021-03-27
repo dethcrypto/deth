@@ -28,4 +28,12 @@ export class TrieExtension {
   encode(): Bytes {
     return rlpEncode([hexPrefixEncode(this.path, false), this.value])
   }
+
+  setPath(path: string) {
+    return new TrieExtension(path, this.value)
+  }
+
+  setValue(value: Bytes) {
+    return new TrieExtension(this.path, value)
+  }
 }
