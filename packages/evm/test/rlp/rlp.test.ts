@@ -3,9 +3,9 @@ import { expect } from 'chai'
 import { Bytes } from '../../src/Bytes'
 import { InvalidEncoding } from '../../src/encoding'
 import { rlpDecode, rlpEncode, RlpSerializable } from '../../src/rlp'
-import testCasesEthInvalid from './eth-invalid.json'
-import testCasesEthValid from './eth-valid.json'
-import testCasesEthers from './ethers.json'
+import testCasesEthInvalid from './cases/eth-invalid.json'
+import testCasesEthValid from './cases/eth-valid.json'
+import testCasesEthers from './cases/ethers.json'
 
 describe('rlpEncode', () => {
   describe('ethers', () => {

@@ -1,13 +1,13 @@
 import { Address } from './Address'
-import { rlpEncode } from './rlp'
 import { Bytes } from './Bytes'
-import { keccak256 } from 'js-sha3'
+import { keccak } from './hash'
+import { rlpEncode } from './rlp'
 
 export function getContractAddress(sender: Address, nonce: number) {
   const encoded = rlpEncode([Bytes.fromHex(sender), Bytes.fromNumber(nonce)])
-  return hashToAddress(keccak256(encoded.toByteArray()))
+  return hashToAddress(keccak(encoded))
 }
 
-function hashToAddress(hash: string) {
-  return hash.substring(24) as Address
+function hashToAddress(hash: Bytes) {
+  return hash.toHex().substring(24) as Address
 }
