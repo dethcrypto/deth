@@ -8,49 +8,59 @@ describe('TrieLeaf', () => {
   const cases = [
     {
       name: 'empty',
-      leaf: new TrieLeaf('', Bytes.EMPTY),
+      node: new TrieLeaf('', Bytes.EMPTY),
       rlp: 'c22080',
     },
     {
-      name: 'shortKey',
-      leaf: new TrieLeaf('abc', Bytes.EMPTY),
+      name: 'keyShort',
+      node: new TrieLeaf('abc', Bytes.EMPTY),
       rlp: 'c4823abc80',
     },
     {
-      name: 'longKey',
-      leaf: new TrieLeaf('1234567890abcdef1234567890abcdef', Bytes.EMPTY),
-      rlp: 'd391201234567890abcdef1234567890abcdef80',
+      name: 'key32',
+      node: new TrieLeaf('ff'.repeat(32), Bytes.EMPTY),
+      rlp:
+        'e3a120ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80',
     },
     {
-      name: 'shortValue',
-      leaf: new TrieLeaf('abc', Bytes.fromHex('abcdef')),
+      name: 'key33',
+      node: new TrieLeaf('ff'.repeat(33), Bytes.EMPTY),
+      rlp:
+        'e4a220ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80',
+    },
+    {
+      name: 'valueShort',
+      node: new TrieLeaf('abc', Bytes.fromHex('abcdef')),
       rlp: 'c7823abc83abcdef',
     },
     {
-      name: 'longValue',
-      leaf: new TrieLeaf(
-        '1234567890abcdef1234567890abcdef',
-        Bytes.fromHex('1234567890abcdef1234567890abcdef')
-      ),
+      name: 'value32',
+      node: new TrieLeaf('abc', Bytes.fromHex('ff'.repeat(32))),
       rlp:
-        'e391201234567890abcdef1234567890abcdef901234567890abcdef1234567890abcdef',
+        'e4823abca0ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    },
+    {
+      name: 'value33',
+      node: new TrieLeaf('abc', Bytes.fromHex('ff'.repeat(33))),
+      rlp:
+        'e5823abca1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
     },
   ]
 
   describe('encode', () => {
-    for (const { name, leaf, rlp } of cases) {
+    for (const { name, node, rlp } of cases) {
       it(name, () => {
-        const encoded = leaf.encode()
+        const encoded = node.encode()
         expect(encoded).to.deep.equal(Bytes.fromHex(rlp))
       })
     }
   })
 
   describe('decode', () => {
-    for (const { name, leaf, rlp } of cases) {
+    for (const { name, node, rlp } of cases) {
       it(name, () => {
         const decoded = TrieLeaf.decode(Bytes.fromHex(rlp))
-        expect(decoded).to.deep.equal(leaf)
+        expect(decoded).to.deep.equal(node)
       })
     }
 
