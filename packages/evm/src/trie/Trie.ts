@@ -37,7 +37,7 @@ export class Trie {
     this.setRootNode(set(this.rootNode, key, value))
   }
 
-  delete(key: Bytes) {
+  remove(key: Bytes) {
     this.set(key, Bytes.EMPTY)
   }
 }
