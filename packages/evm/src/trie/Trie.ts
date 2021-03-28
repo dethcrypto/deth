@@ -43,18 +43,13 @@ export class Trie {
     remaining: string,
     stack: TrieNode[]
   ): { remaining: string; stack: TrieNode[] } {
-    console.log('findPathInner, remaining', remaining)
     stack.push(node)
     if (node instanceof TrieLeaf) {
-      console.log('TrieLeaf:', node.path)
       if (remaining === node.path) {
-        console.log('BINGO!')
         return { remaining: '', stack }
       }
     } else if (node instanceof TrieExtension) {
-      console.log('TrieExtension: ', node.path)
       if (remaining.startsWith(node.path)) {
-        console.log('BINGO!')
         return this.findPathInner(
           node.branch,
           remaining.substring(node.path.length),
@@ -62,12 +57,10 @@ export class Trie {
         )
       }
     } else if (node instanceof TrieBranch) {
-      console.log('TrieBranch')
       if (remaining !== '') {
         const index = parseInt(remaining[0], 16)
         const child = node.children[index]
         if (child) {
-          console.log('BINGO!')
           return this.findPathInner(child, remaining.substring(1), stack)
         }
       }
@@ -82,12 +75,8 @@ export class Trie {
     stack: TrieNode[]
   ) {
     const node = stack.pop()
-    if (!node) {
-      throw new Error('Stack underflow')
-    }
 
     if (remaining.length === 0) {
-      console.log('NOTHING REMAINING')
       if (node instanceof TrieLeaf && node.path === '') {
         stack.push(new TrieLeaf(node.path, value))
       } else if (node instanceof TrieBranch) {
@@ -101,12 +90,10 @@ export class Trie {
         stack.push(TrieBranch.from({ [index]: child }, value))
       }
     } else if (node instanceof TrieBranch) {
-      console.log('REMAINING TrieBranch', remaining)
       const path = remaining.substring(1)
       stack.push(node)
       stack.push(new TrieLeaf(path, value))
     } else if (node instanceof TrieLeaf || node instanceof TrieExtension) {
-      console.log('REMAINING L/E', remaining)
       const common = commonPrefix(remaining, node.path)
       const nodePath = node.path.substring(common.length)
       const remainingPath = remaining.substring(common.length)
@@ -116,7 +103,6 @@ export class Trie {
 
       if (node instanceof TrieLeaf) {
         if (nodePath === '') {
-          console.log('BRANCHVALUE NODEVALUE')
           branchValue = node.value
         } else {
           const index = parseInt(nodePath[0], 16)
