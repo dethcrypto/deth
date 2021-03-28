@@ -1,6 +1,2 @@
 export * from './hexPrefix'
 export * from './Trie'
-export * from './TrieBranch'
-export * from './TrieExtension'
-export * from './TrieLeaf'
-export * from './TrieNode'

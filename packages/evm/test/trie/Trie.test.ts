@@ -17,8 +17,13 @@ describe('Trie', () => {
       it(name, () => {
         const trie = new Trie()
         for (const [key, value] of Object.entries(testCase.in)) {
+          console.log(`${toBytes(key).toHex()} -> ${toBytes(value).toHex()}`)
           trie.set(toBytes(key), toBytes(value))
         }
+        console.log('\n\nTRIE')
+        trie.walk((node, key) => {
+          console.log(`${key} -> ${rlpEncode(node.raw).toHex()}`)
+        })
         expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
       })
     }
