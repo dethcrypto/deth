@@ -11,13 +11,17 @@ export function stackToRoot(
     const current = stack[i]
     if (current instanceof TrieBranch) {
       const key = indices[i + 1]
-      const children = [...current.children]
-      children[key] = next
-      stack[i] = new TrieBranch(children, current.value)
+      if (current.children[key] !== next) {
+        const children = [...current.children]
+        children[key] = next
+        stack[i] = new TrieBranch(children, current.value)
+      }
     } else if (current instanceof TrieExtension) {
       // should always be true
       if (next instanceof TrieBranch) {
-        stack[i] = new TrieExtension(current.path, next)
+        if (current.branch !== next) {
+          stack[i] = new TrieExtension(current.path, next)
+        }
       }
     }
   }

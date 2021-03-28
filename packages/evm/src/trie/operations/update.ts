@@ -8,11 +8,10 @@ export function update(
   remaining: string,
   stack: TrieNode[]
 ) {
-  if (stack.length === 0) {
+  const node = stack.pop()
+  if (!node) {
     return new TrieLeaf(key, value)
   }
-
-  const node = stack.pop()
 
   if (remaining.length === 0) {
     if (node instanceof TrieLeaf && node.path === '') {
