@@ -5,6 +5,7 @@ import { rlpEncode } from '../../src/rlp'
 import { Trie } from '../../src/trie'
 import testCasesAnyOrder from './cases/any-order.json'
 import testCasesInOrder from './cases/in-order.json'
+import { trieToJSON, trieToNodes } from './utils'
 
 describe('Trie', () => {
   it('has a specific empty hash', () => {
@@ -19,11 +20,10 @@ describe('Trie', () => {
         for (const [key, value] of Object.entries(testCase.in)) {
           console.log(`${toBytes(key).toHex()} -> ${toBytes(value).toHex()}`)
           trie.set(toBytes(key), toBytes(value))
+          console.log(trieToJSON(trie))
         }
         console.log('\n\nTRIE')
-        trie.walk((node, key) => {
-          console.log(`${key} -> ${rlpEncode(node.raw).toHex()}`)
-        })
+        console.log(trieToNodes(trie))
         expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
       })
     }

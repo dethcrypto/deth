@@ -30,35 +30,6 @@ export class Trie {
     }
   }
 
-  walk(cb: (node: TrieNode, key: string) => void) {
-    if (this.rootNode) {
-      cb(this.rootNode, '')
-      this.continueWalk(cb, this.rootNode, '')
-    }
-  }
-
-  private continueWalk(
-    cb: (node: TrieNode, key: string) => void,
-    node: TrieNode,
-    key: string
-  ) {
-    if (node instanceof TrieBranch) {
-      for (let i = 0; i < 16; i++) {
-        const child = node.children[i]
-        if (child) {
-          const newKey = key + i.toString(16)
-          cb(child, newKey)
-          this.continueWalk(cb, child, newKey)
-        }
-      }
-    }
-    if (node instanceof TrieExtension) {
-      const newKey = key + node.path
-      cb(node.branch, newKey)
-      this.continueWalk(cb, node.branch, newKey)
-    }
-  }
-
   private findPath(key: Bytes) {
     const remaining = key.toHex()
     if (!this.rootNode) {
@@ -72,13 +43,18 @@ export class Trie {
     remaining: string,
     stack: TrieNode[]
   ): { remaining: string; stack: TrieNode[] } {
+    console.log('findPathInner, remaining', remaining)
     stack.push(node)
     if (node instanceof TrieLeaf) {
+      console.log('TrieLeaf:', node.path)
       if (remaining === node.path) {
+        console.log('BINGO!')
         return { remaining: '', stack }
       }
     } else if (node instanceof TrieExtension) {
+      console.log('TrieExtension: ', node.path)
       if (remaining.startsWith(node.path)) {
+        console.log('BINGO!')
         return this.findPathInner(
           node.branch,
           remaining.substring(node.path.length),
@@ -86,10 +62,12 @@ export class Trie {
         )
       }
     } else if (node instanceof TrieBranch) {
+      console.log('TrieBranch')
       if (remaining !== '') {
         const index = parseInt(remaining[0], 16)
         const child = node.children[index]
         if (child) {
+          console.log('BINGO!')
           return this.findPathInner(child, remaining.substring(1), stack)
         }
       }
@@ -109,6 +87,7 @@ export class Trie {
     }
 
     if (remaining.length === 0) {
+      console.log('NOTHING REMAINING')
       if (node instanceof TrieLeaf && node.path === '') {
         stack.push(new TrieLeaf(node.path, value))
       } else if (node instanceof TrieBranch) {
@@ -122,10 +101,12 @@ export class Trie {
         stack.push(TrieBranch.from({ [index]: child }, value))
       }
     } else if (node instanceof TrieBranch) {
+      console.log('REMAINING TrieBranch', remaining)
       const path = remaining.substring(1)
       stack.push(node)
       stack.push(new TrieLeaf(path, value))
     } else if (node instanceof TrieLeaf || node instanceof TrieExtension) {
+      console.log('REMAINING L/E', remaining)
       const common = commonPrefix(remaining, node.path)
       const nodePath = node.path.substring(common.length)
       const remainingPath = remaining.substring(common.length)
@@ -135,6 +116,7 @@ export class Trie {
 
       if (node instanceof TrieLeaf) {
         if (nodePath === '') {
+          console.log('BRANCHVALUE NODEVALUE')
           branchValue = node.value
         } else {
           const index = parseInt(nodePath[0], 16)
@@ -182,18 +164,21 @@ export class Trie {
 
   private updateStack(key: Bytes, stack: TrieNode[]) {
     const path = key.toHex()
-    let pathPosition = path.length - 1
+    const indices: number[] = []
+    let pathPosition = -1
+    for (const item of stack) {
+      indices.push(parseInt(path[pathPosition] ?? '0', 16))
+      if (item instanceof TrieExtension || item instanceof TrieLeaf) {
+        pathPosition += item.path.length
+      } else if (item instanceof TrieBranch) {
+        pathPosition += 1
+      }
+    }
     for (let i = stack.length - 2; i >= 0; i--) {
       const next = stack[i + 1]
-      if (next instanceof TrieBranch) {
-        pathPosition -= 1
-      } else if (next instanceof TrieExtension || next instanceof TrieLeaf) {
-        pathPosition -= next.path.length
-      }
-
       const current = stack[i]
       if (current instanceof TrieBranch) {
-        const key = parseInt(path[pathPosition], 16)
+        const key = indices[i + 1]
         const children = [...current.children]
         children[key] = next
         stack[i] = new TrieBranch(children, current.value)
