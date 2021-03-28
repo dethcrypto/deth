@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { Bytes } from '../../src/Bytes'
 import { InvalidEncoding } from '../../src/encoding'
-import { hexPrefixEncode, hexPrefixDecode } from '../../src/trie'
+import { hexPrefixEncode, hexPrefixDecode } from '../../src/trie/hexPrefix'
 
 const testCases = [
   {

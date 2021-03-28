@@ -10,7 +10,7 @@ import { trieToJSON, trieToNodes } from './utils'
 describe('Trie', () => {
   it('has a specific empty hash', () => {
     const expected = keccak(rlpEncode(Bytes.EMPTY))
-    expect(new Trie().getRoot()).to.deep.equal(expected)
+    expect(new Trie().root).to.deep.equal(expected)
   })
 
   describe('any order', () => {
@@ -24,7 +24,7 @@ describe('Trie', () => {
         }
         console.log('\n\nTRIE')
         console.log(trieToNodes(trie))
-        expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
+        expect(trie.root).to.deep.equal(Bytes.fromHex(testCase.root))
       })
     }
   })
@@ -34,9 +34,13 @@ describe('Trie', () => {
       it(name, () => {
         const trie = new Trie()
         for (const [key, value] of testCase.in) {
+          console.log(`${toBytes(key).toHex()} -> ${toBytes(value).toHex()}`)
           trie.set(toBytes(key), toBytes(value))
+          // console.log(trieToJSON(trie))
         }
-        expect(trie.getRoot()).to.deep.equal(Bytes.fromHex(testCase.root))
+        console.log('\n\nTRIE')
+        console.log(trieToNodes(trie))
+        expect(trie.root).to.deep.equal(Bytes.fromHex(testCase.root))
       })
     }
   })
