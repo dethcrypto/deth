@@ -1,10 +1,11 @@
-import { expect } from 'chai'
-import testCasesEthers from './ethers.json'
-import testCasesEthValid from './eth-valid.json'
-import testCasesEthInvalid from './eth-invalid.json'
-import { Bytes } from '../../src/Bytes'
-import { RlpSerializable, rlpEncode, rlpDecode } from '../../src/rlp'
 import BN from 'bn.js'
+import { expect } from 'chai'
+import { Bytes } from '../../src/Bytes'
+import { InvalidEncoding } from '../../src/encoding'
+import { rlpDecode, rlpEncode, RlpSerializable } from '../../src/rlp'
+import testCasesEthInvalid from './cases/eth-invalid.json'
+import testCasesEthValid from './cases/eth-valid.json'
+import testCasesEthers from './cases/ethers.json'
 
 describe('rlpEncode', () => {
   describe('ethers', () => {
@@ -48,7 +49,9 @@ describe('rlpDecode', () => {
   describe('eth invalid', () => {
     for (const [name, testCase] of Object.entries(testCasesEthInvalid)) {
       it(name, () => {
-        expect(() => rlpDecode(Bytes.fromHex(testCase.out))).to.throw()
+        expect(() => rlpDecode(Bytes.fromHex(testCase.out))).to.throw(
+          InvalidEncoding
+        )
       })
     }
   })
