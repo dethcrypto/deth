@@ -13,23 +13,16 @@ export function update(
     return new TrieLeaf(key, value)
   }
 
-  if (remaining.length === 0) {
-    if (node instanceof TrieLeaf && node.path === '') {
-      stack.push(new TrieLeaf(node.path, value))
-    } else if (node instanceof TrieBranch) {
-      stack.push(new TrieBranch(node.children, value))
-    } else if (node instanceof TrieExtension) {
-      const index = parseInt(node.path[0], 16)
-      const child =
-        node.path.length > 1
-          ? new TrieExtension(node.path.substring(1), node.branch)
-          : node.branch
-      stack.push(TrieBranch.from({ [index]: child }, value))
-    }
+  if (remaining.length === 0 && node instanceof TrieLeaf) {
+    stack.push(new TrieLeaf(node.path, value))
   } else if (node instanceof TrieBranch) {
-    const path = remaining.substring(1)
-    stack.push(node)
-    stack.push(new TrieLeaf(path, value))
+    if (remaining.length === 0) {
+      stack.push(new TrieBranch(node.children, value))
+    } else {
+      const path = remaining.substring(1)
+      stack.push(node)
+      stack.push(new TrieLeaf(path, value))
+    }
   } else if (node instanceof TrieLeaf || node instanceof TrieExtension) {
     const common = commonPrefix(remaining, node.path)
     const nodePath = node.path.substring(common.length)
@@ -49,21 +42,11 @@ export function update(
     }
 
     if (node instanceof TrieExtension) {
-      if (nodePath === '') {
-        for (let i = 0; i < node.branch.children.length; i++) {
-          const child = node.branch.children[i]
-          if (child) {
-            children[i] = child
-          }
-        }
-        branchValue = node.branch.value
-      } else {
-        const index = parseInt(nodePath[0], 16)
-        const path = nodePath.substring(1)
-        const child =
-          path !== '' ? new TrieExtension(path, node.branch) : node.branch
-        children[index] = child
-      }
+      const index = parseInt(nodePath[0], 16)
+      const path = nodePath.substring(1)
+      const child =
+        path !== '' ? new TrieExtension(path, node.branch) : node.branch
+      children[index] = child
     }
 
     if (remainingPath === '') {
