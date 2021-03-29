@@ -13,31 +13,8 @@ export function remove(key: string, stack: TrieNode[]) {
     if (childCount >= 2) {
       stack.push(new TrieBranch(node.children, Bytes.EMPTY))
     } else {
-      const index = node.children.findIndex((x) => x !== undefined)
-      const child = node.children[index]
-      const parent = stack.pop()
-      if (!parent || parent instanceof TrieBranch) {
-        if (parent) {
-          stack.push(parent)
-        }
-        const nibble = index.toString(16)
-        if (child instanceof TrieBranch) {
-          stack.push(new TrieExtension(nibble, child))
-        } else if (child instanceof TrieExtension) {
-          stack.push(new TrieExtension(nibble + child.path, child.branch))
-        } else if (child instanceof TrieLeaf) {
-          stack.push(new TrieLeaf(nibble + child.path, child.value))
-        }
-      } else if (parent instanceof TrieExtension) {
-        const path = parent.path + index.toString(16)
-        if (child instanceof TrieBranch) {
-          stack.push(new TrieExtension(path, child))
-        } else if (child instanceof TrieExtension) {
-          stack.push(new TrieExtension(path + child.path, child.branch))
-        } else if (child instanceof TrieLeaf) {
-          stack.push(new TrieLeaf(path + child.path, child.value))
-        }
-      }
+      const { child, nibble } = findChild(node.children)
+      insertChild(stack, child, nibble)
     }
   } else if (node instanceof TrieLeaf) {
     if (stack.length === 0) {
@@ -48,54 +25,55 @@ export function remove(key: string, stack: TrieNode[]) {
       const index = parseInt(key[key.length - 1 - node.path.length], 16)
       const childCount = getChildCount(parent)
       const weight = childCount + (parent.value.length !== 0 ? 1 : 0)
+
       if (weight >= 3) {
         const children = [...parent.children]
         children[index] = undefined
         stack.push(new TrieBranch(children, parent.value))
       } else if (childCount === 1) {
-        const grandparent = stack.pop()
-        if (!grandparent || grandparent instanceof TrieBranch) {
-          if (grandparent) {
-            stack.push(grandparent)
-          }
-          stack.push(new TrieLeaf('', parent.value))
-        } else if (grandparent instanceof TrieExtension) {
-          stack.push(new TrieLeaf(grandparent.path, parent.value))
-        }
+        insertChild(stack, new TrieLeaf('', parent.value), '')
       } else {
-        const childIndex = parent.children.findIndex(
-          (x, i) => !!x && i !== index
-        )
-        const child = parent.children[childIndex]
-        const nibble = childIndex.toString(16)
-        const grandparent = stack.pop()
-        if (!grandparent || grandparent instanceof TrieBranch) {
-          if (grandparent) {
-            stack.push(grandparent)
-          }
-          if (child instanceof TrieLeaf) {
-            stack.push(new TrieLeaf(nibble + child.path, child.value))
-          } else if (child instanceof TrieBranch) {
-            stack.push(new TrieExtension(nibble, child))
-          } else if (child instanceof TrieExtension) {
-            stack.push(new TrieExtension(nibble + child.path, child.branch))
-          }
-        } else if (grandparent instanceof TrieExtension) {
-          if (child instanceof TrieLeaf) {
-            const path = grandparent.path + nibble + child.path
-            stack.push(new TrieLeaf(path, child.value))
-          } else if (child instanceof TrieExtension) {
-            const path = grandparent.path + nibble + child.path
-            stack.push(new TrieExtension(path, child.branch))
-          } else if (child instanceof TrieBranch) {
-            stack.push(new TrieExtension(grandparent.path + nibble, child))
-          }
-        }
+        const { child, nibble } = findChild(parent.children, index)
+        insertChild(stack, child, nibble)
       }
     }
   }
 
   return stackToRoot(key, stack)
+}
+
+function insertChild(stack: TrieNode[], child: TrieNode, path: string) {
+  const parent = stack.pop()
+  if (parent instanceof TrieBranch) {
+    stack.push(parent)
+  }
+  if (parent instanceof TrieExtension) {
+    path = parent.path + path
+  }
+  stack.push(extended(path, child))
+}
+
+function findChild(
+  children: readonly (TrieNode | undefined)[],
+  omitIndex?: number
+) {
+  const childIndex = children.findIndex((x, i) => !!x && i !== omitIndex)
+  return {
+    child: children[childIndex] as TrieNode,
+    nibble: childIndex.toString(16),
+  }
+}
+
+function extended(path: string, child: TrieNode) {
+  if (child instanceof TrieBranch) {
+    return new TrieExtension(path, child)
+  } else if (child instanceof TrieLeaf) {
+    return new TrieLeaf(path + child.path, child.value)
+  } else if (child instanceof TrieExtension) {
+    return new TrieExtension(path + child.path, child.branch)
+  } else {
+    throw new Error('Invalid node')
+  }
 }
 
 function getChildCount(branch: TrieBranch) {
