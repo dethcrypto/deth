@@ -4,8 +4,8 @@ import { Trie } from '../../src/trie'
 
 describe('Trie.set', () => {
   it('empty trie', () => {
-    const trie = Trie.fromJson(undefined)
-    trie.set(Bytes.fromHex('00'), Bytes.fromHex('abcd'))
+    let trie = Trie.fromJson(undefined)
+    trie = trie.set(Bytes.fromHex('00'), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '00',
@@ -15,12 +15,12 @@ describe('Trie.set', () => {
   })
 
   it('matching path leaf node', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Leaf',
       path: '00',
       value: '1234',
     })
-    trie.set(Bytes.fromHex('00'), Bytes.fromHex('abcd'))
+    trie = trie.set(Bytes.fromHex('00'), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '00',
@@ -30,12 +30,12 @@ describe('Trie.set', () => {
   })
 
   it('matching path branch no value', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: { type: 'Leaf', path: '1', value: 'abcd' },
     })
-    trie.set(Bytes.fromHex(''), Bytes.fromHex('abcd'))
+    trie = trie.set(Bytes.fromHex(''), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
@@ -46,12 +46,12 @@ describe('Trie.set', () => {
   })
 
   it('matching path branch with value', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       value: '1234',
     })
-    trie.set(Bytes.fromHex(''), Bytes.fromHex('abcd'))
+    trie = trie.set(Bytes.fromHex(''), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
@@ -61,7 +61,7 @@ describe('Trie.set', () => {
   })
 
   it('matching path long extension', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: {
@@ -78,7 +78,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('11'), Bytes.fromHex('abcd'))
+    trie = trie.set(Bytes.fromHex('11'), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
@@ -105,7 +105,7 @@ describe('Trie.set', () => {
   })
 
   it('matching path short extension', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: {
@@ -122,7 +122,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('11'), Bytes.fromHex('abcd'))
+    trie = trie.set(Bytes.fromHex('11'), Bytes.fromHex('abcd'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
@@ -146,7 +146,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path branch', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -155,7 +155,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('02'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('02'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -170,7 +170,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path no common leaf short', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -179,7 +179,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -197,7 +197,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path no common leaf long', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -206,7 +206,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '1234', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -224,7 +224,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common leaf short', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -233,7 +233,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '23', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('012345'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('012345'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -255,7 +255,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common leaf long', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -264,7 +264,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '23ab', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('012345'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('012345'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -286,12 +286,12 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common leaf longer', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Leaf',
       path: '012345',
       value: '1234',
     })
-    trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0123',
@@ -305,7 +305,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path no common extension short', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -322,7 +322,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -344,7 +344,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path no common extension long', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -361,7 +361,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -387,7 +387,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common extension short', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -404,7 +404,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -430,7 +430,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common extension long', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -447,7 +447,7 @@ describe('Trie.set', () => {
         },
       },
     })
-    trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('01ab'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -477,7 +477,7 @@ describe('Trie.set', () => {
   })
 
   it('remaining path common extension longer', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '012345',
       branch: {
@@ -486,7 +486,7 @@ describe('Trie.set', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex('0123'), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0123',
@@ -508,12 +508,12 @@ describe('Trie.set', () => {
   })
 
   it('no remaining path no match', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Leaf',
       path: '012345',
       value: '1234',
     })
-    trie.set(Bytes.fromHex(''), Bytes.fromHex('dead'))
+    trie = trie.set(Bytes.fromHex(''), Bytes.fromHex('dead'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '12345', value: '1234' },

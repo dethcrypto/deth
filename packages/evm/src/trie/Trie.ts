@@ -1,20 +1,19 @@
 import { Bytes } from '../Bytes'
 import { TrieNode } from './nodes'
-import { set } from './operations'
-import { JsonNode, fromJson, toJson } from './operations'
+import { get, set, JsonNode, fromJson, toJson } from './operations'
 
 const EMPTY_ROOT = Bytes.fromHex(
   '56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'
 )
 
 export class Trie {
-  private rootHash?: Bytes = EMPTY_ROOT
-  private rootNode?: TrieNode
+  private rootHash?: Bytes
+  private constructor(private rootNode?: TrieNode) {}
+
+  static EMPTY = new Trie(undefined)
 
   static fromJson(value: JsonNode | undefined) {
-    const trie = new Trie()
-    trie.setRootNode(fromJson(value))
-    return trie
+    return new Trie(fromJson(value))
   }
 
   toJson() {
@@ -28,16 +27,15 @@ export class Trie {
     return this.rootHash
   }
 
-  private setRootNode(node?: TrieNode) {
-    this.rootNode = node
-    this.rootHash = undefined
+  get(key: Bytes): Bytes {
+    return get(this.rootNode, key)
   }
 
   set(key: Bytes, value: Bytes) {
-    this.setRootNode(set(this.rootNode, key, value))
+    return new Trie(set(this.rootNode, key, value))
   }
 
   remove(key: Bytes) {
-    this.set(key, Bytes.EMPTY)
+    return this.set(key, Bytes.EMPTY)
   }
 }

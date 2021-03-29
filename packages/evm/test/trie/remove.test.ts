@@ -4,14 +4,14 @@ import { Trie } from '../../src/trie'
 
 describe('Trie.remove', () => {
   it('branch with 2+ children', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       // to remove
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: { type: 'Leaf', path: '1', value: 'abcd' },
       value: '1a2b',
     })
-    trie.remove(Bytes.fromHex(''))
+    trie = trie.remove(Bytes.fromHex(''))
     const expected = Trie.fromJson({
       // value removed
       type: 'Branch',
@@ -22,13 +22,13 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 child and no parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       // to remove
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       value: '1a2b',
     })
-    trie.remove(Bytes.fromHex(''))
+    trie = trie.remove(Bytes.fromHex(''))
     const expected = Trie.fromJson({
       // replaced with leaf
       type: 'Leaf',
@@ -39,7 +39,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 branch child and branch parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -57,7 +57,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -80,7 +80,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 extension child and branch parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -102,7 +102,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -125,7 +125,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 leaf child and branch parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -139,7 +139,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -154,7 +154,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 branch child and extension parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -168,7 +168,7 @@ describe('Trie.remove', () => {
         value: 'dead',
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       // extended
       type: 'Extension',
@@ -183,7 +183,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 extension child and extension parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -201,7 +201,7 @@ describe('Trie.remove', () => {
         value: 'dead',
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       // extended
       type: 'Extension',
@@ -216,7 +216,7 @@ describe('Trie.remove', () => {
   })
 
   it('branch with 1 leaf child and extension parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -226,7 +226,7 @@ describe('Trie.remove', () => {
         value: 'dead',
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       // extended
       type: 'Leaf',
@@ -237,24 +237,24 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with no parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Leaf',
       path: '00',
       value: '1234',
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson(undefined)
     expect(trie).to.deep.equal(expected)
   })
 
   it('leaf with 2+ siblings', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: { type: 'Leaf', path: '1', value: 'abcd' },
       2: { type: 'Leaf', path: '2', value: 'dead' },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Branch',
       1: { type: 'Leaf', path: '1', value: 'abcd' },
@@ -264,13 +264,13 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with 1 sibling and value parent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: { type: 'Leaf', path: '1', value: 'abcd' },
       value: 'dead',
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Branch',
       1: { type: 'Leaf', path: '1', value: 'abcd' },
@@ -280,12 +280,12 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with no siblings no grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       value: 'dead',
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '',
@@ -295,7 +295,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with no siblings branch grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '0',
       branch: {
@@ -308,7 +308,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0',
@@ -322,7 +322,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with no siblings extension grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -331,7 +331,7 @@ describe('Trie.remove', () => {
         value: 'dead',
       },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '00',
@@ -341,12 +341,12 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with leaf sibling no grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: { type: 'Leaf', path: '1', value: 'abcd' },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '11',
@@ -356,7 +356,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with leaf sibling branch grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: {
         type: 'Branch',
@@ -365,7 +365,7 @@ describe('Trie.remove', () => {
       },
       1: { type: 'Leaf', path: '1', value: 'dead' },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '110', value: 'abcd' },
@@ -375,7 +375,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with leaf sibling extension grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -384,7 +384,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '1', value: 'abcd' },
       },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Leaf',
       path: '0011',
@@ -394,7 +394,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with extension sibling no grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: {
@@ -407,7 +407,7 @@ describe('Trie.remove', () => {
         },
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '11',
@@ -421,7 +421,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with extension sibling branch grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: {
         type: 'Branch',
@@ -438,7 +438,7 @@ describe('Trie.remove', () => {
       },
       value: 'b00b',
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: {
@@ -456,7 +456,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with extension sibling extension grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -473,7 +473,7 @@ describe('Trie.remove', () => {
         },
       },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '0011',
@@ -487,7 +487,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with branch sibling no grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: { type: 'Leaf', path: '0', value: '1234' },
       1: {
@@ -496,7 +496,7 @@ describe('Trie.remove', () => {
         1: { type: 'Leaf', path: '', value: 'f00d' },
       },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '1',
@@ -510,7 +510,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with branch sibling branch grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Branch',
       0: {
         type: 'Branch',
@@ -523,7 +523,7 @@ describe('Trie.remove', () => {
       },
       1: { type: 'Leaf', path: '0', value: 'dead' },
     })
-    trie.remove(Bytes.fromHex('00'))
+    trie = trie.remove(Bytes.fromHex('00'))
     const expected = Trie.fromJson({
       type: 'Branch',
       0: {
@@ -541,7 +541,7 @@ describe('Trie.remove', () => {
   })
 
   it('leaf with branch sibling extension grandparent', () => {
-    const trie = Trie.fromJson({
+    let trie = Trie.fromJson({
       type: 'Extension',
       path: '00',
       branch: {
@@ -554,7 +554,7 @@ describe('Trie.remove', () => {
         },
       },
     })
-    trie.remove(Bytes.fromHex('0000'))
+    trie = trie.remove(Bytes.fromHex('0000'))
     const expected = Trie.fromJson({
       type: 'Extension',
       path: '001',

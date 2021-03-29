@@ -9,15 +9,15 @@ import testCasesInOrder from './cases/in-order.json'
 describe('Trie reference', () => {
   it('has a specific empty hash', () => {
     const expected = keccak(rlpEncode(Bytes.EMPTY))
-    expect(new Trie().root).to.deep.equal(expected)
+    expect(Trie.EMPTY.root).to.deep.equal(expected)
   })
 
   describe('any order', () => {
     for (const [name, testCase] of Object.entries(testCasesAnyOrder)) {
       it(name, () => {
-        const trie = new Trie()
+        let trie = Trie.EMPTY
         for (const [key, value] of Object.entries(testCase.in)) {
-          trie.set(toBytes(key), toBytes(value))
+          trie = trie.set(toBytes(key), toBytes(value))
         }
         expect(trie.root).to.deep.equal(Bytes.fromHex(testCase.root))
       })
@@ -27,9 +27,9 @@ describe('Trie reference', () => {
   describe('in order', () => {
     for (const [name, testCase] of Object.entries(testCasesInOrder)) {
       it(name, () => {
-        const trie = new Trie()
+        let trie = Trie.EMPTY
         for (const [key, value] of testCase.in) {
-          trie.set(toBytes(key), toBytes(value))
+          trie = trie.set(toBytes(key), toBytes(value))
         }
         expect(trie.root).to.deep.equal(Bytes.fromHex(testCase.root))
       })
