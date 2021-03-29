@@ -8,7 +8,11 @@ const EMPTY_ROOT = Bytes.fromHex(
 
 export class Trie {
   private rootHash?: Bytes
-  private constructor(private rootNode?: TrieNode) {}
+  private rootNode?: TrieNode
+
+  protected constructor(value?: Trie | TrieNode) {
+    this.rootNode = value instanceof Trie ? value.rootNode : value
+  }
 
   static EMPTY = new Trie(undefined)
 
