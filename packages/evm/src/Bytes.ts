@@ -10,6 +10,10 @@ export class Bytes {
     return new Bytes(normalizeHexString(value))
   }
 
+  static fromBuffer(value: Buffer) {
+    return Bytes.fromHex(value.toString('hex'))
+  }
+
   static fromByte(value: number) {
     if (!isByte(value)) {
       throw new TypeError('Byte expected')
@@ -52,6 +56,10 @@ export class Bytes {
 
   toHex() {
     return this.value
+  }
+
+  toBuffer() {
+    return Buffer.from(this.value, 'hex')
   }
 
   get(index: number) {
