@@ -12,6 +12,6 @@ export function set(root: TrieNode | undefined, key: Bytes, value: Bytes) {
   } else if (!found) {
     return root
   } else {
-    return remove(path, value, remaining, stack)
+    return remove(path, stack)
   }
 }
