@@ -506,4 +506,19 @@ describe('Trie.set', () => {
     })
     expect(trie).to.deep.equal(expected)
   })
+
+  it('no remaining path no match', () => {
+    const trie = Trie.fromJson({
+      type: 'Leaf',
+      path: '012345',
+      value: '1234',
+    })
+    trie.set(Bytes.fromHex(''), Bytes.fromHex('dead'))
+    const expected = Trie.fromJson({
+      type: 'Branch',
+      0: { type: 'Leaf', path: '12345', value: '1234' },
+      value: 'dead',
+    })
+    expect(trie).to.deep.equal(expected)
+  })
 })

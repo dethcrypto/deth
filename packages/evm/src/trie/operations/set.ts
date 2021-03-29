@@ -8,7 +8,7 @@ export function set(root: TrieNode | undefined, key: Bytes, value: Bytes) {
   const path = key.toHex()
   const { remaining, stack, found } = findPath(root, path)
   if (value.length !== 0) {
-    return update(path, value, remaining, stack)
+    return update(path, value, found, remaining, stack)
   } else if (!found) {
     return root
   } else {

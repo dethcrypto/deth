@@ -5,6 +5,7 @@ import { stackToRoot } from './stackToRoot'
 export function update(
   key: string,
   value: Bytes,
+  found: boolean,
   remaining: string,
   stack: TrieNode[]
 ) {
@@ -13,7 +14,7 @@ export function update(
     return new TrieLeaf(key, value)
   }
 
-  if (remaining.length === 0 && node instanceof TrieLeaf) {
+  if (found && node instanceof TrieLeaf) {
     stack.push(new TrieLeaf(node.path, value))
   } else if (node instanceof TrieBranch) {
     if (remaining.length === 0) {
