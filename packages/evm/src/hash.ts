@@ -1,6 +1,6 @@
-import { keccak256 } from 'js-sha3'
+import { keccak256 } from 'ethereum-cryptography/keccak'
 import { Bytes } from './Bytes'
 
 export function keccak(value: Bytes) {
-  return Bytes.fromHex(keccak256(value.toByteArray()))
+  return Bytes.fromBuffer(keccak256(value.toBuffer()))
 }
