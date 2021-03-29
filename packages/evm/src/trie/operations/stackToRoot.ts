@@ -17,7 +17,6 @@ export function stackToRoot(
         stack[i] = new TrieBranch(children, current.value)
       }
     } else if (current instanceof TrieExtension) {
-      // should always be true
       if (next instanceof TrieBranch) {
         if (current.branch !== next) {
           stack[i] = new TrieExtension(current.path, next)

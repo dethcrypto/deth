@@ -86,12 +86,11 @@ describe('Trie.set', () => {
         type: 'Branch',
         0: { type: 'Leaf', path: '0', value: '1234' },
         1: {
-          // new node
           type: 'Branch',
           value: 'abcd',
           0: {
             type: 'Extension',
-            path: '0', // shortened
+            path: '0',
             branch: {
               type: 'Branch',
               0: { type: 'Leaf', path: '0', value: '1234' },
@@ -130,11 +129,9 @@ describe('Trie.set', () => {
         type: 'Branch',
         0: { type: 'Leaf', path: '0', value: '1234' },
         1: {
-          // new node
           type: 'Branch',
           value: 'abcd',
           0: {
-            // replaced with child
             type: 'Branch',
             0: { type: 'Leaf', path: '0', value: '1234' },
             1: { type: 'Leaf', path: '1', value: 'abcd' },
