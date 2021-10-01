@@ -4,20 +4,39 @@ import { Path, relativePathToPath } from './services/fs/Path'
 import { loadConfig, getConfigWithDefaults } from './config'
 import { RealFileSystem } from './services/fs/RealFileSystem'
 
-const config = getConfig(process.argv.slice(2))
-runNode(config).catch(console.error)
+const args = parseArgs()
 
-function getConfig(args: string[]) {
-  const configPath = getConfigPathFromArgs(args)
+if (args.help) {
+  printHelp()
+} else {
+  const config = getConfig(args.configPath)
+  runNode(config).catch(console.error)
+}
+
+function getConfig(configPath: Path | undefined) {
   return configPath
     ? loadConfig(new RealFileSystem(), configPath)
     : getConfigWithDefaults()
 }
 
-function getConfigPathFromArgs(args: string[]): Path | undefined {
-  const configPath = args[0]
-  if (!configPath) {
-    return undefined
+function parseArgs() {
+  const args = process.argv.slice(2)
+
+  if (['help', '--help', '-h'].includes(args[0])) {
+    return { help: true }
   }
-  return relativePathToPath(configPath, process.cwd())
+
+  const configPath = args[0]
+
+  return {
+    configPath: configPath
+      ? relativePathToPath(configPath, process.cwd())
+      : undefined,
+  }
+}
+
+function printHelp() {
+  console.log(`\
+Usage:
+  deth [config-path]`)
 }
