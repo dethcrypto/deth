@@ -1,7 +1,7 @@
 import { Opaque } from 'ts-essentials'
 import { BN } from 'ethereumjs-util'
 // eslint-disable-next-line
-import { utils } from 'ethers'
+import { utils, BigNumber } from 'ethers'
 
 const HEX_NO_LEADING_ZERO_REGEX = /^0x[1-9a-fA-F][\da-fA-F]*$/
 
@@ -10,7 +10,7 @@ const HEX_NO_LEADING_ZERO_REGEX = /^0x[1-9a-fA-F][\da-fA-F]*$/
  * Always prefixed with 0x, always lowercase.
  * Does not have leading zeroes, except when representing 0 - `"0x0"`.
  */
-export type Quantity = Opaque<'Quantity', string>
+export type Quantity = string
 export function makeQuantity(value: string): Quantity {
   if (value === '0x' || value === '0x0') {
     return '0x0' as Quantity
@@ -39,5 +39,5 @@ export function numberToQuantity(number: number): Quantity {
  * NOTE: this might throw when dealing with big number
  */
 export function quantityToNumber(quantity: Quantity) {
-  return new utils.BigNumber(quantity).toNumber()
+  return BigNumber.from(quantity).toNumber()
 }

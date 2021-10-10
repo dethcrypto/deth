@@ -1,4 +1,4 @@
-import Account from 'ethereumjs-account'
+import { Account } from 'ethereumjs-util'
 import { Dictionary, assert } from 'ts-essentials'
 import { keccak256 } from 'ethereumjs-util'
 import { CheckpointMap } from './CheckpointMap'
@@ -51,7 +51,13 @@ export class DethStateManger {
 
   getAccount(address: Address): Account {
     const account = this.accountsState.get(address) ?? new Account()
-    return new Account(account.serialize())
+
+    return new Account(
+      account.nonce,
+      account.balance,
+      account.stateRoot,
+      account.codeHash
+    )
   }
 
   putAccount(address: Address, account: Account): void {
@@ -108,7 +114,7 @@ export class DethStateManger {
 
   getStateRoot(): Hash {
     const i = this.saveIndex++
-    const hash = bufferToHash(keccak256(i))
+    const hash = bufferToHash(keccak256(Buffer.alloc(i)))
 
     this.savedAccountsState.set(hash, this.accountsState.copy())
     this.savedCodeState.set(hash, this.codeState.copy())

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-declare module 'ethereumjs-block' {
+declare module '@ethereumjs/block' {
   import Blockchain from 'ethereumjs-blockchain'
-  import Common from 'ethereumjs-common'
+  import Common from '@ethereumjs/common'
   import { BN } from 'ethereumjs-util'
-  import { Transaction } from 'ethereumjs-tx'
+  import { Transaction } from '@ethereumjs/tx'
 
   class Block {
     header: BlockHeader

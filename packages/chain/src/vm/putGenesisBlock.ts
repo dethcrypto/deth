@@ -1,5 +1,5 @@
-import VM from 'ethereumts-vm'
-import Block from 'ethereumjs-block'
+import VM from '@ethereumjs/vm'
+import { Block } from '@ethereumjs/block'
 import { ChainOptions } from '../ChainOptions'
 
 export async function putGenesisBlock(vm: VM, options: ChainOptions) {
@@ -20,9 +20,5 @@ export async function putGenesisBlock(vm: VM, options: ChainOptions) {
     { common: vm._common }
   )
 
-  await new Promise<void>((resolve, reject) => {
-    vm.blockchain.putGenesis(genesisBlock, (err: unknown) =>
-      err != null ? reject(err) : resolve()
-    )
-  })
+  await vm.blockchain.putBlock(genesisBlock)
 }

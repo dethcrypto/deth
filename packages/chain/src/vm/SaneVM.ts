@@ -1,7 +1,7 @@
-import VM from 'ethereumts-vm'
-import Block from 'ethereumjs-block'
+import VM from '@ethereumjs/vm'
+import Block from '@ethereumjs/block'
 import { BN, toBuffer } from 'ethereumjs-util'
-import { Transaction } from 'ethereumjs-tx'
+import { Transaction } from '@ethereumjs/tx'
 import {
   RpcTransactionReceipt,
   RpcTransactionResponse,
@@ -25,9 +25,9 @@ import { runIsolatedTransaction } from './runIsolatedTransaction'
 import { DethStateManger } from './storage/DethStateManger'
 import { DethBlockchain } from './storage/DethBlockchain'
 // eslint-disable-next-line no-restricted-imports
-import PStateManager from 'ethereumts-vm/dist/state/promisified'
+import PStateManager from '@ethereumjs/vm/dist/state/stateManager'
 // eslint-disable-next-line no-restricted-imports
-import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
+import { InterpreterStep } from '@ethereumjs/vm/dist/evm/interpreter'
 import { BlockchainAdapter } from './storage/BlockchainAdapter'
 import { StateManagerAdapter } from './storage/StateManagerAdapter'
 import { Snapshot } from '../utils/Snapshot'
@@ -38,7 +38,7 @@ interface VMSnapshot {
 }
 
 /**
- * SaneVM is a wrapper around ethereumts-vm (our fork). It provides a promise-based
+ * SaneVM is a wrapper around @ethereumjs/vm (our fork). It provides a promise-based
  * interface and abstracts away weird ethereumjs specific details
  */
 export class SaneVM {
@@ -144,12 +144,12 @@ export class SaneVM {
 
   async getNonce(address: Address) {
     const account = await this.getAccount(address)
-    return bufferToQuantity(account.nonce)
+    return bufferToQuantity(account.nonce.toBuffer())
   }
 
   async getBalance(address: Address) {
     const account = await this.getAccount(address)
-    return bufferToQuantity(account.balance)
+    return bufferToQuantity(account.balance.toBuffer())
   }
 
   private async getAccount(address: Address) {
@@ -170,11 +170,9 @@ export class SaneVM {
       hashOrNumber.length === 66
         ? toBuffer(hashOrNumber)
         : new BN(hashOrNumber.substr(2), 'hex')
-    const block = await new Promise<Block>((resolve, reject) => {
-      this.vm.blockchain.getBlock(query, (err: unknown, block: Block) =>
-        err != null ? reject(err) : resolve(block)
-      )
-    })
+
+    const block = await this.vm.blockchain.getBlock(query)
+
     return toBlockResponse(block)
   }
 }

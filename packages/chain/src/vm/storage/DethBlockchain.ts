@@ -1,4 +1,4 @@
-import Block from 'ethereumjs-block'
+import Block from '@ethereumjs/block'
 import { Quantity, Hash, bufferToHash, quantityToNumber } from '../../model'
 
 /**

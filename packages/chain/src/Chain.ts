@@ -29,10 +29,10 @@ import {
 } from './errors'
 import { Snapshot } from './utils/Snapshot'
 import { cloneDeep } from 'lodash'
-import { Transaction } from 'ethereumjs-tx'
+import { Transaction } from '@ethereumjs/tx'
 import { EventEmitter } from './utils/EventEmitter'
 // eslint-disable-next-line no-restricted-imports
-import { InterpreterStep } from 'ethereumts-vm/dist/evm/interpreter'
+import { InterpreterStep } from '@ethereumjs/vm/dist/evm/interpreter'
 import { assert, SafeDictionary } from 'ts-essentials'
 import { ChainFilter } from './model/ChainFilter'
 
@@ -251,8 +251,10 @@ export class Chain {
       common: this.vm.vm._common,
     })
 
+    const to = tx.to?.toBuffer()
+
     return {
-      to: tx.to?.length > 0 ? bufferToAddress(tx.to) : undefined,
+      to: to?.length! > 0 ? tx.to?.toString() : undefined,
       from: bufferToAddress((tx as any).from),
       data: tx.data?.length > 0 ? bufferToHexData(tx.data) : undefined,
     }

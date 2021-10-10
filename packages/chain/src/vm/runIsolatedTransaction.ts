@@ -1,7 +1,7 @@
-import VM from 'ethereumts-vm'
-import { Transaction } from 'ethereumjs-tx'
+import VM from '@ethereumjs/vm'
+import { Transaction } from '@ethereumjs/tx'
 // eslint-disable-next-line no-restricted-imports
-import { RunTxResult } from 'ethereumts-vm/dist/runTx'
+import { RunTxResult } from '@ethereumjs/vm/dist/runTx'
 import { getNextBlock } from './getNextBlock'
 import { ChainOptions } from '../ChainOptions'
 

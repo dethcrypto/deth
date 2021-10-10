@@ -6,7 +6,7 @@ import { bufferToHex } from 'ethereumjs-util'
  * A hexadecimal string representing bytes of data.
  * Always prefixed with 0x, always lowercase.
  */
-export type HexData = Opaque<'HexData', string>
+export type HexData = string
 export function makeHexData(value: string): HexData {
   if (!HEX_REGEX.test(value) || value.length % 2 !== 0) {
     throw new TypeError(`Value "${value}" is not valid hex data`)

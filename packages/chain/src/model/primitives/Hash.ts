@@ -6,7 +6,7 @@ import { bufferToHex, toBuffer } from 'ethereumjs-util'
  * A hexadecimal string representing a hash.
  * Always prefixed with 0x, always lowercase and of length 66.
  */
-export type Hash = Opaque<'Hash', string>
+export type Hash = string
 export function makeHash(value: string): Hash {
   if (!HEX_REGEX.test(value) || value.length !== 66) {
     throw new TypeError(`Value "${value}" is not a valid hash`)
