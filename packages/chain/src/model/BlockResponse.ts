@@ -10,7 +10,7 @@ import {
   bufferToAddress,
 } from './primitives'
 import { RpcTransactionResponse } from './RpcTransactionResponse'
-import Block from 'ethereumjs-block'
+import Block from '@ethereumjs/block'
 
 interface RpcBlockResponseBase {
   number: Quantity

@@ -1,27 +1,25 @@
-import { callbackify } from 'util'
 import { BN } from 'ethereumjs-util'
-// we need this import for proper build
-// eslint-disable-next-line
-import Block from 'ethereumjs-block'
 
 import { DethBlockchain } from './DethBlockchain'
 import { bnToQuantity, numberToQuantity, bufferToHash } from '../../model'
-import { callbackifySync } from './adapter-utils'
+import { Block } from '@ethereumjs/block'
 
 /**
  * Wraps DethBlockchain into ethereum-js/blockchain compatible interface
  */
 export class BlockchainAdapter {
   constructor(public readonly dethBlockchain: DethBlockchain) {}
-  putGenesis = callbackifySync(
-    this.dethBlockchain.putGenesis.bind(this.dethBlockchain)
-  )
+  putGenesis(block: Block): Block {
+    this.dethBlockchain.putGenesis(block)
+  }
+  getLatestBlock(): Block {
+    return this.dethBlockchain.getLatestBlock()
+  }
+  putBlock(block: Block): Block {
+    return this.dethBlockchain.putBlock(block)
+  }
 
-  getLatestBlock = callbackifySync(
-    this.dethBlockchain.getLatestBlock.bind(this.dethBlockchain)
-  )
-
-  getBlock = callbackify(async (numberOrTag: Buffer | number | BN) => {
+  async getBlock(numberOrTag: Buffer | number | BN): Promise<Block> {
     if (numberOrTag instanceof Buffer) {
       return this.dethBlockchain.getBlockByHash(bufferToHash(numberOrTag))
     }
@@ -29,10 +27,5 @@ export class BlockchainAdapter {
       return this.dethBlockchain.getBlockByNumber(bnToQuantity(numberOrTag))
     }
     return this.dethBlockchain.getBlockByNumber(numberToQuantity(numberOrTag))
-  })
-
-  // @todo isGenesis arg is missing
-  putBlock = callbackifySync(
-    this.dethBlockchain.putBlock.bind(this.dethBlockchain)
-  )
+  }
 }

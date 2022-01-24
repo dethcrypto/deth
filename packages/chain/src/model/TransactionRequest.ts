@@ -1,42 +1,42 @@
-import {
-  Address,
-  Quantity,
-  HexData,
-  makeQuantity,
-  makeAddress,
-  makeHexData,
-} from './primitives'
-import { FakeTransaction } from 'ethereumjs-tx'
+import { HexData, makeQuantity, makeAddress, makeHexData } from './primitives'
+import { Transaction } from '@ethereumjs/tx'
 import { providers, utils } from 'ethers'
+import { Address } from 'ethereumjs-util'
 
 type WithoutPromises<T> = { [K in keyof T]: Exclude<T[K], Promise<unknown>> }
 type EthersTxRequest = WithoutPromises<providers.TransactionRequest>
 
 export interface RpcTransactionRequest {
-  from?: Address
-  to?: Address
-  gas?: Quantity
-  gasPrice?: Quantity
-  value?: Quantity
-  nonce?: Quantity
+  from?: string
+  to?: string
+  gas?: string
+  gasPrice?: string
+  value?: string
+  nonce?: string
   data?: HexData
 }
 
-export function toFakeTransaction(tx: RpcTransactionRequest) {
-  return new FakeTransaction({
-    from: tx.from ?? '0x0000000000000000000000000000000000000000', // @TODO what should be a default address to use?
-    to: tx.to,
-    data: tx.data,
-    gasLimit: tx.gas,
-    gasPrice: tx.gasPrice,
-    nonce: tx.nonce,
-    value: tx.value,
-  })
+// See https://github.com/ethereumjs/ethereumjs-monorepo/blob/master/packages/tx/README.md#fake-transaction
+export function toFakeTransaction(txParams: RpcTransactionRequest) {
+  const from = Address.fromString(
+    txParams.from ?? '0x0000000000000000000000000000000000000000'
+  )
+
+  delete txParams.from
+
+  const tx = Transaction.fromTxData(txParams)
+
+  // override getSenderAddress
+  tx.getSenderAddress = () => {
+    return from
+  }
+
+  return tx
 }
 
 type Hexable = string | number | ArrayLike<number> | utils.Hexable
 
-const toQuantity = (value: Hexable) =>
+const toQuantity = (value: string) =>
   makeQuantity(utils.hexStripZeros(utils.hexlify(value)))
 const toAddress = (value: Hexable) => makeAddress(utils.hexlify(value))
 const toHexData = (value: Hexable) => makeHexData(utils.hexlify(value))
@@ -47,16 +47,16 @@ export function toRpcTransactionRequest(
   const result: RpcTransactionRequest = {}
 
   if (transaction.gasLimit) {
-    result.gas = toQuantity(transaction.gasLimit)
+    result.gas = toQuantity(transaction.gasLimit.toString())
   }
   if (transaction.gasPrice) {
-    result.gasPrice = toQuantity(transaction.gasPrice)
+    result.gasPrice = toQuantity(transaction.gasPrice.toString())
   }
   if (transaction.nonce) {
-    result.nonce = toQuantity(transaction.nonce)
+    result.nonce = toQuantity(transaction.nonce.toString())
   }
   if (transaction.value) {
-    result.value = toQuantity(transaction.value)
+    result.value = toQuantity(transaction.value.toString())
   }
   if (transaction.from) {
     result.from = toAddress(transaction.from)

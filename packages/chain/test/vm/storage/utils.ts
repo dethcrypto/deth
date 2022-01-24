@@ -1,4 +1,5 @@
-import Block, { BlockHeaderData } from 'ethereumjs-block'
+import { Block } from '@ethereumjs/block'
+import type { BlockHeaderData } from '@ethereumjs/block'
 
 export function dummyBlock(nonce: number) {
   const header: BlockHeaderData = {

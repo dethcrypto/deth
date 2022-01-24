@@ -1,5 +1,5 @@
-import Block from 'ethereumjs-block'
-import { Transaction } from 'ethereumjs-tx'
+import Block from '@ethereumjs/block'
+import { Transaction } from '@ethereumjs/tx'
 import {
   bufferToHash,
   bufferToAddress,
@@ -16,7 +16,7 @@ import {
   RpcTransactionReceipt,
 } from '../model'
 // eslint-disable-next-line
-import { RunTxResult } from 'ethereumts-vm/dist/runTx'
+import { RunTxResult } from '@ethereumjs/vm/dist/runTx'
 
 export function getReceiptsAndResponses(
   block: Block,
